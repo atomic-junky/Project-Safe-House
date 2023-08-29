@@ -1,0 +1,21 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://deveyfq4orc1w"
+path="res://.godot/imported/groud.obj-6749520c92f0e42cc19b13a44c0f8101.mesh"
+
+[deps]
+
+files=["res://.godot/imported/groud.obj-6749520c92f0e42cc19b13a44c0f8101.mesh"]
+
+source_file="res://assets/wasteland/groud.obj"
+dest_files=["res://.godot/imported/groud.obj-6749520c92f0e42cc19b13a44c0f8101.mesh", "res://.godot/imported/groud.obj-6749520c92f0e42cc19b13a44c0f8101.mesh"]
+
+[params]
+
+generate_tangents=true
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+optimize_mesh=true

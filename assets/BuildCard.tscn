@@ -1,0 +1,52 @@
+[gd_scene load_steps=5 format=3 uid="uid://cri5e323f124r"]
+
+[ext_resource type="Script" path="res://scripts/BuildCard.gd" id="1_07hj3"]
+[ext_resource type="Texture2D" uid="uid://cjhgwut7x66yb" path="res://assets/buttons/cards/card.png" id="2_uimop"]
+[ext_resource type="FontFile" uid="uid://b0t4p6p8hij5p" path="res://assets/font/Oswald-Medium.ttf" id="3_0pv7e"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ieuor"]
+font = ExtResource("3_0pv7e")
+font_size = 15
+shadow_color = Color(0, 0, 0, 1)
+
+[node name="BuildCard" type="Control"]
+layout_mode = 3
+anchor_left = -0.077
+anchor_top = -0.19
+anchor_right = 0.077
+anchor_bottom = 0.19
+offset_left = 89.704
+offset_top = 123.12
+offset_right = -87.704
+offset_bottom = -123.12
+grow_horizontal = 2
+grow_vertical = 2
+mouse_default_cursor_shape = 2
+script = ExtResource("1_07hj3")
+
+[node name="Card" type="TextureButton" parent="."]
+layout_mode = 0
+offset_left = -89.0
+offset_top = -123.0
+offset_right = 89.0
+offset_bottom = 123.0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("2_uimop")
+ignore_texture_size = true
+stretch_mode = 0
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_bottom = 0.26
+offset_left = -89.0
+offset_top = -123.0
+offset_right = 89.0
+offset_bottom = -91.0
+text = "Name"
+label_settings = SubResource("LabelSettings_ieuor")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[connection signal="pressed" from="Card" to="." method="_on_texture_button_pressed"]

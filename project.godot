@@ -1,0 +1,54 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Fallout Shelter"
+run/main_scene="res://scenes/Game.tscn"
+config/features=PackedStringArray("4.1", "GL Compatibility")
+run/max_fps=120
+boot_splash/bg_color=Color(0.176471, 0.407843, 0.709804, 1)
+config/icon="res://icon.svg"
+
+[autoload]
+
+Logger="*res://scripts/Global/Logger/Logger.gd"
+RoomList="*res://scripts/Global/RoomList.gd"
+Instructions="*res://scripts/Global/Instructions.gd"
+uuid="*res://scripts/Global/uuid.gd"
+Global="*res://scripts/Global/Variables.gd"
+
+[display]
+
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[input]
+
+ui_zoom={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":0,"position":Vector2(0, 0),"global_position":Vector2(0, 0),"factor":1.0,"button_index":4,"canceled":false,"pressed":false,"double_click":false,"script":null)
+]
+}
+ui_unzoom={
+"deadzone": 0.5,
+"events": [Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"button_mask":0,"position":Vector2(0, 0),"global_position":Vector2(0, 0),"factor":1.0,"button_index":5,"canceled":false,"pressed":false,"double_click":false,"script":null)
+]
+}
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=2
+renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
+textures/lossless_compression/force_png=true
+textures/decals/filter=1
+textures/light_projectors/filter=1
+anti_aliasing/quality/msaa_3d=3

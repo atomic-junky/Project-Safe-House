@@ -1,0 +1,51 @@
+[gd_scene load_steps=9 format=3 uid="uid://c8hen6scm1vtq"]
+
+[ext_resource type="Script" path="res://scripts/Main.gd" id="1_rn6mm"]
+[ext_resource type="MeshLibrary" uid="uid://dr63vbbud52st" path="res://assets/rooms/rooms.tres" id="3_4wbmc"]
+[ext_resource type="Script" path="res://scripts/Camera.gd" id="3_mbg3o"]
+[ext_resource type="Texture2D" uid="uid://bdkprfhl0wb8o" path="res://assets/op_stone_0.jpg-CAB_e3ebb5231c16a06e77692676c83f4c73-5042211468494414472.png" id="4_4bmbi"]
+[ext_resource type="PackedScene" uid="uid://ci1ve6somicw7" path="res://assets/dwellers/Dweller.tscn" id="5_gms01"]
+[ext_resource type="ArrayMesh" uid="uid://deveyfq4orc1w" path="res://assets/wasteland/groud.obj" id="5_uedl3"]
+[ext_resource type="Texture2D" uid="uid://bcmht1dwtrrhx" path="res://assets/Garterbeltb.png" id="7_ewlew"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eia81"]
+albedo_texture = ExtResource("4_4bmbi")
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_rn6mm")
+
+[node name="GridMap" type="GridMap" parent="."]
+mesh_library = ExtResource("3_4wbmc")
+cell_size = Vector3(2, 2, 3)
+metadata/_editor_floor_ = Vector3(0, -5, 0)
+
+[node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 8.50539, 0, 0)
+keep_aspect = 0
+current = true
+fov = 37.8493
+script = ExtResource("3_mbg3o")
+
+[node name="Groud" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, -1, 1.5)
+material_override = SubResource("StandardMaterial3D_eia81")
+mesh = ExtResource("5_uedl3")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.9303, 24, -8)
+light_color = Color(0.831373, 0.890196, 1, 1)
+light_energy = 1.5
+light_size = 1.0
+light_specular = 0.0
+omni_range = 100.0
+omni_attenuation = 1e-05
+
+[node name="Dweller" parent="." instance=ExtResource("5_gms01")]
+transform = Transform3D(-1.18021e-08, 0, -0.27, 0, 0.27, 0, 0.27, 0, -1.18021e-08, 0, 47.095, -3)
+
+[node name="DragBody" type="Sprite3D" parent="."]
+transform = Transform3D(-1.09278e-08, 0, 0.25, 0, 0.25, 0, -0.25, 0, -1.09278e-08, 0, 39.306, 19.264)
+cast_shadow = 0
+no_depth_test = true
+render_priority = 99
+texture = ExtResource("7_ewlew")

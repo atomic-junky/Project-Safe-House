@@ -1,0 +1,262 @@
+[gd_scene load_steps=13 format=3 uid="uid://c1q7mld1s5oyp"]
+
+[ext_resource type="Texture2D" uid="uid://jb10j5512eug" path="res://assets/buttons/map.png" id="1_7tg0y"]
+[ext_resource type="Script" path="res://scripts/Game.gd" id="1_8jcqd"]
+[ext_resource type="PackedScene" uid="uid://c8hen6scm1vtq" path="res://scenes/Main.tscn" id="1_j7kjm"]
+[ext_resource type="Texture2D" uid="uid://dq7cypl6amu1j" path="res://assets/buttons/build.png" id="2_i05tw"]
+[ext_resource type="Script" path="res://scripts/FPSLabel.gd" id="3_2eupc"]
+[ext_resource type="PackedScene" uid="uid://cri5e323f124r" path="res://assets/BuildCard.tscn" id="4_730yh"]
+[ext_resource type="Script" path="res://scripts/BuildOverlay.gd" id="4_wk7e4"]
+[ext_resource type="FontFile" uid="uid://dhql20rabf7qu" path="res://assets/font/Oswald-Regular.ttf" id="7_euomt"]
+[ext_resource type="FontFile" uid="uid://b0t4p6p8hij5p" path="res://assets/font/Oswald-Medium.ttf" id="7_f8rk6"]
+
+[sub_resource type="GDScript" id="GDScript_iptw0"]
+script/source = "extends GridContainer
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass
+	
+
+func _gui_input(event):
+	get_viewport().set_input_as_handled()
+"
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_woi11"]
+content_margin_left = 125.0
+content_margin_top = 152.0
+
+[sub_resource type="GDScript" id="GDScript_2lohv"]
+script/source = "extends Control
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass
+"
+
+[node name="Game" type="Node"]
+script = ExtResource("1_8jcqd")
+
+[node name="FPSCounter" type="RichTextLabel" parent="."]
+offset_left = 5.0
+offset_right = 246.0
+offset_bottom = 22.0
+theme_override_fonts/normal_font = ExtResource("7_euomt")
+theme_override_fonts/bold_font = ExtResource("7_f8rk6")
+theme_override_font_sizes/normal_font_size = 14
+theme_override_font_sizes/bold_font_size = 14
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+script = ExtResource("3_2eupc")
+
+[node name="Interface" type="Control" parent="."]
+clip_contents = true
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+mouse_filter = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Interface"]
+clip_contents = true
+layout_direction = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -2.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="GridContainer" type="GridContainer" parent="Interface/MarginContainer"]
+layout_mode = 2
+mouse_filter = 2
+columns = 3
+script = SubResource("GDScript_iptw0")
+
+[node name="Left" type="VFlowContainer" parent="Interface/MarginContainer/GridContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+alignment = 2
+
+[node name="MapButton" type="TextureButton" parent="Interface/MarginContainer/GridContainer/Left"]
+layout_mode = 2
+texture_normal = ExtResource("1_7tg0y")
+stretch_mode = 0
+
+[node name="Middle" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="Right" type="VFlowContainer" parent="Interface/MarginContainer/GridContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+alignment = 2
+
+[node name="BuildButton" type="TextureButton" parent="Interface/MarginContainer/GridContainer/Right"]
+layout_mode = 2
+texture_normal = ExtResource("2_i05tw")
+
+[node name="BuildOverlay" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("4_wk7e4")
+
+[node name="ColorRect" type="ColorRect" parent="BuildOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.490196)
+
+[node name="Container" type="Control" parent="BuildOverlay"]
+layout_mode = 1
+anchor_top = 0.361
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 0.0719757
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TabsContainer" type="Control" parent="BuildOverlay/Container"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Production" type="Control" parent="BuildOverlay/Container/TabsContainer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="BuildOverlay/Container/TabsContainer/Production"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_woi11")
+vertical_scroll_mode = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 200
+
+[node name="BuildCard" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/HBoxContainer" instance=ExtResource("4_730yh")]
+layout_mode = 2
+room = 4
+
+[node name="BuildCard2" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/HBoxContainer" instance=ExtResource("4_730yh")]
+layout_mode = 2
+room = 5
+
+[node name="BuildCard3" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/HBoxContainer" instance=ExtResource("4_730yh")]
+layout_mode = 2
+room = 6
+
+[node name="Support" type="Control" parent="BuildOverlay/Container/TabsContainer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="BuildOverlay/Container/TabsContainer/Support"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxEmpty_woi11")
+vertical_scroll_mode = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="BuildOverlay/Container/TabsContainer/Support/ScrollContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 200
+
+[node name="BuildCard" parent="BuildOverlay/Container/TabsContainer/Support/ScrollContainer/HBoxContainer" instance=ExtResource("4_730yh")]
+layout_mode = 2
+room = 2
+
+[node name="TabBarContainer" type="Control" parent="BuildOverlay/Container"]
+layout_mode = 1
+anchor_top = 0.853
+anchor_right = 0.998
+anchor_bottom = 1.0
+offset_top = 0.0299683
+offset_right = 0.303955
+mouse_filter = 2
+script = SubResource("GDScript_2lohv")
+
+[node name="CenterContainer" type="CenterContainer" parent="BuildOverlay/Container/TabBarContainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.002
+anchor_bottom = 0.658
+offset_right = -0.300049
+offset_bottom = -0.0248489
+mouse_filter = 2
+
+[node name="TabBar" type="TabBar" parent="BuildOverlay/Container/TabBarContainer/CenterContainer"]
+clip_contents = true
+custom_minimum_size = Vector2(225, 0)
+layout_direction = 2
+layout_mode = 2
+mouse_default_cursor_shape = 2
+tab_alignment = 1
+tab_count = 2
+tab_0/title = "Production"
+tab_1/title = "Support"
+
+[node name="Main" parent="." instance=ExtResource("1_j7kjm")]
+
+[connection signal="pressed" from="Interface/MarginContainer/GridContainer/Right/BuildButton" to="BuildOverlay" method="_on_build_button_pressed"]
+[connection signal="tab_changed" from="BuildOverlay/Container/TabBarContainer/CenterContainer/TabBar" to="BuildOverlay" method="_on_tab_bar_tab_changed"]
