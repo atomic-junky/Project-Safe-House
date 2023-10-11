@@ -1,10 +1,12 @@
 HBoxContainer
+TextureRect
+Label
+VBoxContainer
+HFlowContainer
 TextureProgressBar
 ProgressBar
 CenterContainer
-VBoxContainer
 Node
-Label
 Button
 Sprite3D
 Container
@@ -28,5 +30,3 @@ Skeleton3D
 NavigationObstacle2D
 CharacterBody3D
 MeshInstance3D
-SubViewport
-ShaderGlobalsOverride

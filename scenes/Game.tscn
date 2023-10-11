@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://c1q7mld1s5oyp"]
+[gd_scene load_steps=22 format=3 uid="uid://c1q7mld1s5oyp"]
 
 [ext_resource type="Texture2D" uid="uid://jb10j5512eug" path="res://assets/buttons/map.png" id="1_7tg0y"]
 [ext_resource type="Script" path="res://scripts/Game.gd" id="1_8jcqd"]
@@ -14,6 +14,9 @@
 [ext_resource type="Texture2D" uid="uid://37agi533vmsm" path="res://assets/buttons/ProgressBars/Progress.png" id="7_m5fsr"]
 [ext_resource type="Texture2D" uid="uid://d2epuwtyew5ja" path="res://assets/buttons/ProgressBars/WaterPB.png" id="8_4q3pu"]
 [ext_resource type="Texture2D" uid="uid://bls70157lxo3m" path="res://assets/buttons/ProgressBars/FoodPB.png" id="9_xj0bp"]
+[ext_resource type="Texture2D" uid="uid://d1qu6i5lnpbcq" path="res://assets/buttons/CAPS_icon.png" id="11_s3fyp"]
+[ext_resource type="FontFile" uid="uid://ujrae3mp3ne8" path="res://assets/font/Oswald-Bold.ttf" id="12_d5fum"]
+[ext_resource type="Texture2D" uid="uid://ou3t0wgeq0fw" path="res://assets/buttons/Nuka_icon.png" id="13_ft80h"]
 
 [sub_resource type="GDScript" id="GDScript_iptw0"]
 script/source = "extends GridContainer
@@ -32,6 +35,12 @@ func _process(delta):
 func _gui_input(event):
 	get_viewport().set_input_as_handled()
 "
+
+[sub_resource type="LabelSettings" id="LabelSettings_5ub2i"]
+font = ExtResource("12_d5fum")
+font_size = 20
+font_color = Color(0.964844, 0.917969, 0.804688, 1)
+shadow_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_woi11"]
 content_margin_left = 125.0
@@ -102,6 +111,7 @@ columns = 3
 script = SubResource("GDScript_iptw0")
 
 [node name="Left" type="VFlowContainer" parent="Interface/MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
@@ -176,14 +186,54 @@ layout_mode = 2
 text = "-
 "
 
-[node name="Right" type="VFlowContainer" parent="Interface/MarginContainer/GridContainer"]
+[node name="Right" type="VBoxContainer" parent="Interface/MarginContainer/GridContainer"]
+custom_minimum_size = Vector2(200, 0)
+layout_direction = 2
 layout_mode = 2
 size_flags_vertical = 3
-mouse_filter = 2
 alignment = 2
 
-[node name="BuildButton" type="TextureButton" parent="Interface/MarginContainer/GridContainer/Right"]
+[node name="CapsContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Right"]
 layout_mode = 2
+alignment = 2
+
+[node name="CapsIcon" type="TextureRect" parent="Interface/MarginContainer/GridContainer/Right/CapsContainer"]
+layout_mode = 2
+texture = ExtResource("11_s3fyp")
+expand_mode = 2
+
+[node name="Label" type="Label" parent="Interface/MarginContainer/GridContainer/Right/CapsContainer"]
+layout_mode = 2
+text = "999 999"
+label_settings = SubResource("LabelSettings_5ub2i")
+
+[node name="NukaContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Right"]
+layout_mode = 2
+alignment = 2
+
+[node name="NukaIcon" type="TextureRect" parent="Interface/MarginContainer/GridContainer/Right/NukaContainer"]
+layout_mode = 2
+texture = ExtResource("13_ft80h")
+expand_mode = 3
+
+[node name="Label" type="Label" parent="Interface/MarginContainer/GridContainer/Right/NukaContainer"]
+layout_mode = 2
+text = "999"
+label_settings = SubResource("LabelSettings_5ub2i")
+
+[node name="Bottom" type="VBoxContainer" parent="Interface/MarginContainer/GridContainer/Right"]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 2
+
+[node name="BottomSubContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Right/Bottom"]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 2
+
+[node name="BuildButton" type="TextureButton" parent="Interface/MarginContainer/GridContainer/Right/Bottom/BottomSubContainer"]
+layout_mode = 2
+size_flags_vertical = 8
 texture_normal = ExtResource("2_i05tw")
 
 [node name="BuildOverlay" type="Control" parent="."]
@@ -324,6 +374,6 @@ tab_1/title = "Support"
 
 [connection signal="pressed" from="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer/AddDweller" to="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer" method="_on_add_dweller_pressed"]
 [connection signal="pressed" from="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer/RemoveDweller" to="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer" method="_on_remove_dweller_pressed"]
-[connection signal="pressed" from="Interface/MarginContainer/GridContainer/Right/BuildButton" to="BuildOverlay" method="_on_build_button_pressed"]
+[connection signal="pressed" from="Interface/MarginContainer/GridContainer/Right/Bottom/BottomSubContainer/BuildButton" to="BuildOverlay" method="_on_build_button_pressed"]
 [connection signal="tab_changed" from="BuildOverlay/Container/TabBarContainer/CenterContainer/TabBar" to="BuildOverlay" method="_on_tab_bar_tab_changed"]
 [connection signal="ready" from="Main" to="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer" method="_on_main_ready"]
