@@ -1,7 +1,6 @@
-res://assets/dwellers/Dweller.tscn
-res://assets/rooms/rooms.tres
-res://scripts/Dweller/Dweller.gd
 res://scenes/Game.tscn
+res://assets/rooms/rooms.tres
+res://assets/materials/Ground.tres
 res://scenes/Main.tscn
+res://assets/dwellers/Dweller.tscn
 res://assets/BuildCard.tscn
-res://assets/dwellers/Female_Body.tscn

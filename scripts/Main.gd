@@ -4,8 +4,14 @@ extends Node3D
 @onready var grid_map = $GridMap
 @onready var matrix = []
 
+# Dweller Container
+@onready var dweller_container = $DwellerContainer
+@onready var dc_on_hold = $DwellerContainer/OnHold
+@onready var dc_assigned = $DwellerContainer/Assigned
+@onready var dc_free = $DwellerContainer/Free
+
 const VaultRoom = preload("res://scripts/VaultRoom.gd")
-const FemaleDweller = preload("res://assets/dwellers/Dweller.tscn")
+const Dweller = preload("res://assets/dwellers/Dweller.tscn")
 
 # List of all rooms
 var rooms = []
@@ -27,7 +33,7 @@ func _ready() -> void:
 			matrix[y].append(weakref(new_room))
 		
 	# Base Rooms
-	matrix[0][0].get_ref().type = RoomList.NONE
+	matrix[0][0].get_ref().type = RoomList.OUTSIDE
 	matrix[0][1].get_ref().type = RoomList.VAULTDOOR
 	matrix[0][2] = matrix[0][1]
 	matrix[0][3].get_ref().type = RoomList.ELEVATOR
@@ -104,7 +110,7 @@ func update_rooms() -> void:
 			var next_room = matrix[y][z+1].get_ref() if z < max_width else null
 			
 			# Nothing
-			if room.type == RoomList.NONE:
+			if room.type == RoomList.NONE or room.type == RoomList.OUTSIDE:
 				continue
 			
 			# VaultDoor
@@ -250,4 +256,11 @@ func remove_all_unused_rooms() -> void:
 		if not room.id in id_list:
 			rooms.erase(room)
 			Logger.info("Room (" + room.id + ") removed from the container")
+
+
+func get_all_dwellers():
+	var dwellers = []
+	for sub_node in dweller_container.get_children():
+		dwellers.append_array(sub_node.get_children())
 	
+	return dwellers

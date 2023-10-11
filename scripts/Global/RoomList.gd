@@ -3,6 +3,7 @@ extends Node
 class_name rooms
 
 enum {
+	OUTSIDE = -2,
 	NONE = -1,
 	DIRT = 0,
 	ELEVATOR = 2,

@@ -7,6 +7,8 @@ var instructions = []
 var assigned_room = null # A reference to the room
 var is_traveling = false
 
+var is_waiting_outside = true
+
 var matrix_position:
 	get:
 		var grid_map = get_tree().current_scene.find_child("GridMap")
@@ -15,18 +17,17 @@ var matrix_position:
 		return Vector2i(z, y)
 
 func _ready():
-	position = Vector3(0, 47.095, -3)
+	position.y = 47.095
 	
 func _process(delta):
+	is_waiting_outside = true if assigned_room == null else false
+	
 	if instructions:
 		is_traveling = true
 		
 		var sub_target_position = target_positions[0] if target_positions else null
 		var instruction = instructions[0]
 		var vel = global_position.z * MAX_SPEED
-		
-		# print(instructions)
-		# print(target_positions)
 		
 		# Get direction
 		if sub_target_position:
@@ -60,6 +61,9 @@ func _process(delta):
 		target_positions.clear()
 		instructions.clear()
 		is_traveling = false
+
+func get_main_parent():
+	return get_parent().get_parent().get_parent()
 
 func _input(event):
 	if Global.interface_mode:
@@ -95,7 +99,7 @@ func target_position_calculator(pos):
 	path_to_room(z, y)
 
 func path_to_room(z, y):
-	var parent = get_parent_node_3d()
+	var parent = get_main_parent()
 	var matrix = parent.matrix
 	var max_height = parent.max_height
 	var target_room = matrix[max_height - y][z].get_ref()
@@ -145,7 +149,7 @@ func path_to_room(z, y):
 # => Fill an array of moving points (target_postions)
 # 
 func best_path(start, end, z_modifer):
-	var parent = get_parent_node_3d()
+	var parent = get_main_parent()
 	var grid_map = get_tree().current_scene.find_child("GridMap")
 	var matrix = parent.matrix
 	var max_height = parent.max_height
@@ -168,7 +172,7 @@ func best_path(start, end, z_modifer):
 			
 			var prev_point = astar.get_point_position(id-1) if astar.has_point(id-1) else null
 			match room.get_ref().type:
-				-1, 0, 1:
+				-2, -1, 0, 1:
 					continue
 				2:
 					astar.add_point(id, Vector2i(x, y), 1.0)
@@ -183,10 +187,18 @@ func best_path(start, end, z_modifer):
 					continue
 				_:
 					astar.add_point(id, Vector2i(x, y), 0.0)
+					print(prev_point)
 					# If prev point is a room
 					if prev_point and prev_point.y == y and prev_point.x+1 == x:
 						astar.connect_points(id-1, id)
 					continue
+	
+	if is_waiting_outside:
+		var new_parent = get_main_parent()
+		get_parent().remove_child(self)
+		new_parent.dc_assigned.add_child(self)
+		astar.add_point(0, Vector2i.ZERO, 0.0)
+		astar.connect_points(0, 1)
 	
 	var path = astar.get_id_path(start_index, end_index)
 	
@@ -246,6 +258,9 @@ func best_path(start, end, z_modifer):
 		print("[DEBUG] => Continue")
 	
 	print("[DEBUG] ========== End of Instructions ==========")
+	
+	if is_waiting_outside:
+		get_main_parent().dc_on_hold.update_positions()
 
 func get_prev_instruction():
 	return instructions[instructions.size()-1] if instructions.size() >= 1 else null

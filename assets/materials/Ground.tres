@@ -1,0 +1,15 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://d1duaskb4fnbr"]
+
+[ext_resource type="Texture2D" uid="uid://bdkprfhl0wb8o" path="res://assets/op_stone_0.jpg-CAB_e3ebb5231c16a06e77692676c83f4c73-5042211468494414472.png" id="1_jo6p0"]
+
+[resource]
+resource_name = "Material"
+transparency = 1
+cull_mode = 2
+depth_draw_mode = 2
+no_depth_test = true
+shading_mode = 0
+specular_mode = 2
+albedo_texture = ExtResource("1_jo6p0")
+texture_filter = 1
+texture_repeat = false
