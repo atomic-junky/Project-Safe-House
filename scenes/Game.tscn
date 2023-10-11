@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://c1q7mld1s5oyp"]
+[gd_scene load_steps=18 format=3 uid="uid://c1q7mld1s5oyp"]
 
 [ext_resource type="Texture2D" uid="uid://jb10j5512eug" path="res://assets/buttons/map.png" id="1_7tg0y"]
 [ext_resource type="Script" path="res://scripts/Game.gd" id="1_8jcqd"]
@@ -8,8 +8,12 @@
 [ext_resource type="PackedScene" uid="uid://cri5e323f124r" path="res://assets/BuildCard.tscn" id="4_730yh"]
 [ext_resource type="Script" path="res://scripts/BuildOverlay.gd" id="4_wk7e4"]
 [ext_resource type="Script" path="res://scripts/DwellerCountContainer.gd" id="6_qfpgm"]
+[ext_resource type="Texture2D" uid="uid://b2ejxjnuy3410" path="res://assets/buttons/ProgressBars/EnergyPB.png" id="6_yup7x"]
 [ext_resource type="FontFile" uid="uid://dhql20rabf7qu" path="res://assets/font/Oswald-Regular.ttf" id="7_euomt"]
 [ext_resource type="FontFile" uid="uid://b0t4p6p8hij5p" path="res://assets/font/Oswald-Medium.ttf" id="7_f8rk6"]
+[ext_resource type="Texture2D" uid="uid://37agi533vmsm" path="res://assets/buttons/ProgressBars/Progress.png" id="7_m5fsr"]
+[ext_resource type="Texture2D" uid="uid://d2epuwtyew5ja" path="res://assets/buttons/ProgressBars/WaterPB.png" id="8_4q3pu"]
+[ext_resource type="Texture2D" uid="uid://bls70157lxo3m" path="res://assets/buttons/ProgressBars/FoodPB.png" id="9_xj0bp"]
 
 [sub_resource type="GDScript" id="GDScript_iptw0"]
 script/source = "extends GridContainer
@@ -113,24 +117,61 @@ layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 
-[node name="CenterContainer" type="CenterContainer" parent="Interface/MarginContainer/GridContainer/Middle"]
+[node name="MiddleSubContainer" type="VBoxContainer" parent="Interface/MarginContainer/GridContainer/Middle"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 
-[node name="DwellerCountContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Middle/CenterContainer"]
+[node name="TopVaultStats" type="CenterContainer" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="ProgressBarContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/TopVaultStats"]
+layout_mode = 2
+theme_override_constants/separation = 15
+
+[node name="EnergyProgressBar" type="TextureProgressBar" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/TopVaultStats/ProgressBarContainer"]
+custom_minimum_size = Vector2(150, 30)
+layout_mode = 2
+value = 50.0
+nine_patch_stretch = true
+texture_over = ExtResource("6_yup7x")
+texture_progress = ExtResource("7_m5fsr")
+
+[node name="WaterProgressBar" type="TextureProgressBar" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/TopVaultStats/ProgressBarContainer"]
+custom_minimum_size = Vector2(150, 30)
+layout_mode = 2
+value = 50.0
+nine_patch_stretch = true
+texture_over = ExtResource("8_4q3pu")
+texture_progress = ExtResource("7_m5fsr")
+
+[node name="FoodProgressBar" type="TextureProgressBar" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/TopVaultStats/ProgressBarContainer"]
+custom_minimum_size = Vector2(150, 30)
+layout_mode = 2
+value = 50.0
+nine_patch_stretch = true
+texture_over = ExtResource("9_xj0bp")
+texture_progress = ExtResource("7_m5fsr")
+
+[node name="CenterContainer" type="CenterContainer" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="DwellerCountContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer"]
 layout_mode = 2
 script = ExtResource("6_qfpgm")
 
-[node name="AddDweller" type="Button" parent="Interface/MarginContainer/GridContainer/Middle/CenterContainer/DwellerCountContainer"]
+[node name="AddDweller" type="Button" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer"]
 layout_mode = 2
 text = "+"
 
-[node name="DwellerCount" type="Label" parent="Interface/MarginContainer/GridContainer/Middle/CenterContainer/DwellerCountContainer"]
+[node name="DwellerCount" type="Label" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer"]
 layout_mode = 2
 text = "0 dwellers"
 
-[node name="RemoveDweller" type="Button" parent="Interface/MarginContainer/GridContainer/Middle/CenterContainer/DwellerCountContainer"]
+[node name="RemoveDweller" type="Button" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer"]
 layout_mode = 2
 text = "-
 "
@@ -281,8 +322,8 @@ tab_1/title = "Support"
 
 [node name="Main" parent="." instance=ExtResource("1_j7kjm")]
 
-[connection signal="pressed" from="Interface/MarginContainer/GridContainer/Middle/CenterContainer/DwellerCountContainer/AddDweller" to="Interface/MarginContainer/GridContainer/Middle/CenterContainer/DwellerCountContainer" method="_on_add_dweller_pressed"]
-[connection signal="pressed" from="Interface/MarginContainer/GridContainer/Middle/CenterContainer/DwellerCountContainer/RemoveDweller" to="Interface/MarginContainer/GridContainer/Middle/CenterContainer/DwellerCountContainer" method="_on_remove_dweller_pressed"]
+[connection signal="pressed" from="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer/AddDweller" to="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer" method="_on_add_dweller_pressed"]
+[connection signal="pressed" from="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer/RemoveDweller" to="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer" method="_on_remove_dweller_pressed"]
 [connection signal="pressed" from="Interface/MarginContainer/GridContainer/Right/BuildButton" to="BuildOverlay" method="_on_build_button_pressed"]
 [connection signal="tab_changed" from="BuildOverlay/Container/TabBarContainer/CenterContainer/TabBar" to="BuildOverlay" method="_on_tab_bar_tab_changed"]
-[connection signal="ready" from="Main" to="Interface/MarginContainer/GridContainer/Middle/CenterContainer/DwellerCountContainer" method="_on_main_ready"]
+[connection signal="ready" from="Main" to="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer" method="_on_main_ready"]

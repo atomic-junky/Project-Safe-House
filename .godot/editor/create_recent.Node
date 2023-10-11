@@ -1,8 +1,11 @@
+HBoxContainer
+TextureProgressBar
+ProgressBar
+CenterContainer
+VBoxContainer
 Node
 Label
-HBoxContainer
 Button
-CenterContainer
 Sprite3D
 Container
 RichTextLabel
@@ -27,6 +30,3 @@ CharacterBody3D
 MeshInstance3D
 SubViewport
 ShaderGlobalsOverride
-TextureButton
-CollisionShape2D
-Area2D
