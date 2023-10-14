@@ -364,3 +364,5 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 *.lnk
+
+.godot/
