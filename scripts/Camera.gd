@@ -12,6 +12,8 @@ const ZOOM_INCREMENT: float = 0.05
 const ZOOM_RATE: float = 8.0
 const MIN_HORIZONTAL_SCROLL: float = 6.0
 const MAX_HORIZONTAL_SCROLL: float = -18.5
+const MIN_VERTICAL_SCROLL: float = 50
+const MAX_VERTICAL_SCROLL: float = 0
 
 var _target_zoom: float = 0.01
 var selected_body = null
@@ -87,8 +89,9 @@ func screen_point_to_ray(to = null, collide_with_areas: bool = true, collide_wit
 
 
 func _physics_process(delta):
-	var zoom_ratio = 1-((((zoom() - 0) * 1) / (MAX_ZOOM - 0)))+1 # It work a bit
+	var zoom_ratio = 1-((((zoom() - 0) * 1) / (MAX_ZOOM - 0)))+1 # It work a bit (no)
 	position.z = min(MIN_HORIZONTAL_SCROLL*zoom_ratio, max(MAX_HORIZONTAL_SCROLL*zoom_ratio, position.z))
+	position.y = min(MIN_VERTICAL_SCROLL*zoom_ratio, max(MAX_VERTICAL_SCROLL*zoom_ratio, position.y))
 	
 	var zoom = lerp(
 		zoom(),
