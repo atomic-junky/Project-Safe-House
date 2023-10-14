@@ -1,7 +1,0 @@
-res://scenes/Game.tscn
-res://assets/rooms/rooms.tres
-res://assets/materials/Ground.tres
-res://scenes/Main.tscn
-res://assets/dwellers/Dweller.tscn
-res://assets/BuildCard.tscn
-res://scripts/Camera.gd
