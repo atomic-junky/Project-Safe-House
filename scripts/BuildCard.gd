@@ -1,7 +1,7 @@
 extends Control
 
 
-enum room_list { ELEVATOR = 2, POWER_GENERATOR = 4, WATER_TREATMENT = 5, DINER = 6 }
+enum room_list { ELEVATOR = 2, POWER_GENERATOR = 4, WATER_TREATMENT = 5, DINER = 6, LIVING_ROOM = 7 }
 @export var room: room_list
 @onready var main_game = get_tree().current_scene.find_child("Main")
 var mouse_hover: bool = false
@@ -22,6 +22,10 @@ func _ready():
 		room_list.DINER:
 			$Label.text = "Diner"
 			texture = card_texture("E")
+		room_list.LIVING_ROOM:
+			$Label.text = "Living Room"
+			texture = card_texture("C")
+			
 	
 	if texture:
 		$Card.texture_normal = texture

@@ -333,15 +333,19 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 200
 
-[node name="BuildCard" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/HBoxContainer" instance=ExtResource("4_730yh")]
+[node name="LivingRoomBuildCard" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/HBoxContainer" instance=ExtResource("4_730yh")]
+layout_mode = 2
+room = 7
+
+[node name="PowerGeneratorBuildCard" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/HBoxContainer" instance=ExtResource("4_730yh")]
 layout_mode = 2
 room = 4
 
-[node name="BuildCard2" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/HBoxContainer" instance=ExtResource("4_730yh")]
+[node name="WaterTreatmentBuildCard" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/HBoxContainer" instance=ExtResource("4_730yh")]
 layout_mode = 2
 room = 5
 
-[node name="BuildCard3" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/HBoxContainer" instance=ExtResource("4_730yh")]
+[node name="DinerBuildCard" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/HBoxContainer" instance=ExtResource("4_730yh")]
 layout_mode = 2
 room = 6
 
@@ -370,9 +374,8 @@ layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 200
 
-[node name="BuildCard" parent="BuildOverlay/Container/TabsContainer/Support/ScrollContainer/HBoxContainer" instance=ExtResource("4_730yh")]
+[node name="ElevatorBuildCard" parent="BuildOverlay/Container/TabsContainer/Support/ScrollContainer/HBoxContainer" instance=ExtResource("4_730yh")]
 layout_mode = 2
-room = 2
 
 [node name="TabBarContainer" type="Control" parent="BuildOverlay/Container"]
 layout_mode = 1
