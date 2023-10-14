@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://c1q7mld1s5oyp"]
+[gd_scene load_steps=24 format=3 uid="uid://c1q7mld1s5oyp"]
 
 [ext_resource type="Texture2D" uid="uid://jb10j5512eug" path="res://assets/buttons/map.png" id="1_7tg0y"]
 [ext_resource type="Script" path="res://scripts/Game.gd" id="1_8jcqd"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://scripts/FPSLabel.gd" id="3_2eupc"]
 [ext_resource type="PackedScene" uid="uid://cri5e323f124r" path="res://assets/BuildCard.tscn" id="4_730yh"]
 [ext_resource type="Script" path="res://scripts/BuildOverlay.gd" id="4_wk7e4"]
+[ext_resource type="Texture2D" uid="uid://dptv4jqgsnw8b" path="res://assets/buttons/Vault_icon.png" id="5_mkp1d"]
 [ext_resource type="Script" path="res://scripts/DwellerCountContainer.gd" id="6_qfpgm"]
 [ext_resource type="Texture2D" uid="uid://b2ejxjnuy3410" path="res://assets/buttons/ProgressBars/EnergyPB.png" id="6_yup7x"]
 [ext_resource type="FontFile" uid="uid://dhql20rabf7qu" path="res://assets/font/Oswald-Regular.ttf" id="7_euomt"]
@@ -36,6 +37,11 @@ func _gui_input(event):
 	get_viewport().set_input_as_handled()
 "
 
+[sub_resource type="LabelSettings" id="LabelSettings_xsh62"]
+font = ExtResource("12_d5fum")
+font_size = 24
+font_color = Color(0, 0, 0, 1)
+
 [sub_resource type="LabelSettings" id="LabelSettings_5ub2i"]
 font = ExtResource("12_d5fum")
 font_size = 20
@@ -64,6 +70,7 @@ func _process(delta):
 script = ExtResource("1_8jcqd")
 
 [node name="FPSCounter" type="RichTextLabel" parent="."]
+visible = false
 offset_left = 5.0
 offset_right = 246.0
 offset_bottom = 22.0
@@ -110,17 +117,42 @@ mouse_filter = 2
 columns = 3
 script = SubResource("GDScript_iptw0")
 
-[node name="Left" type="VFlowContainer" parent="Interface/MarginContainer/GridContainer"]
+[node name="Left" type="VBoxContainer" parent="Interface/MarginContainer/GridContainer"]
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
-size_flags_vertical = 3
-mouse_filter = 2
 alignment = 2
 
-[node name="MapButton" type="TextureButton" parent="Interface/MarginContainer/GridContainer/Left"]
+[node name="VaultContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Left"]
 layout_mode = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="Interface/MarginContainer/GridContainer/Left/VaultContainer"]
+scale = Vector2(0.152439, 0.152439)
+texture = ExtResource("5_mkp1d")
+centered = false
+
+[node name="Label" type="Label" parent="Interface/MarginContainer/GridContainer/Left/VaultContainer"]
+custom_minimum_size = Vector2(70, 70)
+layout_mode = 2
+text = "999"
+label_settings = SubResource("LabelSettings_xsh62")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Bottom" type="VBoxContainer" parent="Interface/MarginContainer/GridContainer/Left"]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 2
+
+[node name="BottomSubContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Left/Bottom"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MapButton" type="TextureButton" parent="Interface/MarginContainer/GridContainer/Left/Bottom/BottomSubContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+mouse_default_cursor_shape = 2
 texture_normal = ExtResource("1_7tg0y")
-stretch_mode = 0
+stretch_mode = 4
 
 [node name="Middle" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer"]
 layout_mode = 2
@@ -234,9 +266,11 @@ alignment = 2
 [node name="BuildButton" type="TextureButton" parent="Interface/MarginContainer/GridContainer/Right/Bottom/BottomSubContainer"]
 layout_mode = 2
 size_flags_vertical = 8
+mouse_default_cursor_shape = 2
 texture_normal = ExtResource("2_i05tw")
 
 [node name="BuildOverlay" type="Control" parent="."]
+visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
