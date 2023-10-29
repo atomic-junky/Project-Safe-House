@@ -376,6 +376,7 @@ theme_override_constants/separation = 200
 
 [node name="ElevatorBuildCard" parent="BuildOverlay/Container/TabsContainer/Support/ScrollContainer/HBoxContainer" instance=ExtResource("4_730yh")]
 layout_mode = 2
+room = 2
 
 [node name="TabBarContainer" type="Control" parent="BuildOverlay/Container"]
 layout_mode = 1

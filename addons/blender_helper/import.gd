@@ -1,4 +1,7 @@
 @tool
+
+class_name BHImport
+
 extends EditorImportPlugin
 
 var paths := preload("./paths.gd")
@@ -50,7 +53,7 @@ func remove_file(path: String) -> int:
 	return dir.remove(path)
 
 
-func _import(source_file: String, save_path: String, options: Dictionary, platform_variants: Array, gen_files: Array) -> int:
+func _import(source_file: String, save_path: String, options: Dictionary, platform_variants: Array, gen_files: Array) -> Error:
 	#I think source_file should be named source_path because it is not a File but a path (String)
 	var global_file = ProjectSettings.globalize_path(source_file)
 	var res := convert_resource(source_file, global_file, options)

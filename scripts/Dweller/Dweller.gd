@@ -78,7 +78,7 @@ func _input(event):
 		
 		var ray = camera.screen_point_to_ray()
 		if ray.has("collider") and ray.collider == $Body:
-			print("collide")
+			Logger.debug("collide")
 		
 		var grid_map = get_tree().current_scene.find_child("GridMap")
 		var parent = get_parent_node_3d()
@@ -187,7 +187,6 @@ func best_path(start, end, z_modifer):
 					continue
 				_:
 					astar.add_point(id, Vector2i(x, y), 0.0)
-					print(prev_point)
 					# If prev point is a room
 					if prev_point and prev_point.y == y and prev_point.x+1 == x:
 						astar.connect_points(id-1, id)
@@ -219,33 +218,33 @@ func best_path(start, end, z_modifer):
 		if current_room.type == RoomList.ELEVATOR:
 			if prev_room and prev_position.x == point_position.x and prev_position.y != point_position.y:
 				instructions.append(Instructions.EXIT_ELEVATOR)
-				print("[DEBUG] Exit elevator (1)")
+				Logger.debug("Exit elevator (1)")
 			elif not next_room:
 				instructions.append(Instructions.EXIT_ELEVATOR)
-				print("[DEBUG] Exit elevator (2)")
+				Logger.debug("Exit elevator (2)")
 			elif next_room and next_room.type == RoomList.ELEVATOR:
 				if next_position.x == point_position.x and next_position.y != point_position.y:
 					instructions.append(Instructions.ENTER_ELEVATOR)
-					print("[DEBUG] Enter elevator (1)")
+					Logger.debug("Enter elevator (1)")
 			elif not prev_room and next_room and next_room.type == RoomList.ELEVATOR:
 				instructions.append(Instructions.ENTER_ELEVATOR)
-				print("[DEBUG] Enter elevator (2)")
+				Logger.debug("Enter elevator (2)")
 				
 		
 		if current_room.type == RoomList.ELEVATOR:
 			if next_room and next_room.type == RoomList.ELEVATOR:
 				if (next_room.type == RoomList.ELEVATOR and next_position.x != point_position.x and next_position.y == point_position.y):
 					instructions.append(Instructions.MOVE_ON_FLOOR)
-					print("[DEBUG] Move on floor (1)")
+					Logger.debug("Move on floor (1)")
 				elif next_position.y != point_position.y:
 					instructions.append(Instructions.MOVE_ON_ELEVATOR)
-					print("[DEBUG] Move on elevator")
+					Logger.debug("Move on elevator")
 			else:
 				instructions.append(Instructions.MOVE_ON_FLOOR)
-				print("[DEBUG] Move on floor (2)")
+				Logger.debug("Move on floor (2)")
 		elif next_room and next_position.y == next_position.y:
 			instructions.append(Instructions.MOVE_ON_FLOOR)
-			print("[DEBUG] Move on floor (3)")
+			Logger.debug("Move on floor (3)")
 		
 		# Append the target position for each time
 		if first_index_condition:
@@ -255,9 +254,9 @@ func best_path(start, end, z_modifer):
 			var y = (max_height - point_position.y) * grid_map.cell_size.y - 0.905
 			target_positions.append(Vector3(0, y, z))
 		
-		print("[DEBUG] => Continue")
+		Logger.debug("Continue")
 	
-	print("[DEBUG] ========== End of Instructions ==========")
+	Logger.debug("========== End of Instructions ==========")
 	
 	if is_waiting_outside:
 		get_main_parent().dc_on_hold.update_positions()

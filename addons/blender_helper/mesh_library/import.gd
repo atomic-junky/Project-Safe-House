@@ -1,5 +1,5 @@
 @tool
-extends "../import.gd"
+extends BHImport
 
 func _get_resource_type() -> String:
 	return "MeshLibrary"
