@@ -216,7 +216,7 @@ func best_path(start, end, z_modifer):
 		var prev_instruction = get_prev_instruction()
 		
 		if current_room.type == RoomList.ELEVATOR:
-			if prev_room and prev_position.x == point_position.x and prev_position.y != point_position.y:
+			if prev_room and prev_position.x == point_position.x and prev_position.y != point_position.y and next_room and next_position.y == point_position.y:
 				instructions.append(Instructions.EXIT_ELEVATOR)
 				Logger.debug("Exit elevator (1)")
 			elif not next_room:
