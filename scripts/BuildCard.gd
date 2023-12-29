@@ -1,8 +1,7 @@
 extends Control
 
 
-enum room_list { ELEVATOR = 2, POWER_GENERATOR = 4, WATER_TREATMENT = 5, DINER = 6, LIVING_ROOM = 7 }
-@export var room: room_list
+@export var room: int # Type: RoomList
 @onready var main_game = get_tree().current_scene.find_child("Main")
 var mouse_hover: bool = false
 
@@ -10,21 +9,30 @@ var mouse_hover: bool = false
 func _ready():
 	var texture
 	match room:
-		room_list.ELEVATOR:
+		RoomList.ELEVATOR:
 			$Label.text = "Elevator"
 			texture = card_texture()
-		room_list.POWER_GENERATOR:
-			$Label.text = "Power Generator"
-			texture = card_texture("S")
-		room_list.WATER_TREATMENT:
-			$Label.text = "Water Treatment"
-			texture = card_texture("P")
-		room_list.DINER:
-			$Label.text = "Diner"
-			texture = card_texture("E")
-		room_list.LIVING_ROOM:
+		RoomList.LIVING_ROOM:
 			$Label.text = "Living Room"
 			texture = card_texture("C")
+		RoomList.POWER_GENERATOR:
+			$Label.text = "Power Generator"
+			texture = card_texture("S")
+		RoomList.DINER:
+			$Label.text = "Diner"
+			texture = card_texture("E")
+		RoomList.WATER_TREATMENT:
+			$Label.text = "Water Treatment"
+			texture = card_texture("P")
+		RoomList.STORAGE_ROOM:
+			$Label.text = "Storage Room"
+			texture = card_texture("E")
+		RoomList.MEDBAY:
+			$Label.text = "Medbay"
+			texture = card_texture("I")
+		RoomList.SCIENCE_LAB:
+			$Label.text = "Science Lab"
+			texture = card_texture("I")
 			
 	
 	if texture:

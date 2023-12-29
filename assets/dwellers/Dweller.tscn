@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://ci1ve6somicw7"]
 
 [ext_resource type="Script" path="res://scripts/Dweller/Dweller.gd" id="1_vjmqo"]
-[ext_resource type="PackedScene" uid="uid://2dntu6ajnkfq" path="res://assets/dwellers/Female_Body.tscn" id="2_j5fs1"]
+[ext_resource type="PackedScene" uid="uid://2dntu6ajnkfq" path="res://assets/dwellers/Body.tscn" id="2_mo2ei"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_28lvu"]
 size = Vector3(1.336, 3.295, 0.175247)
@@ -13,7 +13,7 @@ script = ExtResource("1_vjmqo")
 [node name="Body" type="AnimatableBody3D" parent="."]
 sync_to_physics = false
 
-[node name="Female Body" parent="Body" instance=ExtResource("2_j5fs1")]
+[node name="Body" parent="Body" instance=ExtResource("2_mo2ei")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Body"]
 transform = Transform3D(1, 0, -2.4869e-14, 0, 1, 0, 2.4869e-14, 0, 1, 0, 1.65624, 0)

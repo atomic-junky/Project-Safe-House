@@ -65,6 +65,8 @@ func _input(event) -> void:
 				
 				if room.type != RoomList.DIRT:
 					return
+					
+				print(Global.build_room)
 				
 				var prev_room = matrix[y][z-1].get_ref() if z > 0 else null
 				var next_room = matrix[y][z+1].get_ref() if z < max_width else null
@@ -139,7 +141,7 @@ func update_rooms() -> void:
 				
 			
 			# Room
-			if room.type >= RoomList.POWER_GENERATOR:
+			if room.type >= RoomList.LIVING_ROOM:
 				# [] [] []
 				if (not prev_room or prev_room.id != room.id) and (z+2 < max_width and matrix[y][z+2].get_ref().id == room.id):
 					grid_map.set_cell_item(Vector3i(
@@ -235,14 +237,14 @@ func new_room(type) -> WeakRef:
 	return weakref(_new_room)
 	
 func get_room_mesh(type, size) -> int:
-	if size == 1:
-		match type:
-			RoomList.POWER_GENERATOR:
-				return 3
-			RoomList.WATER_TREATMENT:
-				return 3
-			RoomList.DINER:
-				return 3
+	#if size == 1:
+		#match type:
+			#RoomList.POWER_GENERATOR:
+				#return 3
+			#RoomList.WATER_TREATMENT:
+				#return 3
+			#RoomList.DINER:
+				#return 3
 	return 3
 	
 func remove_all_unused_rooms() -> void:

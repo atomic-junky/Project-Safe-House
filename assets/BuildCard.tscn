@@ -10,26 +10,24 @@ font_size = 15
 shadow_color = Color(0, 0, 0, 1)
 
 [node name="BuildCard" type="Control"]
+custom_minimum_size = Vector2(178, 246)
 layout_mode = 3
-anchor_left = -0.077
-anchor_top = -0.19
-anchor_right = 0.077
-anchor_bottom = 0.19
-offset_left = 89.704
-offset_top = 123.12
-offset_right = -87.704
-offset_bottom = -123.12
+anchor_right = 0.155
+anchor_bottom = 0.38
+offset_right = -0.559998
+offset_bottom = -0.240021
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
 mouse_default_cursor_shape = 2
 script = ExtResource("1_07hj3")
 
 [node name="Card" type="TextureButton" parent="."]
-layout_mode = 0
-offset_left = -89.0
-offset_top = -123.0
-offset_right = 89.0
-offset_bottom = 123.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 mouse_default_cursor_shape = 2
 texture_normal = ExtResource("2_uimop")
 ignore_texture_size = true
@@ -38,11 +36,9 @@ stretch_mode = 0
 [node name="Label" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = -1
-anchor_bottom = 0.26
-offset_left = -89.0
-offset_top = -123.0
-offset_right = 89.0
-offset_bottom = -91.0
+anchor_right = 1.0
+anchor_bottom = 0.126
+offset_bottom = 0.00399971
 text = "Name"
 label_settings = SubResource("LabelSettings_ieuor")
 horizontal_alignment = 1

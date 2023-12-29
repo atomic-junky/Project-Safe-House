@@ -37,20 +37,18 @@ func _gui_input(event):
 	get_viewport().set_input_as_handled()
 "
 
-[sub_resource type="LabelSettings" id="LabelSettings_xsh62"]
-font = ExtResource("12_d5fum")
-font_size = 24
-font_color = Color(0, 0, 0, 1)
-
 [sub_resource type="LabelSettings" id="LabelSettings_5ub2i"]
 font = ExtResource("12_d5fum")
 font_size = 20
 font_color = Color(0.964844, 0.917969, 0.804688, 1)
 shadow_color = Color(0, 0, 0, 1)
 
+[sub_resource type="LabelSettings" id="LabelSettings_xsh62"]
+font = ExtResource("12_d5fum")
+font_size = 24
+font_color = Color(0, 0, 0, 1)
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_woi11"]
-content_margin_left = 125.0
-content_margin_top = 152.0
 
 [sub_resource type="GDScript" id="GDScript_2lohv"]
 script/source = "extends Control
@@ -121,6 +119,24 @@ script = SubResource("GDScript_iptw0")
 custom_minimum_size = Vector2(200, 0)
 layout_mode = 2
 alignment = 2
+
+[node name="DateContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Left"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Day" type="Label" parent="Interface/MarginContainer/GridContainer/Left/DateContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+text = "Oct. 23 2077"
+label_settings = SubResource("LabelSettings_5ub2i")
+vertical_alignment = 1
+
+[node name="Hour" type="Label" parent="Interface/MarginContainer/GridContainer/Left/DateContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+text = "00:03"
+label_settings = SubResource("LabelSettings_5ub2i")
+vertical_alignment = 1
 
 [node name="VaultContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Left"]
 layout_mode = 2
@@ -324,30 +340,50 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_woi11")
+mouse_filter = 0
 vertical_scroll_mode = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_right = 50
+
+[node name="HBoxContainer" type="HBoxContainer" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 6
 mouse_filter = 2
-theme_override_constants/separation = 200
+theme_override_constants/separation = 25
 
-[node name="LivingRoomBuildCard" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/HBoxContainer" instance=ExtResource("4_730yh")]
+[node name="LivingRoomBuildCard" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
 layout_mode = 2
-room = 7
+room = 3
 
-[node name="PowerGeneratorBuildCard" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/HBoxContainer" instance=ExtResource("4_730yh")]
+[node name="PowerGeneratorBuildCard" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
 layout_mode = 2
 room = 4
 
-[node name="WaterTreatmentBuildCard" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/HBoxContainer" instance=ExtResource("4_730yh")]
+[node name="DinerBuildCard" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
 layout_mode = 2
 room = 5
 
-[node name="DinerBuildCard" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/HBoxContainer" instance=ExtResource("4_730yh")]
+[node name="WaterTreatmentBuildCard" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
 layout_mode = 2
 room = 6
+
+[node name="StorageRoomBuildCard" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
+layout_mode = 2
+room = 7
+
+[node name="MedbayBuildCard" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
+layout_mode = 2
+room = 8
+
+[node name="ScienceLabBuildCard" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
+layout_mode = 2
+room = 9
 
 [node name="Support" type="Control" parent="BuildOverlay/Container/TabsContainer"]
 layout_mode = 1
@@ -369,12 +405,21 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_woi11")
 vertical_scroll_mode = 0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="BuildOverlay/Container/TabsContainer/Support/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="BuildOverlay/Container/TabsContainer/Support/ScrollContainer"]
 layout_mode = 2
-mouse_filter = 2
-theme_override_constants/separation = 200
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_right = 50
 
-[node name="ElevatorBuildCard" parent="BuildOverlay/Container/TabsContainer/Support/ScrollContainer/HBoxContainer" instance=ExtResource("4_730yh")]
+[node name="HBoxContainer" type="HBoxContainer" parent="BuildOverlay/Container/TabsContainer/Support/ScrollContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 6
+mouse_filter = 2
+theme_override_constants/separation = 25
+
+[node name="ElevatorBuildCard" parent="BuildOverlay/Container/TabsContainer/Support/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
 layout_mode = 2
 room = 2
 
@@ -403,8 +448,8 @@ custom_minimum_size = Vector2(225, 0)
 layout_direction = 2
 layout_mode = 2
 mouse_default_cursor_shape = 2
-tab_alignment = 1
 tab_count = 2
+tab_alignment = 1
 tab_0/title = "Production"
 tab_1/title = "Support"
 

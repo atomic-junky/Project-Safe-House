@@ -104,7 +104,7 @@ func path_to_room(z, y):
 	var max_height = parent.max_height
 	var target_room = matrix[max_height - y][z].get_ref()
 	
-	if target_room.type < RoomList.ELEVATOR:
+	if target_room.type < RoomList.VAULTDOOR:
 		return
 	assigned_room = matrix[max_height - y][z]
 		
@@ -153,8 +153,6 @@ func best_path(start, end, z_modifer):
 	var grid_map = get_tree().current_scene.find_child("GridMap")
 	var matrix = parent.matrix
 	var max_height = parent.max_height
-	# Copy the matrix in a new array
-	# -1 => dirt; 0 => room; 1 => elevator
 	
 	var astar = AStar2D.new()
 	var start_index = 0
@@ -171,26 +169,26 @@ func best_path(start, end, z_modifer):
 			if Vector2i(x, y) == end: end_index = id
 			
 			var prev_point = astar.get_point_position(id-1) if astar.has_point(id-1) else null
-			match room.get_ref().type:
-				-2, -1, 0, 1:
-					continue
-				2:
-					astar.add_point(id, Vector2i(x, y), 1.0)
-					# If prev point is a room
-					if prev_point and prev_point.y == y and prev_point.x+1 == x:
-						astar.connect_points(id-1, id)
-						
-					var top_room = matrix[y-1][x].get_ref() if y > 0 else null
-					# If elevator on top
-					if top_room and top_room.type == RoomList.ELEVATOR:
-						astar.connect_points(vector_to_id(Vector2i(x, y-1)), id)
-					continue
-				_:
-					astar.add_point(id, Vector2i(x, y), 0.0)
-					# If prev point is a room
-					if prev_point and prev_point.y == y and prev_point.x+1 == x:
-						astar.connect_points(id-1, id)
-					continue
+			var room_type = room.get_ref().type
+			if room_type <= RoomList.DIRT:
+				continue
+			elif room_type == RoomList.ELEVATOR:
+				astar.add_point(id, Vector2i(x, y), 1.0)
+				# If prev point is a room
+				if prev_point and prev_point.y == y and prev_point.x+1 == x:
+					astar.connect_points(id-1, id)
+					
+				var top_room = matrix[y-1][x].get_ref() if y > 0 else null
+				# If elevator on top
+				if top_room and top_room.type == RoomList.ELEVATOR:
+					astar.connect_points(vector_to_id(Vector2i(x, y-1)), id)
+				continue
+			else:
+				astar.add_point(id, Vector2i(x, y), 0.0)
+				# If prev point is a room
+				if prev_point and prev_point.y == y and prev_point.x+1 == x:
+					astar.connect_points(id-1, id)
+				continue
 	
 	if is_waiting_outside:
 		var new_parent = get_main_parent()

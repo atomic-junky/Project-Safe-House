@@ -23,5 +23,7 @@ func _on_build_button_pressed():
 	
 func _gui_input(event):
 	if event is InputEventMouseButton and event.is_pressed():
+		if event.button_index in [MOUSE_BUTTON_WHEEL_DOWN, MOUSE_BUTTON_WHEEL_UP]:
+			return
 		hide()
 		Global.interface_mode = false
