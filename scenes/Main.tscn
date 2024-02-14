@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://c8hen6scm1vtq"]
+[gd_scene load_steps=15 format=3 uid="uid://c8hen6scm1vtq"]
 
 [ext_resource type="Script" path="res://scripts/Main.gd" id="1_rn6mm"]
 [ext_resource type="MeshLibrary" uid="uid://dr63vbbud52st" path="res://assets/rooms/rooms.tres" id="3_4wbmc"]
@@ -7,7 +7,6 @@
 [ext_resource type="PackedScene" uid="uid://ci1ve6somicw7" path="res://assets/dwellers/Dweller.tscn" id="5_gms01"]
 [ext_resource type="Script" path="res://scripts/OnHold.gd" id="6_7b20j"]
 [ext_resource type="Texture2D" uid="uid://bcmht1dwtrrhx" path="res://assets/Garterbeltb.png" id="7_ewlew"]
-[ext_resource type="PackedScene" uid="uid://b8a4p7ldhfkdg" path="res://assets/wasteland/groud.blend" id="9_makm8"]
 [ext_resource type="Material" uid="uid://d1duaskb4fnbr" path="res://assets/materials/Ground.tres" id="10_xbyu0"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hwkrt"]
@@ -163,9 +162,6 @@ ignore_occlusion_culling = true
 gi_mode = 0
 mesh = SubResource("ArrayMesh_15ej2")
 skeleton = NodePath("")
-
-[node name="groud" parent="." instance=ExtResource("9_makm8")]
-visible = false
 
 [node name="Plane_006" type="MeshInstance3D" parent="."]
 transform = Transform3D(0, 1, -5.96046e-08, -5.96046e-08, 0, 1, 1, -5.96046e-08, 0, 1, -1, 1.5)
