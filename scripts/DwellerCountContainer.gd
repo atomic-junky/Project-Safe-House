@@ -4,7 +4,7 @@ extends HBoxContainer
 const Dweller = preload("res://assets/dwellers/Dweller.tscn")
 const dweller_type = preload("res://scripts/Dweller/Dweller.gd")
 
-@onready var main = $"../../../../../../../Main"
+@onready var main = $"../../../../../../../Shelter"
 @onready var dweller_count = $DwellerCount
 
 

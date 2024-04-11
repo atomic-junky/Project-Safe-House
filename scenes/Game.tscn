@@ -1,8 +1,7 @@
-[gd_scene load_steps=24 format=3 uid="uid://c1q7mld1s5oyp"]
+[gd_scene load_steps=25 format=3 uid="uid://bmnaptewe4c2t"]
 
 [ext_resource type="Texture2D" uid="uid://jb10j5512eug" path="res://assets/buttons/map.png" id="1_7tg0y"]
 [ext_resource type="Script" path="res://scripts/Game.gd" id="1_8jcqd"]
-[ext_resource type="PackedScene" uid="uid://c8hen6scm1vtq" path="res://scenes/Main.tscn" id="1_j7kjm"]
 [ext_resource type="Texture2D" uid="uid://dq7cypl6amu1j" path="res://assets/buttons/build.png" id="2_i05tw"]
 [ext_resource type="Script" path="res://scripts/FPSLabel.gd" id="3_2eupc"]
 [ext_resource type="PackedScene" uid="uid://cri5e323f124r" path="res://assets/BuildCard.tscn" id="4_730yh"]
@@ -18,6 +17,7 @@
 [ext_resource type="Texture2D" uid="uid://d1qu6i5lnpbcq" path="res://assets/buttons/CAPS_icon.png" id="11_s3fyp"]
 [ext_resource type="FontFile" uid="uid://ujrae3mp3ne8" path="res://assets/font/Oswald-Bold.ttf" id="12_d5fum"]
 [ext_resource type="Texture2D" uid="uid://ou3t0wgeq0fw" path="res://assets/buttons/Nuka_icon.png" id="13_ft80h"]
+[ext_resource type="PackedScene" uid="uid://c7b68nqwdkfjp" path="res://scenes/Shelter.tscn" id="18_tl8lo"]
 
 [sub_resource type="GDScript" id="GDScript_iptw0"]
 script/source = "extends GridContainer
@@ -28,12 +28,7 @@ func _ready():
 	pass # Replace with function body.
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
-	
-
-func _gui_input(event):
+func _gui_input(_event):
 	get_viewport().set_input_as_handled()
 "
 
@@ -48,6 +43,14 @@ font = ExtResource("12_d5fum")
 font_size = 24
 font_color = Color(0, 0, 0, 1)
 
+[sub_resource type="GDScript" id="GDScript_l14jj"]
+script/source = "extends TextureButton
+
+
+func _on_pressed():
+	GlobalSignal.emit(\"build_button_pressed\")
+"
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_woi11"]
 
 [sub_resource type="GDScript" id="GDScript_2lohv"]
@@ -57,11 +60,6 @@ script/source = "extends Control
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	pass # Replace with function body.
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
 "
 
 [node name="Game" type="Node"]
@@ -284,6 +282,7 @@ layout_mode = 2
 size_flags_vertical = 8
 mouse_default_cursor_shape = 2
 texture_normal = ExtResource("2_i05tw")
+script = SubResource("GDScript_l14jj")
 
 [node name="BuildOverlay" type="Control" parent="."]
 visible = false
@@ -453,10 +452,9 @@ tab_alignment = 1
 tab_0/title = "Production"
 tab_1/title = "Support"
 
-[node name="Main" parent="." instance=ExtResource("1_j7kjm")]
+[node name="Shelter" parent="." instance=ExtResource("18_tl8lo")]
 
 [connection signal="pressed" from="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer/AddDweller" to="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer" method="_on_add_dweller_pressed"]
 [connection signal="pressed" from="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer/RemoveDweller" to="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer" method="_on_remove_dweller_pressed"]
-[connection signal="pressed" from="Interface/MarginContainer/GridContainer/Right/Bottom/BottomSubContainer/BuildButton" to="BuildOverlay" method="_on_build_button_pressed"]
+[connection signal="pressed" from="Interface/MarginContainer/GridContainer/Right/Bottom/BottomSubContainer/BuildButton" to="Interface/MarginContainer/GridContainer/Right/Bottom/BottomSubContainer/BuildButton" method="_on_pressed"]
 [connection signal="tab_changed" from="BuildOverlay/Container/TabBarContainer/CenterContainer/TabBar" to="BuildOverlay" method="_on_tab_bar_tab_changed"]
-[connection signal="ready" from="Main" to="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer" method="_on_main_ready"]

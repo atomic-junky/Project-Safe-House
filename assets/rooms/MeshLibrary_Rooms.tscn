@@ -1,6 +1,7 @@
-[gd_scene load_steps=40 format=3 uid="uid://cpn46e2slecm4"]
+[gd_scene load_steps=42 format=3 uid="uid://cpn46e2slecm4"]
 
 [ext_resource type="Texture2D" uid="uid://bk633h68iwlnu" path="res://assets/rooms/tex_strata.png-CAB_97dfacac3fdcc0307f2d5a6645235bcb-143695002864160156.png" id="1_soevq"]
+[ext_resource type="Texture2D" uid="uid://bdvdobix38gfe" path="res://assets/rooms/build_mode_texture.png" id="2_7qnh8"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vhmp4"]
 albedo_texture = ExtResource("1_soevq")
@@ -44,6 +45,9 @@ shadow_mesh = SubResource("ArrayMesh_fk25h")
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_pj7ej"]
 data = PackedVector3Array(0, -2, -2, 0, 0, -3, 0, -2, -3, 0, -2, -2, 0, 0, -2, 0, 0, -3, 0, -2, 0, 0, 0, -2, 0, -2, -2, 0, -2, 0, 0, 0, 0, 0, 0, -2)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0hbs4"]
+albedo_texture = ExtResource("2_7qnh8")
+
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_77n4s"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gof3c"]
@@ -76,7 +80,6 @@ _surfaces = [{
 "vertex_count": 4,
 "vertex_data": PackedByteArray(0, 0, 0, 0, 0, 0, 0, 192, 0, 0, 0, 128, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 128, 0, 0, 0, 0, 0, 0, 0, 192, 0, 0, 64, 192, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 64, 192, 255, 255, 255, 127, 255, 127, 0, 128, 255, 255, 255, 127, 255, 127, 0, 128, 255, 255, 255, 127, 255, 127, 0, 128, 255, 255, 255, 127, 255, 127, 0, 128)
 }]
-blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_vr14c")
 
 [sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_oaq22"]
@@ -414,6 +417,7 @@ shape = SubResource("ConcavePolygonShape3D_pj7ej")
 
 [node name="Default selected" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2, 0)
+material_override = SubResource("StandardMaterial3D_0hbs4")
 mesh = SubResource("ArrayMesh_cg1ad")
 skeleton = NodePath("")
 

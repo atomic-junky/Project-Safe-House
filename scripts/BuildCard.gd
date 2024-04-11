@@ -43,8 +43,11 @@ func _on_texture_button_pressed():
 	Global.build_mode = true
 	Global.interface_mode = false
 	Global.build_room = room
-	main_game.toggle_build_mode(room)
-	get_tree().current_scene.find_child("BuildOverlay").hide()
+	
+	GlobalSignal.emit("build_card_selected", [room])
+	
+	# main_game.toggle_build_mode(room)
+	# get_tree().current_scene.find_child("BuildOverlay").hide()
 	
 
 func card_texture(special: String = ""):

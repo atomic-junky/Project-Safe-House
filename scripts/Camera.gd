@@ -18,6 +18,8 @@ const MAX_VERTICAL_SCROLL: float = 0
 var _target_zoom: float = 0.01
 var selected_body = null
 
+var _disabled: bool = false
+
 func _init():
 	position.x = 3.6
 	position.z = -4.85
@@ -29,9 +31,12 @@ func _ready():
 	_target_zoom = 0.2
 
 func _input(event) -> void:
-	var build_overlay = get_tree().current_scene.get_node("BuildOverlay")
+	if _disabled:
+		return
+	
+	var build_overlay = get_tree().current_scene.get_node_or_null("BuildOverlay")
 	# Zoom
-	if not build_overlay.visible and event is InputEventMouseButton:
+	if (not build_overlay or not build_overlay.visible) and event is InputEventMouseButton:
 		if event.is_pressed():
 			if event.button_index == MOUSE_BUTTON_WHEEL_UP:
 				zoom_in()
@@ -56,7 +61,7 @@ func _input(event) -> void:
 		return
 	
 	# Drag
-	if not build_overlay.visible and event is InputEventMouseMotion:
+	if (not build_overlay or not build_overlay.visible) and event is InputEventMouseMotion:
 		if event.button_mask == MOUSE_BUTTON_LEFT:
 			position.z -= -event.relative.x * zoom() * 100 * DRAG_SPEED
 			position.y -= -event.relative.y * zoom() * 100 * DRAG_SPEED
@@ -93,13 +98,13 @@ func _physics_process(delta):
 	position.z = min(MIN_HORIZONTAL_SCROLL*zoom_ratio, max(MAX_HORIZONTAL_SCROLL*zoom_ratio, position.z))
 	position.y = min(MIN_VERTICAL_SCROLL*zoom_ratio, max(MAX_VERTICAL_SCROLL*zoom_ratio, position.y))
 	
-	var zoom = lerp(
+	var _zoom = lerp(
 		zoom(),
 		_target_zoom * 1,
 		ZOOM_RATE * delta
 	)
 	
-	position.x = zoom * 100
+	position.x = _zoom * 100
 
 
 func get_mouse_position_on_plane():
@@ -109,3 +114,9 @@ func get_mouse_position_on_plane():
 	var plane = Plane( 1, 0, 0, 0 )
 	var pos_on_plane = plane.intersects_ray(ray_origin, ray_dir)
 	return pos_on_plane
+
+func disable() -> void:
+	_disabled = true
+
+func enable() -> void:
+	_disabled = false

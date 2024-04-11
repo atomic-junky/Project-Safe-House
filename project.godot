@@ -21,8 +21,8 @@ config/icon="res://icon.svg"
 
 RoomList="*res://scripts/Global/RoomList.gd"
 Instructions="*res://scripts/Global/Instructions.gd"
-uuid="*res://scripts/Global/uuid.gd"
 Global="*res://scripts/Global/Variables.gd"
+GlobalSignal="*res://scripts/Core/GlobalSignal.gd"
 
 [display]
 

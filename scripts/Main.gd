@@ -65,8 +65,6 @@ func _input(event) -> void:
 				
 				if room.type != RoomList.DIRT:
 					return
-					
-				print(Global.build_room)
 				
 				var prev_room = matrix[y][z-1].get_ref() if z > 0 else null
 				var next_room = matrix[y][z+1].get_ref() if z < max_width else null
