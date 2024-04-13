@@ -6,7 +6,7 @@ class_name Dweller
 const MAX_SPEED = 2.5
 var id: String = UUID.v4()
 
-var assigned_room = null # A reference to the room
+var assigned_room = null
 var is_traveling = false
 
 var matrix_position:
@@ -58,9 +58,6 @@ func _process(delta):
 			_target_positions.remove_at(0)
 			_instructions.remove_at(0)
 	else:
-		if assigned_room != null and is_traveling:
-			assigned_room.get_ref()._register_dweller(self)
-			
 		_target_positions.clear()
 		_instructions.clear()
 		is_traveling = false
@@ -68,70 +65,20 @@ func _process(delta):
 func get_main_parent():
 	return get_parent().get_parent().get_parent()
 
-func _input(event):
-	if Global.interface_mode:
-		return
-		
-	return
-	
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
-		var camera = get_tree().current_scene.find_child("Camera")
-		if not camera:
-			return
-		
-		var ray = camera.screen_point_to_ray()
-		if ray.has("collider") and ray.collider == $Body:
-			Logger.debug("collide")
-		
-		var grid_map = get_tree().current_scene.find_child("GridMap")
-		var parent = get_parent_node_3d()
-		if not grid_map or not parent:
-			return
-		
-		var mouse_3d = camera.screen_point_to_ray()
-		if not mouse_3d.has("position"):
-			return
-		
-		target_position_calculator(mouse_3d.position)
-
-func target_position_calculator(pos):
+func path_to_room(pos):
 	var grid_map = get_tree().current_scene.find_child("GridMap")
 	
 	var z = roundi(pos.z/ grid_map.cell_size.z) * -1
 	var y = roundi((pos.y)/ grid_map.cell_size.y)
-	path_to_room(z, y)
 
-func path_to_room(z, y):
 	var parent = get_main_parent()
-	var matrix = parent._matrix
+	var matrix: Matrix = parent._matrix
 	var max_height = matrix.size.y
 	var target_room = matrix.get_room_at(y, z)
 	
 	if target_room != null:
 		return
 	
-	# Unassigned the dweller from the old room
-	if assigned_room != null:
-		assigned_room.get_ref()._forget_dweller(self)
-		
-	assigned_room = matrix.get_room_at(y, z)
-		
-	var max_width = matrix.size.x
-	
-	var prev_room = matrix.get_room_at(y, z-1) if z > 0 else null
-	var next_room = matrix.get_room_at(y, z+1) if z < max_width else null
-	
-	# [x] []
-	if (not prev_room or prev_room.id != target_room.id) and next_room and next_room.id == target_room.id:
-		# [x] [] []
-		if z+1 < max_width and matrix.get_room_at(y, z+2).id == target_room.id:
-			z+=1
-	# [] [x]
-	elif (not next_room or next_room.id != target_room.id) and prev_room and prev_room.id == target_room.id:
-		# [] [] [x]
-		if z-1 > 0 and matrix.get_room_at(y, z-2).id == target_room.id:
-			z-=1
-		
 	if _instructions and _instructions[0] == Instructions.MOVE_ON_FLOOR:
 		_target_positions.clear()
 		_instructions.clear()
@@ -139,7 +86,24 @@ func path_to_room(z, y):
 	var start = Vector2i(matrix_position.x, max_height - matrix_position.y - 1)
 	var end = Vector2i(z, max_height - y - 1)
 	
+	# Unassigned the dweller from the old room
+	if assigned_room != null:
+		assigned_room._forget_dweller(self)
+		
+	assigned_room = matrix.get_room_at(end.x, end.y)
+	assigned_room._register_dweller(self)
+	
 	best_path(start, end)
+	
+	var work_position = assigned_room.get_work_position(self)
+	var first_pos = assigned_room.get_first_position()
+
+	_instructions.append(Instructions.MOVE_ON_FLOOR)
+	_target_positions.append(Vector3(
+		0,
+		(max_height - first_pos.y) * grid_map.cell_size.y - 3 + work_position.y,
+		(first_pos.x * grid_map.cell_size.z + work_position.x) * -1 
+	))
 
 
 func _on_t_enter_elevator_timeout():

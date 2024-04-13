@@ -39,8 +39,6 @@ func best_path(start, end):
 		
 		var first_index_condition = index != 0 or path.size() <= 1
 		
-		var prev_instruction = _get_prev_instruction()
-		
 		if current_room is Elevator:
 			if prev_room and prev_position.x == point_position.x and prev_position.y != point_position.y and next_room and next_position.y == point_position.y:
 				_instructions.append(Instructions.EXIT_ELEVATOR)

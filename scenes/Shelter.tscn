@@ -114,6 +114,7 @@ shadow_mesh = SubResource("ArrayMesh_j571h")
 script = ExtResource("1_73ywb")
 
 [node name="GridMap" type="GridMap" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -1.5)
 mesh_library = ExtResource("2_bd3lx")
 cell_size = Vector3(2, 2, 3)
 metadata/_editor_floor_ = Vector3(0, -5, 0)
@@ -140,7 +141,7 @@ omni_attenuation = 1e-05
 script = ExtResource("4_u5mf0")
 
 [node name="Dweller" parent="DwellerContainer/OnHold" instance=ExtResource("5_qq4nu")]
-transform = Transform3D(-1.18021e-08, 0, -0.27, 0, 0.27, 0, 0.27, 0, -1.18021e-08, 0, 47.095, -1)
+transform = Transform3D(-1.18021e-08, 0, -0.27, 0, 0.27, 0, 0.27, 0, -1.18021e-08, -1, 47.095, -1)
 
 [node name="Assigned" type="Node" parent="DwellerContainer"]
 
@@ -164,6 +165,6 @@ mesh = SubResource("ArrayMesh_15ej2")
 skeleton = NodePath("")
 
 [node name="Plane_006" type="MeshInstance3D" parent="."]
-transform = Transform3D(0, 1, -5.96046e-08, -5.96046e-08, 0, 1, 1, -5.96046e-08, 0, 1, -1, 1.5)
+transform = Transform3D(0, 1, -5.96046e-08, -5.96046e-08, 0, 1, 1, -5.96046e-08, 0, 0, -1, 0)
 mesh = SubResource("ArrayMesh_b0vcg")
 skeleton = NodePath("")

@@ -5,9 +5,11 @@ extends Node3D
 
 @onready var grid_map = $GridMap
 @onready var dc_assigned = $DwellerContainer/Assigned
+@onready var drag_body = $DragBody
 
 var _matrix = Matrix.new(10, 25)
 var _selected_build_room = null
+var _selected_dweller = null
 
 
 func _ready():
@@ -29,12 +31,15 @@ func _ready():
 
 
 func _input(event) -> void:
+	var camera = $Camera
+	var ray = camera.screen_point_to_ray()
+	var pos_on_plane = camera.get_mouse_position_on_plane()
+
 	if _selected_build_room != null and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
-			var mouse_3d = $Camera.screen_point_to_ray()
-			if mouse_3d.has("collider") and mouse_3d.collider == $GridMap:
-				var z = roundi(mouse_3d.position.z/ $GridMap.cell_size.z) * -1
-				var y = roundi((mouse_3d.position.y)/ $GridMap.cell_size.y)
+			if ray.has("collider") and ray.collider == $GridMap:
+				var z = roundi(ray.position.z/ $GridMap.cell_size.z) * -1
+				var y = roundi((ray.position.y)/ $GridMap.cell_size.y)
 				y = _matrix.size.y - y - 1
 				
 				if not _is_a_build_location(z, y, _selected_build_room):
@@ -43,6 +48,36 @@ func _input(event) -> void:
 				var _room = RoomPicker.pick(_selected_build_room).new()
 				_matrix.add_room(_room, [Vector2(z, y)])
 				_update_rooms()
+				return
+	
+	# Dweller Drag and Drop Handler
+	# if event.is_pressed() and event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN, MOUSE_BUTTON_WHEEL_LEFT, MOUSE_BUTTON_WHEEL_RIGHT]:
+	# 	return
+
+	if event is InputEventMouseButton and event.is_pressed() and ray.has("collider") and ray.collider is AnimatableBody3D:
+		camera.body_drag_mode = true
+		_selected_dweller = ray.collider.get_parent()
+	elif event is InputEventMouseButton and !event.is_pressed():
+		if _selected_dweller:
+			# FIXME: Not very accurate (sometimes it select neighbour rooms)
+			var dweller_room = _selected_dweller.assigned_room
+			var target_room = _matrix.get_room_at(
+				roundi((pos_on_plane.z + 1)/ grid_map.cell_size.z) * -1,
+				_matrix.size.y - roundi(pos_on_plane.y/ grid_map.cell_size.y) - 1
+			)
+
+			if not (dweller_room != null and dweller_room == target_room) and target_room != null:
+				_selected_dweller.path_to_room(pos_on_plane)
+				
+		camera.body_drag_mode = false
+		_selected_dweller = null
+		drag_body.hide()
+	
+	if _selected_dweller != null and event is InputEventMouseMotion:
+		drag_body.show()
+		drag_body.position.z = pos_on_plane.z
+		drag_body.position.y = pos_on_plane.y
+		return
 
 func _on_build_mode_enabled(selected_room) -> void:
 	for y in _matrix.size.y:
@@ -80,7 +115,6 @@ func _update_rooms() -> void:
 	for y in range(_matrix.size.y):
 		for z in range(_matrix.size.x):
 			var room = _matrix.get_room_at_first_position(z, y)
-			var prev_room = _matrix.get_room_at(z-1, y) if z > 0 else null
 			var _next_room = _matrix.get_room_at(z+1, y) if z < _matrix.size.y else null
 			
 			# Nothing

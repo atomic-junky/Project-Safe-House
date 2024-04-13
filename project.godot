@@ -24,6 +24,12 @@ Instructions="*res://scripts/Global/Instructions.gd"
 Global="*res://scripts/Global/Variables.gd"
 GlobalSignal="*res://scripts/Core/GlobalSignal.gd"
 
+[debug]
+
+gdscript/warnings/incompatible_ternary=0
+gdscript/warnings/integer_division=0
+gdscript/warnings/narrowing_conversion=0
+
 [display]
 
 window/stretch/mode="canvas_items"

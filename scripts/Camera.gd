@@ -1,8 +1,6 @@
 extends Camera3D
 
 
-@onready var drag_body = $"../DragBody"
-
 const DEBUG_SPEED = 0.5
 const DRAG_SPEED = 0.0007
 
@@ -16,9 +14,9 @@ const MIN_VERTICAL_SCROLL: float = 50
 const MAX_VERTICAL_SCROLL: float = 0
 
 var _target_zoom: float = 0.01
-var selected_body = null
 
 var _disabled: bool = false
+var body_drag_mode: bool = false
 
 func _init():
 	position.x = 3.6
@@ -31,7 +29,7 @@ func _ready():
 	_target_zoom = 0.2
 
 func _input(event) -> void:
-	if _disabled:
+	if _disabled or body_drag_mode:
 		return
 	
 	var build_overlay = get_tree().current_scene.get_node_or_null("BuildOverlay")
@@ -42,23 +40,6 @@ func _input(event) -> void:
 				zoom_in()
 			if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 				zoom_out()
-	
-	var ray = screen_point_to_ray()
-	if event is InputEventMouseButton and event.is_pressed() and ray.has("collider") and ray.collider is AnimatableBody3D:
-		selected_body = ray.collider.get_parent()
-	elif event is InputEventMouseButton and !event.is_pressed():
-		if selected_body:
-			var pos_on_plane = get_mouse_position_on_plane()
-			selected_body.target_position_calculator(pos_on_plane)
-		selected_body = null
-		drag_body.hide()
-	
-	if selected_body != null and event is InputEventMouseMotion:
-		drag_body.show()
-		var pos_on_plane = get_mouse_position_on_plane()
-		drag_body.position.z = pos_on_plane.z
-		drag_body.position.y = pos_on_plane.y
-		return
 	
 	# Drag
 	if (not build_overlay or not build_overlay.visible) and event is InputEventMouseMotion:

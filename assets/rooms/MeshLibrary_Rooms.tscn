@@ -456,6 +456,12 @@ skeleton = NodePath("")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Room r1/StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_cxkuy")
 
+[node name="Marker3D" type="Marker3D" parent="Room r1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.3703, -1.83208, -0.49047)
+
+[node name="Marker3D2" type="Marker3D" parent="Room r1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8315, -1.86371, -2.39235)
+
 [node name="Room r2" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -8)
 mesh = SubResource("ArrayMesh_vvno4")
