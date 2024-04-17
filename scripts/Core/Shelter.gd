@@ -7,17 +7,13 @@ extends Node3D
 @onready var dc_assigned = $DwellerContainer/Assigned
 @onready var drag_body = $DragBody
 
-var _matrix = Matrix.new(10, 25)
+var _matrix = Matrix.new(14, 25)
 var _selected_build_room = null
 var _selected_dweller = null
 
 
 func _ready():
 	GlobalSignal.add_listener("build_card_selected", _on_build_mode_enabled)
-	
-	# Empty locations
-	var _empty_location = EmptyLocation.new()
-	_matrix.add_room(_empty_location, [Vector2(0, 0)])
 	
 	# Place the vault door
 	var _vault_door = VaultDoor.new()
@@ -26,6 +22,15 @@ func _ready():
 	# Place the first elevator
 	var _elevator = Elevator.new()
 	_matrix.add_room(_elevator, [Vector2(3, 0)])
+
+	# Empty locations
+	var _empty_location = EmptyLocation.new()
+	for x in _matrix.size.x:
+		if _matrix._is_room_at(x, 0):
+			continue
+
+		_matrix.add_room(_empty_location, [Vector2(x, 0)])
+	
 	
 	_update_rooms()
 
@@ -38,9 +43,10 @@ func _input(event) -> void:
 	if _selected_build_room != null and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 			if ray.has("collider") and ray.collider == $GridMap:
-				var z = roundi(ray.position.z/ $GridMap.cell_size.z) * -1
+				var z = roundi((ray.position.z+1.5)/ $GridMap.cell_size.z) * -1
 				var y = roundi((ray.position.y)/ $GridMap.cell_size.y)
 				y = _matrix.size.y - y - 1
+				print(z, " ", y)
 				
 				if not _is_a_build_location(z, y, _selected_build_room):
 					return
@@ -48,6 +54,7 @@ func _input(event) -> void:
 				var _room = RoomPicker.pick(_selected_build_room).new()
 				_matrix.add_room(_room, [Vector2(z, y)])
 				_update_rooms()
+				_selected_build_room = null
 				return
 	
 	# Dweller Drag and Drop Handler

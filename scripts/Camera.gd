@@ -2,14 +2,14 @@ extends Camera3D
 
 
 const DEBUG_SPEED = 0.5
-const DRAG_SPEED = 0.0007
+const DRAG_SPEED = 0.0015
 
-const MIN_ZOOM: float = 0.035
-const MAX_ZOOM: float = 0.5
+const MIN_ZOOM: float = 0.045
+const MAX_ZOOM: float = 0.3
 const ZOOM_INCREMENT: float = 0.05
 const ZOOM_RATE: float = 8.0
-const MIN_HORIZONTAL_SCROLL: float = 6.0
-const MAX_HORIZONTAL_SCROLL: float = -18.5
+const MIN_HORIZONTAL_SCROLL: float = 3.0
+const MAX_HORIZONTAL_SCROLL: float = -34
 const MIN_VERTICAL_SCROLL: float = 50
 const MAX_VERTICAL_SCROLL: float = 0
 
@@ -75,17 +75,17 @@ func screen_point_to_ray(to = null, collide_with_areas: bool = true, collide_wit
 
 
 func _physics_process(delta):
-	var zoom_ratio = 1-((((zoom() - 0) * 1) / (MAX_ZOOM - 0)))+1 # It work a bit (no)
-	position.z = min(MIN_HORIZONTAL_SCROLL*zoom_ratio, max(MAX_HORIZONTAL_SCROLL*zoom_ratio, position.z))
-	position.y = min(MIN_VERTICAL_SCROLL*zoom_ratio, max(MAX_VERTICAL_SCROLL*zoom_ratio, position.y))
-	
 	var _zoom = lerp(
 		zoom(),
 		_target_zoom * 1,
 		ZOOM_RATE * delta
-	)
+	) * 100
 	
-	position.x = _zoom * 100
+	
+	# TODO: Limit the camera in y and z axis
+
+
+	position.x = _zoom
 
 
 func get_mouse_position_on_plane():

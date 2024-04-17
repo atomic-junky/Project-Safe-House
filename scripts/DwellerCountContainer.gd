@@ -1,6 +1,6 @@
 extends HBoxContainer
 
-var DwellerObject = preload("res://assets/dwellers/Dweller.tscn")
+var DwellerObject = preload("res://objects/dwellers/Dweller.tscn")
 
 @onready var main = $"../../../../../../../Shelter"
 @onready var dweller_count = $DwellerCount

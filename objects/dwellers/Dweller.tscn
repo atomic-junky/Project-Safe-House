@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://ci1ve6somicw7"]
 
 [ext_resource type="Script" path="res://scripts/Dweller/Dweller.gd" id="1_vjmqo"]
-[ext_resource type="PackedScene" uid="uid://2dntu6ajnkfq" path="res://assets/dwellers/DwellerBody.tscn" id="2_mnvit"]
+[ext_resource type="PackedScene" uid="uid://2dntu6ajnkfq" path="res://objects/dwellers/DwellerBody.tscn" id="2_mnvit"]
 [ext_resource type="Script" path="res://scripts/Dweller/DwellerBody.gd" id="3_xiymd"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_28lvu"]
