@@ -16,7 +16,7 @@ var is_outside: bool = true
 # 
 func best_path(start, end):
 	var parent = _get_main_parent()
-	var grid_map = get_tree().current_scene.find_child("GridMap")
+	var shelter_map = get_tree().current_scene.find_child("SceneMap")
 	var matrix: Matrix = parent._matrix
 	var max_height = matrix.size.y
 	
@@ -75,8 +75,8 @@ func best_path(start, end):
 			if next_position == null: # If it's the last position
 				point_position.x = matrix._vector_to_center_room_position(end).x
 			
-			var z = point_position.x * grid_map.cell_size.z * -1
-			var y = (max_height - point_position.y) * grid_map.cell_size.y - 0.905 - 2 
+			var z = point_position.x * shelter_map.cell_size.z * -1
+			var y = (max_height - point_position.y) * shelter_map.cell_size.y - 0.905 - 2 
 			_target_positions.append(Vector3(0, y, z))
 		
 		Logger.debug("Continue")

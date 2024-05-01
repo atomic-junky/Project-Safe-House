@@ -11,9 +11,9 @@ var is_traveling = false
 
 var matrix_position:
 	get:
-		var grid_map = get_tree().current_scene.find_child("GridMap")
-		var z = roundi(position.z/ grid_map.cell_size.z) * -1
-		var y = roundi((position.y)/ grid_map.cell_size.y)
+		var shelter_map = get_tree().current_scene.find_child("SceneMap")
+		var z = roundi(position.z/ shelter_map.cell_size.z) * -1
+		var y = roundi((position.y)/ shelter_map.cell_size.y)
 		return Vector2i(z, y)
 
 func _ready():
@@ -66,10 +66,10 @@ func get_main_parent():
 	return get_parent().get_parent().get_parent()
 
 func path_to_room(pos):
-	var grid_map = get_tree().current_scene.find_child("GridMap")
+	var shelter_map = get_tree().current_scene.find_child("AutoSceneMap")
 	
-	var z = roundi(pos.z/ grid_map.cell_size.z) * -1
-	var y = roundi((pos.y)/ grid_map.cell_size.y)
+	var z = roundi(pos.z/ shelter_map.cell_size.z) * -1
+	var y = roundi((pos.y)/ shelter_map.cell_size.y)
 
 	var parent = get_main_parent()
 	var matrix: Matrix = parent._matrix
@@ -101,8 +101,8 @@ func path_to_room(pos):
 	_instructions.append(Instructions.MOVE_ON_FLOOR)
 	_target_positions.append(Vector3(
 		0,
-		(max_height - first_pos.y) * grid_map.cell_size.y - 3 + work_position.y,
-		(first_pos.x * grid_map.cell_size.z + work_position.x) * -1 
+		(max_height - first_pos.y) * shelter_map.cell_size.y - 3 + work_position.y,
+		(first_pos.x * shelter_map.cell_size.z + work_position.x) * -1 
 	))
 
 

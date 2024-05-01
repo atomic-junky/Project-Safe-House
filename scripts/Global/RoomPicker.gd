@@ -16,7 +16,7 @@ class_name RoomPicker
 # WEAPON_WORKSHOP = 12
 # OUTFIT_WORKSHOP = 13
 
-static var _dictionary: Dictionary = {
+static var _class_picker: Dictionary = {
 	RoomList.VAULTDOOR: VaultDoor,
 	RoomList.ELEVATOR: Elevator,
 	RoomList.LIVING_ROOM: LivingRoom,
@@ -25,5 +25,6 @@ static var _dictionary: Dictionary = {
 	RoomList.WATER_TREATMENT: WaterTreatment
 }
 
+
 static func pick(room_id: int):
-	return _dictionary.get(room_id)
+	return _class_picker.get(room_id)

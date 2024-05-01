@@ -1,0 +1,22 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://bkh4cm41ncuqo"]
+
+[sub_resource type="Shader" id="1"]
+code = "shader_type spatial;
+render_mode unshaded, shadows_disabled;
+
+uniform float radius = 64.0;
+uniform vec4 color: source_color;
+
+void fragment() {
+	vec4 pos = inverse(MODEL_MATRIX) * INV_VIEW_MATRIX * vec4(VERTEX, 1.0);
+	
+	ALBEDO = color.rgb;
+	ALPHA = clamp(mix(1.0, 0.0, length(pos / radius)), 0.0, 1.0);
+}
+"
+
+[resource]
+render_priority = 0
+shader = SubResource("1")
+shader_parameter/radius = 64.0
+shader_parameter/color = Color(0.9, 0.6, 0, 1)

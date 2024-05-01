@@ -3,7 +3,7 @@ class_name ShelterCore
 extends Node3D
 
 
-@onready var grid_map = $GridMap
+@onready var shelter_map = $AutoSceneMap
 @onready var dc_assigned = $DwellerContainer/Assigned
 @onready var drag_body = $DragBody
 
@@ -19,13 +19,14 @@ func _ready():
 	var _vault_door = VaultDoor.new()
 	_matrix.add_room(_vault_door, [Vector2(1, 0), Vector2(2, 0)])
 	
-	# Place the first elevator
-	var _elevator = Elevator.new()
-	_matrix.add_room(_elevator, [Vector2(3, 0)])
+	# Place two elevators 
+	for y in range(2):
+		var _elevator = Elevator.new()
+		_matrix.add_room(_elevator, [Vector2(3, y)])
 
 	# Empty locations
-	var _empty_location = EmptyLocation.new()
 	for x in _matrix.size.x:
+		var _empty_location = EmptyLocation.new()
 		if _matrix._is_room_at(x, 0):
 			continue
 
@@ -42,11 +43,14 @@ func _input(event) -> void:
 
 	if _selected_build_room != null and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
-			if ray.has("collider") and ray.collider == $GridMap:
-				var z = roundi((ray.position.z+1.5)/ $GridMap.cell_size.z) * -1
-				var y = roundi((ray.position.y)/ $GridMap.cell_size.y)
+			if ray.has("collider"):
+				var collider_parent = ray.collider.get_parent().get_parent()
+				if collider_parent == shelter_map:
+					return
+				
+				var z = roundi((ray.position.z+1.5)/ shelter_map.cell_size.z) * -1
+				var y = roundi((ray.position.y)/ shelter_map.cell_size.y)
 				y = _matrix.size.y - y - 1
-				print(z, " ", y)
 				
 				if not _is_a_build_location(z, y, _selected_build_room):
 					return
@@ -58,8 +62,8 @@ func _input(event) -> void:
 				return
 	
 	# Dweller Drag and Drop Handler
-	# if event.is_pressed() and event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN, MOUSE_BUTTON_WHEEL_LEFT, MOUSE_BUTTON_WHEEL_RIGHT]:
-	# 	return
+	if event.is_pressed() and event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN, MOUSE_BUTTON_WHEEL_LEFT, MOUSE_BUTTON_WHEEL_RIGHT]:
+		return
 
 	if event is InputEventMouseButton and event.is_pressed() and ray.has("collider") and ray.collider is AnimatableBody3D:
 		camera.body_drag_mode = true
@@ -69,8 +73,8 @@ func _input(event) -> void:
 			# FIXME: Not very accurate (sometimes it select neighbour rooms)
 			var dweller_room = _selected_dweller.assigned_room
 			var target_room = _matrix.get_room_at(
-				roundi((pos_on_plane.z + 1)/ grid_map.cell_size.z) * -1,
-				_matrix.size.y - roundi(pos_on_plane.y/ grid_map.cell_size.y) - 1
+				roundi((pos_on_plane.z + 1)/ shelter_map.cell_size.z) * -1,
+				_matrix.size.y - roundi(pos_on_plane.y/ shelter_map.cell_size.y) - 1
 			)
 
 			if not (dweller_room != null and dweller_room == target_room) and target_room != null:
@@ -117,7 +121,8 @@ func _is_a_build_location(z, y, build_room) -> bool:
 	return false
 
 func _update_rooms() -> void:
-	grid_map.clear()
+	shelter_map.clear()
+	print(shelter_map._scene_map.get_child_count())
 	
 	for y in range(_matrix.size.y):
 		for z in range(_matrix.size.x):
@@ -127,32 +132,23 @@ func _update_rooms() -> void:
 			# Nothing
 			if room == null or room is EmptyLocation:
 				if not _matrix._is_room_at(z, y):
-					_place_room(y, z, 0)
+					_place_room(y, z, MeshLink._meshes.DIRT.name)
 				continue
 			
-			_place_room_border(y, z, room.size)
-			
-			# VaultDoor
-			if room is VaultDoor:
-				_place_room(y, z, 9)
-				continue
-			
-			# Elevator
-			if room is Elevator:
-				_place_room(y, z, 2)
-				continue
-			
-			_place_room(y, z, 2+room.size)
+			_place_room(y, z, room.mesh.name)
 
-func _place_room(y: int, z: int, mesh_index: int) -> void:
-	grid_map.set_cell_item(Vector3i(
+
+func _place_room(y: int, z: int, mesh_name: String) -> void:
+	shelter_map.set_cell_item(Vector3i(
 		0, _matrix.size.y-y-1, -z
-	), mesh_index)
-	
+	), mesh_name)
+
+
 func _place_room_border(y: int, z: int, size: int) -> void:
-	grid_map.set_cell_item(Vector3i(
+	shelter_map.set_cell_item(Vector3i(
 		1, _matrix.size.y-y-1, -z
-	), 5+size)
+	), 6+size)
+
 
 func _place_build_location(y: int, z: int, _size: int = 1):
-	_place_room(y, z, 1)
+	_place_room(y, z, MeshLink._meshes.BUILD_LOCATION.name)

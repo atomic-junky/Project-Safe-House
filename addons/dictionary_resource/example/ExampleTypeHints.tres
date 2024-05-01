@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="BasicDictionaryResource" load_steps=2 format=3 uid="uid://dgb0nfjaj4s7k"]
+
+[ext_resource type="Script" path="res://addons/dictionary_resource/basic_dictionary_resource.gd" id="1_eiawb"]
+
+[resource]
+script = ExtResource("1_eiawb")
+value = {
+"head_offset": Vector3(0, 0, 0),
+"is_player": false,
+"jump_height": 2.08167e-12,
+"speed": 2.08167e-12
+}

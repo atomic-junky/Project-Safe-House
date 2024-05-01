@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="DictionaryResource" load_steps=3 format=3 uid="uid://dowp6fmcwe5en"]
+
+[ext_resource type="Script" path="res://addons/dictionary_resource/dictionary_resource.gd" id="1_sra5c"]
+[ext_resource type="Resource" uid="uid://dgb0nfjaj4s7k" path="res://addons/dictionary_resource/example/ExampleTypeHints.tres" id="2_v6r6k"]
+
+[resource]
+script = ExtResource("1_sra5c")
+type_hints = ExtResource("2_v6r6k")
+is_player = null
+jump_height = null
+speed = null
+head_offset = null

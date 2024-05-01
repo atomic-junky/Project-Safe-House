@@ -1,13 +1,13 @@
 [gd_scene load_steps=12 format=3 uid="uid://c7b68nqwdkfjp"]
 
 [ext_resource type="Script" path="res://scripts/Core/Shelter.gd" id="1_73ywb"]
-[ext_resource type="MeshLibrary" uid="uid://dr63vbbud52st" path="res://assets/rooms/rooms.tres" id="2_bd3lx"]
 [ext_resource type="Script" path="res://scripts/Camera.gd" id="3_mbaw0"]
+[ext_resource type="PackedScene" uid="uid://ygg1dtk5whr5" path="res://objects/core/auto_scene_map.tscn" id="3_rbshk"]
 [ext_resource type="Script" path="res://scripts/OnHold.gd" id="4_u5mf0"]
 [ext_resource type="PackedScene" uid="uid://ci1ve6somicw7" path="res://objects/dwellers/Dweller.tscn" id="5_qq4nu"]
 [ext_resource type="Texture2D" uid="uid://bcmht1dwtrrhx" path="res://assets/Garterbeltb.png" id="6_p46bs"]
 [ext_resource type="Material" uid="uid://d1duaskb4fnbr" path="res://assets/materials/Ground.tres" id="8_5s06x"]
-[ext_resource type="PackedScene" uid="uid://c462qrwcqvtgc" path="res://assets/meshs/groud.glb" id="8_fv27p"]
+[ext_resource type="PackedScene" uid="uid://c462qrwcqvtgc" path="res://assets/meshes/groud.glb" id="10_u8p67"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_awr0o"]
 resource_name = "Material.001"
@@ -73,11 +73,8 @@ shadow_mesh = SubResource("ArrayMesh_j571h")
 [node name="Shelter" type="Node3D"]
 script = ExtResource("1_73ywb")
 
-[node name="GridMap" type="GridMap" parent="."]
+[node name="AutoSceneMap" parent="." instance=ExtResource("3_rbshk")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -1.5)
-mesh_library = ExtResource("2_bd3lx")
-cell_size = Vector3(2, 2, 3)
-metadata/_editor_floor_ = Vector3(0, -5, 0)
 
 [node name="Camera" type="Camera3D" parent="."]
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 8.50539, 0, 0)
@@ -120,5 +117,5 @@ visible = false
 mesh = SubResource("ArrayMesh_b0vcg")
 skeleton = NodePath("")
 
-[node name="groud" parent="." instance=ExtResource("8_fv27p")]
+[node name="groud" parent="." instance=ExtResource("10_u8p67")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -1.5)
