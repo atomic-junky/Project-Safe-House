@@ -23,6 +23,7 @@ RoomList="*res://scripts/Global/RoomList.gd"
 Instructions="*res://scripts/Global/Instructions.gd"
 Global="*res://scripts/Global/Variables.gd"
 GlobalSignal="*res://scripts/Core/GlobalSignal.gd"
+MeshLink="*res://scripts/Global/MeshLink.gd"
 
 [debug]
 

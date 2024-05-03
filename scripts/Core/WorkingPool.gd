@@ -15,30 +15,55 @@ func _init(parameters: WorkingPoolParameters = WorkingPoolParameters._default())
 				"dweller": null
 			})
 
+
 func is_full(room_size):
-	var free_slots = _spots[room_size].filter(func(s): return s.dweller == null)
-	return len(free_slots) <= 0
+	var free_spots = _spots[room_size].filter(func(s): return s.dweller == null)
+	return len(free_spots) <= 0
+
+
+func is_empty(room_size):
+	var taken_spots = get_all_taken(room_size)
+	return len(taken_spots) <= 0
+
 
 func _assign_dweller(room_size, dweller: Dweller):
 	if is_full(room_size):
 		return
 	
-	var slot = _spots[room_size].filter(func(s): return s.dweller == null).pick_random()
+	var slot = _spots[room_size].filter(func(s): return s.dweller == null)[0]
 	slot.dweller = dweller
 
+
 func _deassign_dweller(room_size, dweller: Dweller):
-	pass
+	var spot = get_dweller_spot(room_size, dweller)
+	if len(spot) <= 0:
+		return
+
+	spot[0].dweller = null
+
+
+func get_dweller_spot(room_size, dweller):
+	return _spots[room_size].filter(func(s): return s.dweller != null and s.dweller.id == dweller.id)
+
 
 func get_position(room_size, dweller):
-	var slot = _spots[room_size].filter(func(s): return s.dweller != null and s.dweller.id == dweller.id)
-	if len(slot) > 0:
-		return slot[0].get("position")
+	var spot = get_dweller_spot(room_size, dweller)
+	if len(spot) > 0:
+		return spot[0].get("position")
+
 
 func is_taken_at(room_size, spot_id):
-	pass
+	return get_one(room_size, spot_id).dweller != null
+
 
 func get_one(room_size, spot_id):
-	pass
+	return _spots[room_size][spot_id]
+
 
 func get_all(room_size):
-	pass
+	return _spots[room_size]
+
+
+func get_all_taken(room_size):
+	var taken_spots = _spots[room_size].filter(func(s): return s.dweller != null)
+	return taken_spots

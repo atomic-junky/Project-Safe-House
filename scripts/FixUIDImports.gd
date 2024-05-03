@@ -9,7 +9,6 @@ func _run() -> void:
 	add_files("res://")
 	
 	for file in files:
-		print(file)
 		var res = load(file)
 		ResourceSaver.save(res)
 

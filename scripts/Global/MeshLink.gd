@@ -1,6 +1,4 @@
-@tool
 extends Node
-class_name MeshLink
 
 
 const _meshes = {
@@ -22,15 +20,15 @@ const _meshes = {
 	},
 	ELEVATOR_TOP = {
 		name="elevator_top",
-		path="res://assets/meshes/elevator_middle.glb"
+		path="res://objects/map_scenes/shelter/rooms/ElevatorMiddle.tscn"
 	},
 	ELEVATOR_MIDDLE = {
 		name="elevator_middle",
-		path="res://assets/meshes/elevator_middle.glb"
+		path="res://objects/map_scenes/shelter/rooms/ElevatorMiddle.tscn"
 	},
 	ELEVATOR_BOTTOM = {
 		name="elevator_bottom",
-		path="res://assets/meshes/elevator_middle.glb"
+		path="res://objects/map_scenes/shelter/rooms/ElevatorMiddle.tscn"
 	},
 	LIVING_ROOM_1L = {
 		name="living_room_1l",
@@ -46,8 +44,36 @@ const _meshes = {
 	}
 }
 
+var _slot_markers = {}
 
-static func build_palette() -> ScenePalette:
+
+func _ready():
+	load_slot_markers()
+
+
+func load_slot_markers():
+	for key in _meshes.keys():
+		var el = _meshes[key]
+		var scene = load(el.path).instantiate()
+
+		var markers = scene.get_node_or_null("SlotMarkers")
+		if markers == null:
+			continue
+
+		var positions = []
+		for marker in markers.get_children():
+			positions.append(marker.position)
+
+		_slot_markers[el.name] = positions
+
+		scene.queue_free()
+
+
+func get_spots(room_name: String):
+	return _slot_markers[room_name]
+
+
+func build_palette() -> ScenePalette:
 	var pal: ScenePalette = ScenePalette.new()
 
 	for el in _meshes.values():

@@ -1,5 +1,6 @@
 class_name Matrix
 
+
 var size: Vector2 = Vector2.ZERO
 var matrix: Array[Array]
 
@@ -140,8 +141,10 @@ func _vector_to_center_room_position(vec):
 	var r_positions = room.positions
 	r_positions.sort_custom(_sort_postions)
 	
-	if len(r_positions) % 2 == 0:
-		var modifier = (r_positions[len(r_positions)/2] - r_positions[len(r_positions)/2-1])/2
-		return r_positions[len(r_positions)/2-1] + modifier
+	if len(r_positions) % 2 != 0:
+		var modifier = (r_positions.back() - r_positions[0])/2
+		modifier.x += 0.5
+
+		return r_positions[0] + modifier
 		
-	return r_positions[(len(r_positions)-1)/2]
+	return r_positions[(len(r_positions))/2]

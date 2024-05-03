@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="ScenePalette" load_steps=6 format=3 uid="uid://dsfcvkdq8h6bx"]
 
 [ext_resource type="Script" path="res://addons/scene_map/scene_palette.gd" id="1_1bg3y"]
-[ext_resource type="PackedScene" uid="uid://c4i0xs47xdjs4" path="res://assets/meshes/elevator_middle.glb" id="1_an215"]
+[ext_resource type="PackedScene" uid="uid://c4i0xs47xdjs4" path="res://assets/meshes/rooms/elevator_middle.glb" id="1_an215"]
 [ext_resource type="PackedScene" uid="uid://bntug5tb4spcc" path="res://assets/meshes/dirt.glb" id="1_haet3"]
 [ext_resource type="PackedScene" uid="uid://klktocoyqruc" path="res://objects/map_scenes/shelter/BuildLocation.tscn" id="2_rd7xw"]
 [ext_resource type="PackedScene" uid="uid://dacyqnhhe31i3" path="res://assets/meshes/rooms/vault_door.glb" id="4_0sr7e"]

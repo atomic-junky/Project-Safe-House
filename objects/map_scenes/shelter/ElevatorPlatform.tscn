@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://djuntgxl1uea6"]
+
+[ext_resource type="Script" path="res://scripts/ElevatorPlatform.gd" id="1_7gl2q"]
+[ext_resource type="PackedScene" uid="uid://hfj0svft1xlw" path="res://assets/meshes/elevator_platform.glb" id="1_we87d"]
+
+[node name="ElevatorPlatform" type="Node3D"]
+script = ExtResource("1_7gl2q")
+
+[node name="Mesh" parent="." instance=ExtResource("1_we87d")]
+
+[node name="SlotMarkers" type="Node" parent="."]
+
+[node name="m01" type="Marker3D" parent="SlotMarkers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.9, -1.91, -1.5)
+
+[node name="m02" type="Marker3D" parent="SlotMarkers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, -1.91, -1.25)
+
+[node name="m03" type="Marker3D" parent="SlotMarkers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.9, -1.91, -1.1)
+
+[node name="m04" type="Marker3D" parent="SlotMarkers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -1.91, -1.9)
+
+[node name="m05" type="Marker3D" parent="SlotMarkers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.25, -1.91, -1.25)
+
+[node name="m06" type="Marker3D" parent="SlotMarkers"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.25, -1.91, -1.75)

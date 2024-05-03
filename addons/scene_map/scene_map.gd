@@ -110,7 +110,7 @@ func _set_cell_center_z(value: bool) -> void:
 # @param p_orientation Quaternion specifying how the item is oriented.
 # @returns True if the item was removed or placed, false if item was already present when placing.
 func set_cell_item(
-	p_coordinate: Vector3, p_item_id: int, p_orientation: Quaternion = Quaternion.IDENTITY
+	p_coordinate: Vector3, p_item_id: int, p_orientation: Quaternion = Quaternion.IDENTITY, p_item_name: String = "default"
 ) -> bool:
 	var coordinate = p_coordinate.floor()
 
@@ -126,7 +126,7 @@ func set_cell_item(
 	if cell_map.has(coordinate):
 		_remove_instance(coordinate)
 
-	return _place_instance(coordinate, p_item_id, p_orientation)
+	return _place_instance(coordinate, p_item_id, p_orientation, p_item_name)
 
 
 # Gets the palette ID of the item at the indicated coordinates.
@@ -211,7 +211,7 @@ func _remove_instance(coordinate: Vector3) -> bool:
 	return true
 
 
-func _place_instance(coordinate: Vector3, item_id: int, orientation: Quaternion) -> bool:
+func _place_instance(coordinate: Vector3, item_id: int, orientation: Quaternion, p_item_name: String) -> bool:
 	var scene: PackedScene = palette.get_item_scene(item_id)
 	if !scene:
 		push_error("Missing scene for item %s at cell %s" % [item_id, coordinate])
@@ -243,7 +243,7 @@ func _place_instance(coordinate: Vector3, item_id: int, orientation: Quaternion)
 		parent = parent.get_parent()
 
 	cell_map[coordinate] = {
-		"itemId": item_id, "path": self.get_path_to(node), "orientation": orientation
+		"itemId": item_id, "path": self.get_path_to(node), "orientation": orientation, "itemName": p_item_name
 	}
 
 	return true
@@ -255,9 +255,10 @@ func _rebuild() -> void:
 		var data := cell_map.get(cell) as Dictionary
 		var item_id := data.itemId as int
 		var orientation := data.orientation as Quaternion
+		var item_name := data.itemName as String
 
 		_remove_instance(cell)
-		_place_instance(cell, item_id, orientation)
+		_place_instance(cell, item_id, orientation, item_name)
 
 
 func _on_palette_changed():

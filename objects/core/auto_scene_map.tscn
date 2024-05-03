@@ -1,14 +1,14 @@
 [gd_scene load_steps=5 format=3 uid="uid://ygg1dtk5whr5"]
 
 [ext_resource type="Script" path="res://addons/scene_map/scene_map.gd" id="1_h88j2"]
-[ext_resource type="Script" path="res://scripts/core/auto_scene_map.gd" id="1_nratm"]
+[ext_resource type="Script" path="res://scripts/Core/AutoSceneMap.gd" id="1_j5lcu"]
 [ext_resource type="Script" path="res://addons/scene_map/scene_palette.gd" id="3_0cabc"]
 
 [sub_resource type="Resource" id="Resource_myxbp"]
 script = ExtResource("3_0cabc")
 
 [node name="AutoSceneMap" type="Node3D"]
-script = ExtResource("1_nratm")
+script = ExtResource("1_j5lcu")
 
 [node name="SceneMap" type="Node3D" parent="."]
 script = ExtResource("1_h88j2")

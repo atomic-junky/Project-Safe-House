@@ -3,121 +3,113 @@ extends Entity
 class_name Dweller
 
 
-const MAX_SPEED = 2.5
+const MAX_SPEED = 1.5
 var id: String = UUID.v4()
 
 var assigned_room = null
 var is_traveling = false
 
+var map_path: MapPath
+var _target_pos
+
+var _waiting_on_elevator: bool = false
+var _is_on_elevator_platform: bool = false
+var _elevator_transfer_process: int = 0
+
 var matrix_position:
 	get:
 		var shelter_map = get_tree().current_scene.find_child("SceneMap")
-		var z = roundi(position.z/ shelter_map.cell_size.z) * -1
-		var y = roundi((position.y)/ shelter_map.cell_size.y)
+		var z = floori((position.z/ shelter_map.cell_size.z)*-1) # x axis
+		var y = roundi((position.y)/ shelter_map.cell_size.y) # y axis
 		return Vector2i(z, y)
+
 
 func _ready():
 	position.y = 47.095
 	
+
 func _process(delta):
-	is_outside = true if assigned_room == null else false
+	_travel_process(delta)
+
+
+func _travel_process(delta):
+	# TODO: Simplify this mess (the elevator logic part)
+	if not map_path or (map_path.is_cleared and _target_pos == global_position):
+		return
+
+	var _prev_room	= map_path.prev_room
+	var _next_room	= map_path.get_next_room()
+	if _prev_room is Elevator and _next_room is Elevator and (_target_pos == global_position or _prev_room.is_open) and not _waiting_on_elevator:
+		_waiting_on_elevator = true
 	
-	if _instructions: # TODO: Improve this mess
-		is_traveling = true
-		
-		var sub_target_position = _target_positions[0] if _target_positions else null
-		var instruction = _instructions[0]
-		var _vel = global_position.z * MAX_SPEED
-		
-		# Get direction
-		if sub_target_position:
-			if global_position.z > sub_target_position.z:
-				$Body.scale.x = 1
-			elif global_position.z < sub_target_position.z:
-				$Body.scale.x = -1
-		
-		# Process instructions
-		match instruction:
-			Instructions.ENTER_ELEVATOR:
-				if $Timer/t_EnterElevator.is_stopped():
-					$Timer/t_EnterElevator.start()
-			Instructions.EXIT_ELEVATOR:
-				if $Timer/t_ExitElevator.is_stopped():
-					$Timer/t_ExitElevator.start()
-			Instructions.MOVE_ON_ELEVATOR:
-				if $Timer/t_MoveElevator.is_stopped():
-					$Timer/t_MoveElevator.start()
-			Instructions.MOVE_ON_FLOOR:
-				if sub_target_position:
-					global_position.y = move_toward(global_position.y, sub_target_position.y, delta * MAX_SPEED)
-					global_position.z = move_toward(global_position.z, sub_target_position.z, delta * MAX_SPEED)
-		
-		if _target_positions and instruction == Instructions.MOVE_ON_FLOOR and \
-		global_position.y == sub_target_position.y and \
-		global_position.z == sub_target_position.z:
-			_target_positions.remove_at(0)
-			_instructions.remove_at(0)
-	else:
-		_target_positions.clear()
-		_instructions.clear()
-		is_traveling = false
+	if _waiting_on_elevator:
+		return _elevator_process(delta)
 
-func get_main_parent():
-	return get_parent().get_parent().get_parent()
+	if _target_pos == null or _target_pos == global_position:
+		if _next_room is Elevator:
+			# Get the accurate position if the next room is an elevator
+			_next_room.wait_for_elevator(self)
+			map_path.pop_next_target_pos()
+		else:
+			_target_pos = map_path.pop_next_target_pos()
+			
 
-func path_to_room(pos):
-	var shelter_map = get_tree().current_scene.find_child("AutoSceneMap")
-	
-	var z = roundi(pos.z/ shelter_map.cell_size.z) * -1
-	var y = roundi((pos.y)/ shelter_map.cell_size.y)
+	_move_process(delta)
 
-	var parent = get_main_parent()
+
+func _elevator_process(delta):
+	var elevator = map_path.prev_room if map_path.prev_room != null else assigned_room
+
+	if not elevator.is_open and _elevator_transfer_process == 0:
+		return
+
+	# Exception if the door is already open
+	if elevator.is_open and _elevator_transfer_process == 0:
+		_elevator_transfer_process += 1
+		_target_pos = elevator._get_first_transfer_position()
+
+	if _target_pos == global_position and not _is_on_elevator_platform:
+		_elevator_transfer_process += 1
+
+		match _elevator_transfer_process:
+			1:
+				_target_pos = elevator._get_first_transfer_position()
+			2:
+				_target_pos = elevator._get_second_transfer_position()
+			3:
+				elevator.transfer_dweller_to_platform(self)
+				elevator.ask_for_elevator(map_path.get_next_room())
+				_is_on_elevator_platform = true
+			4:
+				_target_pos = map_path.pop_next_target_pos()
+			5:
+				_waiting_on_elevator = false
+				_elevator_transfer_process = 0
+
+	_move_process(delta)
+
+
+
+func _move_process(delta):
+	global_position.y = move_toward(global_position.y, _target_pos.y, delta * MAX_SPEED)
+	global_position.z = move_toward(global_position.z, _target_pos.z, delta * MAX_SPEED)
+	global_position.x = move_toward(global_position.x, _target_pos.x, delta * MAX_SPEED)
+
+
+
+func path_to_room(target_room):
+	var parent = _get_main_parent()
 	var matrix: Matrix = parent._matrix
 	var max_height = matrix.size.y
-	var target_room = matrix.get_room_at(y, z)
-	
-	if target_room != null:
-		return
-	
-	if _instructions and _instructions[0] == Instructions.MOVE_ON_FLOOR:
-		_target_positions.clear()
-		_instructions.clear()
 	
 	var start = Vector2i(matrix_position.x, max_height - matrix_position.y - 1)
-	var end = Vector2i(z, max_height - y - 1)
+	var end = target_room.positions[0]
 	
 	# Unassigned the dweller from the old room
 	if assigned_room != null:
 		assigned_room._forget_dweller(self)
-		
-	assigned_room = matrix.get_room_at(end.x, end.y)
+	
+	assigned_room = target_room
 	assigned_room._register_dweller(self)
 	
-	best_path(start, end)
-	
-	var work_position = assigned_room.get_work_position(self)
-	var first_pos = assigned_room.get_first_position()
-
-	_instructions.append(Instructions.MOVE_ON_FLOOR)
-	_target_positions.append(Vector3(
-		0,
-		(max_height - first_pos.y) * shelter_map.cell_size.y - 3 + work_position.y,
-		(first_pos.x * shelter_map.cell_size.z + work_position.x) * -1 
-	))
-
-
-func _on_t_enter_elevator_timeout():
-	global_position.x = -1
-	_instructions.remove_at(0)
-
-
-func _on_t_exit_elevator_timeout():
-	_instructions.remove_at(0)
-	global_position.x = 0
-
-
-func _on_t_move_elevator_timeout():
-	if _target_positions:
-		_instructions.remove_at(0)
-		global_position.y = _target_positions[0].y
-		_target_positions.remove_at(0)
+	map_path = best_path(start, end)

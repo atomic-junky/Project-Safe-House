@@ -3,13 +3,17 @@ class_name ShelterCore
 extends Node3D
 
 
-@onready var shelter_map = $AutoSceneMap
-@onready var dc_assigned = $DwellerContainer/Assigned
+@onready var shelter_map: AutoSceneMap = $AutoSceneMap
+@onready var platform_container = $PlatformContainer
 @onready var drag_body = $DragBody
+@onready var dweller_container = $DwellerContainer
+
+@onready var elevator_platform = preload("res://objects/map_scenes/shelter/ElevatorPlatform.tscn")
 
 var _matrix = Matrix.new(14, 25)
 var _selected_build_room = null
 var _selected_dweller = null
+var _elevator_networks = []
 
 
 func _ready():
@@ -31,9 +35,9 @@ func _ready():
 			continue
 
 		_matrix.add_room(_empty_location, [Vector2(x, 0)])
-	
-	
+
 	_update_rooms()
+	_update_elevator_networks()
 
 
 func _input(event) -> void:
@@ -57,12 +61,15 @@ func _input(event) -> void:
 				
 				var _room = RoomPicker.pick(_selected_build_room).new()
 				_matrix.add_room(_room, [Vector2(z, y)])
+
 				_update_rooms()
+				_update_elevator_networks()
+
 				_selected_build_room = null
 				return
-	
+
 	# Dweller Drag and Drop Handler
-	if event.is_pressed() and event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN, MOUSE_BUTTON_WHEEL_LEFT, MOUSE_BUTTON_WHEEL_RIGHT]:
+	if event is InputEventMouseButton and event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN, MOUSE_BUTTON_WHEEL_LEFT, MOUSE_BUTTON_WHEEL_RIGHT]:
 		return
 
 	if event is InputEventMouseButton and event.is_pressed() and ray.has("collider") and ray.collider is AnimatableBody3D:
@@ -70,7 +77,6 @@ func _input(event) -> void:
 		_selected_dweller = ray.collider.get_parent()
 	elif event is InputEventMouseButton and !event.is_pressed():
 		if _selected_dweller:
-			# FIXME: Not very accurate (sometimes it select neighbour rooms)
 			var dweller_room = _selected_dweller.assigned_room
 			var target_room = _matrix.get_room_at(
 				roundi((pos_on_plane.z + 1)/ shelter_map.cell_size.z) * -1,
@@ -78,7 +84,8 @@ func _input(event) -> void:
 			)
 
 			if not (dweller_room != null and dweller_room == target_room) and target_room != null:
-				_selected_dweller.path_to_room(pos_on_plane)
+				if not (target_room is Elevator or target_room is EmptyLocation):
+					_selected_dweller.path_to_room(target_room)
 				
 		camera.body_drag_mode = false
 		_selected_dweller = null
@@ -90,6 +97,7 @@ func _input(event) -> void:
 		drag_body.position.y = pos_on_plane.y
 		return
 
+
 func _on_build_mode_enabled(selected_room) -> void:
 	for y in _matrix.size.y:
 		for z in _matrix.size.x:
@@ -99,6 +107,7 @@ func _on_build_mode_enabled(selected_room) -> void:
 			_place_build_location(y, z)
 	
 	_selected_build_room = selected_room
+
 
 func _is_a_build_location(z, y, build_room) -> bool:
 	var room = _matrix.get_room_at(z, y)
@@ -120,34 +129,109 @@ func _is_a_build_location(z, y, build_room) -> bool:
 	
 	return false
 
+
 func _update_rooms() -> void:
 	shelter_map.clear()
-	print(shelter_map._scene_map.get_child_count())
 	
 	for y in range(_matrix.size.y):
 		for z in range(_matrix.size.x):
 			var room = _matrix.get_room_at_first_position(z, y)
 			var _next_room = _matrix.get_room_at(z+1, y) if z < _matrix.size.y else null
 			
+			add_child(room)
+
 			# Nothing
 			if room == null or room is EmptyLocation:
 				if not _matrix._is_room_at(z, y):
 					_place_room(y, z, MeshLink._meshes.DIRT.name)
 				continue
 			
-			_place_room(y, z, room.mesh.name)
+			_place_room(y, z, room.mesh.name, room)
 
 
-func _place_room(y: int, z: int, mesh_name: String) -> void:
-	shelter_map.set_cell_item(Vector3i(
+func _update_elevator_networks() -> void:
+	var new_networks = _get_elevator_networks()
+
+	for platform: ElevatorPlaform in platform_container.get_children():
+		var freeable = true
+		for network in new_networks:
+			if platform._current_elevator in network:
+				freeable = false
+				platform.network = network
+
+		if freeable:
+			platform.queue_free()
+
+
+	for network in new_networks:
+		var already_have_platform = false
+		for platform: ElevatorPlaform in platform_container.get_children():
+			if platform.network == network:
+				already_have_platform = true
+
+		var first_elevator: Elevator = network[0]
+
+		if not already_have_platform:
+			var new_platform = elevator_platform.instantiate()
+
+			platform_container.add_child(new_platform)
+			new_platform.global_position = first_elevator.room_node.global_position
+			new_platform.network = network
+	
+	for platform: ElevatorPlaform in platform_container.get_children():
+		for network in new_networks:
+			if platform.network != network:
+				continue
+			
+			for elevator in network:
+				elevator._platform = platform
+				elevator.is_open = false
+		
+	_elevator_networks = new_networks
+
+
+func _get_elevator_networks() -> Array[Array]:
+	var networks: Array[Array] = []
+	var visited = []
+
+	for x in range(_matrix.size.x):
+		var network = []
+
+		for y in range(_matrix.size.y):
+			var room = _matrix.get_room_at(x, y)
+			if not room is Elevator:
+				if len(network) > 0:
+					networks.append(network)
+				network = []
+				continue
+
+			if room in visited:
+				continue
+
+			network.append(room)
+			visited.append(room)
+		
+		if len(network) > 0:
+			networks.append(network)
+	
+	return networks
+
+
+func _place_room(y: int, z: int, mesh_name: String, room: Room = null) -> void:
+	var coordinate = Vector3i(
 		0, _matrix.size.y-y-1, -z
-	), mesh_name)
+	)
+
+	shelter_map.set_cell_item(coordinate, mesh_name)
+
+	if room != null:
+		room.room_node = shelter_map._get_cell_node(coordinate)
 
 
-func _place_room_border(y: int, z: int, size: int) -> void:
-	shelter_map.set_cell_item(Vector3i(
-		1, _matrix.size.y-y-1, -z
-	), 6+size)
+# func _place_room_border(y: int, z: int, size: int) -> void:
+# 	shelter_map.set_cell_item(Vector3i(
+# 		1, _matrix.size.y-y-1, -z
+# 	), 6+size)
 
 
 func _place_build_location(y: int, z: int, _size: int = 1):

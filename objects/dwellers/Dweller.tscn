@@ -1,8 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://ci1ve6somicw7"]
+[gd_scene load_steps=4 format=3 uid="uid://ci1ve6somicw7"]
 
 [ext_resource type="Script" path="res://scripts/Dweller/Dweller.gd" id="1_vjmqo"]
 [ext_resource type="PackedScene" uid="uid://2dntu6ajnkfq" path="res://objects/dwellers/DwellerBody.tscn" id="2_mnvit"]
-[ext_resource type="Script" path="res://scripts/Dweller/DwellerBody.gd" id="3_xiymd"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_28lvu"]
 size = Vector3(1.336, 3.295, 0.175247)
@@ -15,7 +14,7 @@ script = ExtResource("1_vjmqo")
 sync_to_physics = false
 
 [node name="DwellerBody" parent="Body" instance=ExtResource("2_mnvit")]
-script = ExtResource("3_xiymd")
+transform = Transform3D(1, 0, 2.13163e-14, 0, 1, 0, -2.13163e-14, 0, 1, -9.41753e-05, 1.70961, -5.03111e-10)
 
 [node name="HitBox" type="CollisionShape3D" parent="Body"]
 transform = Transform3D(1, 0, -2.4869e-14, 0, 1, 0, 2.4869e-14, 0, 1, 0, 1.65624, 0)

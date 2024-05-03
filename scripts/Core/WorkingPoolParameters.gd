@@ -3,12 +3,18 @@ class_name WorkingPoolParameters
 
 var _sizes: Dictionary = {}
 
-func append_positions(size: int = 1, positions: Array[Vector3] = []):
+
+func append_positions(size: int = 1, positions: Array = []):
 	_sizes[size] = positions
 
-func _from_markers():
-	# TODO: Put some Marker3D on a room mesh to know were are the working spots
-	pass
+
+func _from_markers(size: int, markers_parent: Node):
+	var positions = []
+	for marker in markers_parent.get_children():
+		positions.append(marker.position)
+	
+	append_positions(size, positions)
+
 
 static func _default():
 	var parameters = WorkingPoolParameters.new()

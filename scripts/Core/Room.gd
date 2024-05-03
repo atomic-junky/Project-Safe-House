@@ -1,9 +1,10 @@
-extends Object
-
+extends Node
 class_name Room
+
 
 var id: String = UUID.v4()
 var positions: Array[Vector2]
+var max_size: int = 3
 var size: int = 1 :
 	get:
 		return len(positions)
@@ -11,8 +12,7 @@ var size: int = 1 :
 var mesh: Dictionary :
 	get = _get_mesh
 
-var max_size: int = 3
-
+var room_node: Node3D
 var dwellers: Array = []
 var working_spots: WorkingPool = WorkingPool.new()
 
@@ -21,7 +21,7 @@ func _init() -> void:
 	call("_constructor")
 
 	if self is EmptyLocation:
-		return	
+		return
 	Logger.info("Room(" + id + ") created")
 
 
