@@ -138,21 +138,21 @@ func _update_rooms() -> void:
 			var room = _matrix.get_room_at_first_position(z, y)
 			var _next_room = _matrix.get_room_at(z+1, y) if z < _matrix.size.y else null
 			
-			add_child(room)
-
 			# Nothing
 			if room == null or room is EmptyLocation:
 				if not _matrix._is_room_at(z, y):
 					_place_room(y, z, MeshLink._meshes.DIRT.name)
 				continue
-			
+
+			if room.get_parent() != self:			
+				add_child(room)
 			_place_room(y, z, room.mesh.name, room)
 
 
 func _update_elevator_networks() -> void:
 	var new_networks = _get_elevator_networks()
 
-	for platform: ElevatorPlaform in platform_container.get_children():
+	for platform: ElevatorPlatform in platform_container.get_children():
 		var freeable = true
 		for network in new_networks:
 			if platform._current_elevator in network:
@@ -165,7 +165,7 @@ func _update_elevator_networks() -> void:
 
 	for network in new_networks:
 		var already_have_platform = false
-		for platform: ElevatorPlaform in platform_container.get_children():
+		for platform: ElevatorPlatform in platform_container.get_children():
 			if platform.network == network:
 				already_have_platform = true
 
@@ -178,7 +178,7 @@ func _update_elevator_networks() -> void:
 			new_platform.global_position = first_elevator.room_node.global_position
 			new_platform.network = network
 	
-	for platform: ElevatorPlaform in platform_container.get_children():
+	for platform: ElevatorPlatform in platform_container.get_children():
 		for network in new_networks:
 			if platform.network != network:
 				continue

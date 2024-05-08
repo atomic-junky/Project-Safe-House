@@ -16,6 +16,14 @@ var room_node: Node3D
 var dwellers: Array = []
 var working_spots: WorkingPool = WorkingPool.new()
 
+var position: Vector3 :
+	get:
+		return room_node.position
+
+var global_position: Vector3 :
+	get:
+		return room_node.global_position
+
 
 func _init() -> void:
 	call("_constructor")

@@ -1,10 +1,11 @@
 extends Node3D
-class_name ElevatorPlaform
+class_name ElevatorPlatform
 
 
 const MAX_SPEED: float = 1.0
 
 @onready var _slot_markers = $SlotMarkers
+@onready var t_departure: Timer = get_node("Timers/tDeparture")
 
 var network: Array = []
 
@@ -24,7 +25,10 @@ func _ready():
 
 func _assign_dweller(dweller: Dweller):
 	spots_pool._assign_dweller(1, dweller)
-	dweller._target_pos = global_position + spots_pool.get_position(1, dweller)
+
+
+func _deassign_dweller(dweller: Dweller):
+	spots_pool._deassign_dweller(1, dweller)
 
 
 func _transfer_dwellers(dwellers: Array):
@@ -32,36 +36,33 @@ func _transfer_dwellers(dwellers: Array):
 		spots_pool._assign_dweller(1, dweller)
 
 
-func _process(delta):
+func _process(_delta):
 	_current_elevator = null
 	for elevator in network:
 		if elevator.room_node.global_position.y == global_position.y:
 			_current_elevator = elevator
 			_requests.erase(_current_elevator)
 
-	if _target_elevator == null and _current_elevator != null and not _requests.is_empty():
-		_target_elevator = _get_next_floor()
 
-	if _target_elevator != null and (_current_elevator == null or _current_elevator != _target_elevator):
-		if _current_elevator and _requests.is_empty():
-		# if _current_elevator and not (_current_elevator.is_empty() or is_full()):
-			return
-
-		var _target_pos = _target_elevator.room_node.global_position
-		global_position.y = move_toward(global_position.y, _target_pos.y, delta * MAX_SPEED)
-		
-		for spot in spots_pool.get_all_taken(1):
-			spot.dweller._target_pos = global_position + spots_pool.get_position(1, spot.dweller)
-	elif _current_elevator == _target_elevator:
-		_target_elevator = null
-		for spot in spots_pool.get_all_taken(1):
-			await get_tree().create_timer(1.0).timeout
-			spot.dweller._is_on_elevator_platform = false
-			spots_pool._deassign_dweller(1, spot.dweller)
+func get_dweller_pos(dweller: Dweller):
+	return global_position + spots_pool.get_position(1, dweller)
 
 
 func request(elevator: Elevator):
 	_requests.append(elevator)
+
+
+func _can_go() -> bool:
+	if len(_requests) <= 0:
+		return false
+
+	# Check if all dwellers are in place
+	for spot in spots_pool.get_all_taken(1):
+		var dweller = spot.dweller
+		if !dweller.machine.state is EIdlePlatformState:
+			return false
+
+	return true
 
 
 func _sort_high_floors(a, b) -> bool:
@@ -87,3 +88,16 @@ func _get_next_floor():
 
 func is_full():
 	return spots_pool.is_full(1)
+func is_empty():
+	return spots_pool.is_empty(1)
+
+
+func _on_t_departure_timeout():
+	_target_elevator = _get_next_floor()
+
+
+func _move_to_floor(delta: float, pos_y: float):
+	global_position.y = move_toward(global_position.y, pos_y, delta * MAX_SPEED)
+
+	for spot in spots_pool.get_all_taken(1):
+		spot.dweller.global_position = get_dweller_pos(spot.dweller)

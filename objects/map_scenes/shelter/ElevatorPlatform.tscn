@@ -1,7 +1,10 @@
-[gd_scene load_steps=3 format=3 uid="uid://djuntgxl1uea6"]
+[gd_scene load_steps=6 format=3 uid="uid://djuntgxl1uea6"]
 
 [ext_resource type="Script" path="res://scripts/ElevatorPlatform.gd" id="1_7gl2q"]
 [ext_resource type="PackedScene" uid="uid://hfj0svft1xlw" path="res://assets/meshes/elevator_platform.glb" id="1_we87d"]
+[ext_resource type="Script" path="res://scripts/Core/StateMachine/StateMachine.gd" id="3_pcofr"]
+[ext_resource type="Script" path="res://scripts/Core/StateMachine/States/ElevatorPlatform/IdleState.gd" id="4_8xt2g"]
+[ext_resource type="Script" path="res://scripts/Core/StateMachine/States/ElevatorPlatform/MovingState.gd" id="5_smdp7"]
 
 [node name="ElevatorPlatform" type="Node3D"]
 script = ExtResource("1_7gl2q")
@@ -27,3 +30,23 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.25, -1.91, -1.25)
 
 [node name="m06" type="Marker3D" parent="SlotMarkers"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.25, -1.91, -1.75)
+
+[node name="Timers" type="Node" parent="."]
+
+[node name="tDeparture" type="Timer" parent="Timers"]
+one_shot = true
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state", "node")]
+script = ExtResource("3_pcofr")
+initial_state = NodePath("EPIdleState")
+node = NodePath("..")
+
+[node name="EPIdleState" type="Node" parent="StateMachine" node_paths=PackedStringArray("moving_state")]
+script = ExtResource("4_8xt2g")
+moving_state = NodePath("../EPMovingState")
+
+[node name="EPMovingState" type="Node" parent="StateMachine" node_paths=PackedStringArray("idle_state")]
+script = ExtResource("5_smdp7")
+idle_state = NodePath("../EPIdleState")
+
+[connection signal="timeout" from="Timers/tDeparture" to="." method="_on_t_departure_timeout"]

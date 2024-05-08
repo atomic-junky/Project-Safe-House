@@ -38,8 +38,10 @@ func _clean_path():
 		_room_cache.append(room.id)
 
 	# Remove in between elevators
+	var cleaned_path = _path.duplicate()
+	
 	for i in len(_path)-1:
-		if i <= 0:
+		if i <= 0 or i >= len(_path)-1:
 			continue
 
 		var p_pos = _astar.get_point_position(_path[i])
@@ -48,9 +50,15 @@ func _clean_path():
 		var prev_p_pos = _astar.get_point_position(_path[i-1])
 		var prev_p_room = _matrix.get_room_at(prev_p_pos.x, prev_p_pos.y)
 
-		if prev_p_room is Elevator and p_room is Elevator:
-			if prev_p_pos.x == p_pos.x:
-				_path.erase(_path[i])
+		
+		var next_p_pos = _astar.get_point_position(_path[i+1])
+		var next_p_room = _matrix.get_room_at(next_p_pos.x, next_p_pos.y)
+
+		if prev_p_room is Elevator and p_room is Elevator and next_p_room is Elevator:
+			if prev_p_pos.x == p_pos.x and next_p_pos.x == p_pos.x:
+				cleaned_path.erase(_path[i])
+	
+	_path = cleaned_path
 
 
 func pop_next_target_pos() -> Vector3:
@@ -66,7 +74,7 @@ func pop_next_target_pos() -> Vector3:
 
 	var p_global_position = Vector3(-1, y, z)
 
-	prev_room = get_next_room()
+	prev_room = get_current_room()
 
 	_path.remove_at(0)
 
@@ -76,7 +84,7 @@ func pop_next_target_pos() -> Vector3:
 	return p_global_position
 
 
-func get_next_room():
+func get_current_room():
 	if len(_path) <= 0:
 		return null
 
@@ -84,3 +92,17 @@ func get_next_room():
 	var p_pos = _astar.get_point_position(p_index)
 
 	return _matrix.get_room_at(p_pos.x, p_pos.y)
+
+
+func get_next_room():
+	if len(_path) <= 1:
+		return null
+
+	var p_index = _path[1]
+	var p_pos = _astar.get_point_position(p_index)
+
+	return _matrix.get_room_at(p_pos.x, p_pos.y)
+
+
+func is_empty() -> bool:
+	return len(_path) <= 0
