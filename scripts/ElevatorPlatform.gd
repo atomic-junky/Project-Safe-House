@@ -48,7 +48,7 @@ func get_dweller_pos(dweller: Dweller):
 	return global_position + spots_pool.get_position(1, dweller)
 
 
-func request(elevator: Elevator):
+func request(elevator: ElevatorShaft):
 	_requests.append(elevator)
 
 

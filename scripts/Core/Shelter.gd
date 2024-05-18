@@ -25,7 +25,7 @@ func _ready():
 	
 	# Place two elevators 
 	for y in range(2):
-		var _elevator = Elevator.new()
+		var _elevator = ElevatorShaft.new()
 		_matrix.add_room(_elevator, [Vector2(3, y)])
 
 	# Empty locations
@@ -84,7 +84,7 @@ func _input(event) -> void:
 			)
 
 			if not (dweller_room != null and dweller_room == target_room) and target_room != null:
-				if not (target_room is Elevator or target_room is EmptyLocation):
+				if not (target_room is ElevatorShaft or target_room is EmptyLocation):
 					_selected_dweller.path_to_room(target_room)
 				
 		camera.body_drag_mode = false
@@ -121,7 +121,7 @@ func _is_a_build_location(z, y, build_room) -> bool:
 	
 	# If the selected room is an elevator
 	if build_room == RoomList.ELEVATOR:
-		if (top_room != null and top_room is Elevator) or (bottom_room != null and bottom_room is Elevator):
+		if (top_room != null and top_room is ElevatorShaft) or (bottom_room != null and bottom_room is ElevatorShaft):
 			return true
 	
 	if prev_room != null or next_room != null:
@@ -169,7 +169,7 @@ func _update_elevator_networks() -> void:
 			if platform.network == network:
 				already_have_platform = true
 
-		var first_elevator: Elevator = network[0]
+		var first_elevator: ElevatorShaft = network[0]
 
 		if not already_have_platform:
 			var new_platform = elevator_platform.instantiate()
@@ -199,7 +199,7 @@ func _get_elevator_networks() -> Array[Array]:
 
 		for y in range(_matrix.size.y):
 			var room = _matrix.get_room_at(x, y)
-			if not room is Elevator:
+			if not room is ElevatorShaft:
 				if len(network) > 0:
 					networks.append(network)
 				network = []

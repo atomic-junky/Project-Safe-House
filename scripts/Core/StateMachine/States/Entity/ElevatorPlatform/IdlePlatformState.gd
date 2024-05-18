@@ -7,7 +7,7 @@ const TRAVEL_SPEED = 1.5
 @export var shaft_transtion_state: EToShaftTransitionCState
 @export var running_state: ERunningState
 
-var current_elevator: Elevator
+var current_elevator: ElevatorShaft
 var platform: ElevatorPlatform
 
 
@@ -19,7 +19,7 @@ func _enter(_msg={}) -> void:
 
 
 func _do(_delta: float) -> void:
-    if platform._current_elevator == node.map_path.get_current_room() and not node.map_path.get_next_room() is Elevator:
+    if platform._current_elevator == node.map_path.get_current_room() and not node.map_path.get_next_room() is ElevatorShaft:
         if shaft_transtion_state._active:
             return
         

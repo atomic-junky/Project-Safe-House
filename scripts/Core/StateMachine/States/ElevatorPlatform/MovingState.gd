@@ -4,7 +4,7 @@ extends State
 
 @export var idle_state: EPIdleState
 
-var _target_floor: Elevator
+var _target_floor: ElevatorShaft
 var _target_y_pos: float
 
 

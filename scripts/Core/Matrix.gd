@@ -109,9 +109,9 @@ func _build_astar_path() -> AStar2D:
 			if right_id != null:
 				astar.connect_points(point_id, right_id)
 				
-			if room is Elevator:
-				var top_id = Matrix._vector_to_astar_id(Vector2i(x, y-1)) if get_room_at(x, y-1) is Elevator else null
-				var bottom_id = Matrix._vector_to_astar_id(Vector2i(x, y+1)) if get_room_at(x, y+1) is Elevator else null
+			if room is ElevatorShaft:
+				var top_id = Matrix._vector_to_astar_id(Vector2i(x, y-1)) if get_room_at(x, y-1) is ElevatorShaft else null
+				var bottom_id = Matrix._vector_to_astar_id(Vector2i(x, y+1)) if get_room_at(x, y+1) is ElevatorShaft else null
 				
 				if top_id != null:
 					astar.connect_points(point_id, top_id)

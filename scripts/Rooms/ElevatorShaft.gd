@@ -1,9 +1,9 @@
 extends Room
 
-class_name Elevator
+class_name ElevatorShaft
 
 
-signal transfer
+signal open
 
 var _platform: ElevatorPlatform
 var is_open = false
@@ -30,7 +30,7 @@ func _constructor():
 
 
 func _process(_delta):
-	if is_open and !working_spots.is_empty(size):
+	if is_open and !working_spots.is_empty(size) and _platform._current_elevator == self:
 		transfer_dwellers_to_platform()
 	
 	if !is_open and !working_spots.is_empty(size):
@@ -40,9 +40,9 @@ func _process(_delta):
 		_get_animation_player().play("open_door")
 		await _get_animation_player().animation_finished
 		is_open = true
+		open.emit()
 	
 	if is_open and _platform._current_elevator != self:
-		await get_tree().create_timer(1.0).timeout
 		_get_animation_player().play("close_door")
 		is_open = false
 
@@ -75,7 +75,7 @@ func _transfer_dweller_to_platform(dweller: Dweller):
 	dweller.elevator_transfer.emit()
 
 
-func ask_for_elevator(elevator: Elevator):
+func ask_for_elevator(elevator: ElevatorShaft):
 	_platform.request(elevator)
 
 

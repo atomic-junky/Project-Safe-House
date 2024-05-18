@@ -6,7 +6,7 @@ const TRAVEL_SPEED = 1.5
 
 @export var elevator_platform_state: State
 
-var current_elevator: Elevator
+var current_elevator: ElevatorShaft
 var _target_pos: Array[Vector3]
 
 

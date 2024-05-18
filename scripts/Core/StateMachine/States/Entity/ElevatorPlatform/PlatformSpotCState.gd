@@ -6,7 +6,7 @@ const TRAVEL_SPEED = 1.5
 
 @export var idle_platform_state: EIdlePlatformState
 
-var elevator: Elevator
+var elevator: ElevatorShaft
 var platform: ElevatorPlatform
 var _target_pos: Vector3
 

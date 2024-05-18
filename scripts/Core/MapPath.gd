@@ -54,7 +54,7 @@ func _clean_path():
 		var next_p_pos = _astar.get_point_position(_path[i+1])
 		var next_p_room = _matrix.get_room_at(next_p_pos.x, next_p_pos.y)
 
-		if prev_p_room is Elevator and p_room is Elevator and next_p_room is Elevator:
+		if prev_p_room is ElevatorShaft and p_room is ElevatorShaft and next_p_room is ElevatorShaft:
 			if prev_p_pos.x == p_pos.x and next_p_pos.x == p_pos.x:
 				cleaned_path.erase(_path[i])
 	

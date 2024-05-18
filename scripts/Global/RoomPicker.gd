@@ -18,7 +18,7 @@ class_name RoomPicker
 
 static var _class_picker: Dictionary = {
 	RoomList.VAULTDOOR: VaultDoor,
-	RoomList.ELEVATOR: Elevator,
+	RoomList.ELEVATOR: ElevatorShaft,
 	RoomList.LIVING_ROOM: LivingRoom,
 	RoomList.POWER_GENERATOR: PowerGenerator,
 	RoomList.DINER: Diner,

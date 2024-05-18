@@ -25,7 +25,7 @@ func _do(delta: float) -> void:
             parent.transition_to(idle_state)
             return
         
-        if node.map_path.get_current_room() is Elevator:
+        if node.map_path.get_current_room() is ElevatorShaft:
             parent.transition_to(elevator_shaft_state)
             return
 
