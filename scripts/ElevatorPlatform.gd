@@ -2,6 +2,8 @@ extends Node3D
 class_name ElevatorPlatform
 
 
+@export var machine: StateMachine
+
 const MAX_SPEED: float = 1.0
 
 @onready var _slot_markers = $SlotMarkers
@@ -14,6 +16,7 @@ var _target_elevator: Room
 var _requests: Array = []
 
 var spots_pool: WorkingPool
+var accept_dweller: bool = true
 
 
 func _ready():

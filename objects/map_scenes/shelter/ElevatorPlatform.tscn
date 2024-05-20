@@ -6,8 +6,9 @@
 [ext_resource type="Script" path="res://scripts/Core/StateMachine/States/ElevatorPlatform/IdleState.gd" id="4_8xt2g"]
 [ext_resource type="Script" path="res://scripts/Core/StateMachine/States/ElevatorPlatform/MovingState.gd" id="5_smdp7"]
 
-[node name="ElevatorPlatform" type="Node3D"]
+[node name="ElevatorPlatform" type="Node3D" node_paths=PackedStringArray("machine")]
 script = ExtResource("1_7gl2q")
+machine = NodePath("StateMachine")
 
 [node name="Mesh" parent="." instance=ExtResource("1_we87d")]
 

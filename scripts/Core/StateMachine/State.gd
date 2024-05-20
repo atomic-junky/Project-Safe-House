@@ -17,7 +17,7 @@ var node: Node :
 
 var state: State :
 	get:
-		return machine.state
+		return machine.state if machine else null
 
 
 func set_state(new_state: State, msg={}, force_reset: bool = false) -> State:

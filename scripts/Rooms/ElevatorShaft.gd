@@ -30,7 +30,7 @@ func _constructor():
 
 
 func _process(_delta):
-	if is_open and !working_spots.is_empty(size) and _platform._current_elevator == self:
+	if is_open and !working_spots.is_empty(size) and _platform._current_elevator == self and _platform.accept_dweller:
 		transfer_dwellers_to_platform()
 	
 	if !is_open and !working_spots.is_empty(size):
@@ -43,8 +43,8 @@ func _process(_delta):
 		open.emit()
 	
 	if is_open and _platform._current_elevator != self:
-		_get_animation_player().play("close_door")
 		is_open = false
+		_get_animation_player().play("close_door")
 
 
 func _get_animation_player() -> AnimationPlayer:

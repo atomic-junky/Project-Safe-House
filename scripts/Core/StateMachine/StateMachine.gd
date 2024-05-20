@@ -8,6 +8,9 @@ extends Node
 @export var node: Node
 
 var state: State
+var last_state: State :
+	get: 
+		return state.state
 
 
 func _ready() -> void:
