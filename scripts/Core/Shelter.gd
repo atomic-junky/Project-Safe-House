@@ -41,24 +41,29 @@ func _ready():
 
 
 func _input(event) -> void:
+	_remove_pointer()
+
 	var camera = $Camera
 	var ray = camera.screen_point_to_ray()
 	var pos_on_plane = camera.get_mouse_position_on_plane()
 
-	if _selected_build_room != null and event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
-			if ray.has("collider"):
-				var collider_parent = ray.collider.get_parent().get_parent()
-				if collider_parent == shelter_map:
-					return
-				
-				var z = roundi((ray.position.z+1.5)/ shelter_map.cell_size.z) * -1
-				var y = roundi((ray.position.y)/ shelter_map.cell_size.y)
-				y = _matrix.size.y - y - 1
-				
+	if ray.has("collider"):
+		var z = roundi((ray.position.z+1.5)/ shelter_map.cell_size.z) * -1
+		var y = roundi((ray.position.y)/ shelter_map.cell_size.y)
+		y = _matrix.size.y - y - 1
+
+		var collider_parent = ray.collider.get_parent().get_parent()
+		if collider_parent == shelter_map:
+			return
+
+		if _matrix._is_room_at(z, y):
+			_place_pointer(y, z)
+
+		if _selected_build_room != null and event is InputEventMouseButton:
+			if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 				if not _is_a_build_location(z, y, _selected_build_room):
 					return
-				
+			
 				var _room = RoomPicker.pick(_selected_build_room).new()
 				_matrix.add_room(_room, [Vector2(z, y)])
 
@@ -228,11 +233,41 @@ func _place_room(y: int, z: int, mesh_name: String, room: Room = null) -> void:
 		room.room_node = shelter_map._get_cell_node(coordinate)
 
 
-# func _place_room_border(y: int, z: int, size: int) -> void:
-# 	shelter_map.set_cell_item(Vector3i(
-# 		1, _matrix.size.y-y-1, -z
-# 	), 6+size)
-
-
 func _place_build_location(y: int, z: int, _size: int = 1):
 	_place_room(y, z, MeshLink._meshes.BUILD_LOCATION.name)
+
+
+func _remove_pointer():
+	for mesh in [MeshLink._meshes.POINTER_1L, MeshLink._meshes.POINTER_2L, MeshLink._meshes.POINTER_3L]:
+		var item_id = shelter_map._get_item_index(mesh.name)
+		var cell = shelter_map._get_cell(item_id)
+
+		if not cell:
+			return
+
+		shelter_map._remove_instance(cell)
+
+
+func _place_pointer(y: int, z: int):
+	var room: Room = _matrix.get_room_at(z, y)
+	if room == null:
+		return
+	
+	var r_positions = room.positions
+	r_positions.sort_custom(_matrix._sort_postions)
+
+	var first_position = r_positions[0]
+
+	var coordinate = Vector3i(
+		1, _matrix.size.y-first_position.y-1, -first_position.x
+	)
+
+	var mesh = MeshLink._meshes.POINTER_1L
+	match room.size:
+		2:
+			mesh = MeshLink._meshes.POINTER_2L
+		3:
+			mesh = MeshLink._meshes.POINTER_3L
+
+	shelter_map.set_cell_item(coordinate, mesh.name)
+	

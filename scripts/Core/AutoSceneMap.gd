@@ -34,11 +34,22 @@ func _get_item_index(item_name: String) -> int:
 	return -1
 
 
+func _get_cell(item_id: int):
+	for key in _scene_map.cell_map.keys():
+		var cell = _scene_map.cell_map[key]
+		if cell.itemId == item_id:
+			return key
+
+
 func set_cell_item(
 	p_coordinate: Vector3, p_item_name: String, p_orientation: Quaternion = Quaternion.IDENTITY
 ) -> bool:
 	var p_item_id = _get_item_index(p_item_name)
 	return _scene_map.set_cell_item(p_coordinate, p_item_id, p_orientation, p_item_name)
+
+
+func _remove_instance(coordinate: Vector3) -> bool:
+	return _scene_map._remove_instance(coordinate)
 
 
 func get_cell(p_coordinate: Vector3):

@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://di108753nv2ai"]
+
+[ext_resource type="PackedScene" uid="uid://dacyqnhhe31i3" path="res://assets/meshes/rooms/vault_door.glb" id="1_na6rj"]
+[ext_resource type="PackedScene" uid="uid://qujlp6hln1y3" path="res://objects/core/base_collisions/2l_collision.tscn" id="2_b30xy"]
+
+[node name="VaultDoor" type="Node3D"]
+
+[node name="vault_door" parent="." instance=ExtResource("1_na6rj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.0946656)
+
+[node name="2l_Collision" parent="." instance=ExtResource("2_b30xy")]

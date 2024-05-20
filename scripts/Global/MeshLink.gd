@@ -10,13 +10,25 @@ const _meshes = {
 		name="dirt",
 		path="res://assets/meshes/dirt.glb"
 	},
+	POINTER_1L={
+		name="pointer_1l",
+		path="res://assets/meshes/ui/selector_1l.glb"
+	},
+	POINTER_2L={
+		name="pointer_2l",
+		path="res://assets/meshes/ui/selector_2l.glb"
+	},
+	POINTER_3L={
+		name="pointer_3l",
+		path="res://assets/meshes/ui/selector_3l.glb"
+	},
 	BUILD_LOCATION = {
 		name="build_location",
 		path="res://objects/map_scenes/shelter/BuildLocation.tscn"
 	},
 	VAULTDOOR = {
 		name="vaultdoor",
-		path="res://assets/meshes/rooms/vault_door.glb"
+		path="res://objects/map_scenes/shelter/rooms/VaultDoor.tscn"
 	},
 	ELEVATOR_TOP = {
 		name="elevator_top",
