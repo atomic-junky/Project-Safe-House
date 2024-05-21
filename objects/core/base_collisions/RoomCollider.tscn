@@ -1,0 +1,39 @@
+[gd_scene load_steps=3 format=3 uid="uid://df03y6j0we2a1"]
+
+[sub_resource type="GDScript" id="GDScript_15thv"]
+script/source = "@tool
+extends Area3D
+
+
+@export_range(1, 10) var room_size: int = 1:
+	set(val):
+		room_size = val
+		_compute_collision_size()
+
+@onready var collision_shape: CollisionShape3D = $CollisionShape3D
+
+
+func _ready():
+	_compute_collision_size()
+
+
+func _compute_collision_size():
+	if !collision_shape:
+		return
+	
+	var box = BoxShape3D.new()
+	box.set_size(Vector3(3, 2, 3*room_size))
+	collision_shape.shape = box 
+	
+	position.z = -1.5*room_size
+"
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_10vtq"]
+size = Vector3(3, 2, 3)
+
+[node name="Area3D" type="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, -1, -1.5)
+script = SubResource("GDScript_15thv")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_10vtq")

@@ -44,20 +44,23 @@ func _input(event) -> void:
 	_remove_pointer()
 
 	var camera = $Camera
-	var ray = camera.screen_point_to_ray()
+	var ray_bodies = camera.screen_point_to_ray(null, false, true)
+	var ray_areas = camera.screen_point_to_ray(null, true, false)
 	var pos_on_plane = camera.get_mouse_position_on_plane()
 
-	if ray.has("collider"):
-		var z = roundi((ray.position.z+1.5)/ shelter_map.cell_size.z) * -1
-		var y = roundi((ray.position.y)/ shelter_map.cell_size.y)
+	if ray_areas.has("collider"):
+		var z = roundi((ray_areas.position.z+1.5)/ shelter_map.cell_size.z) * -1
+		var y = roundi((ray_areas.position.y)/ shelter_map.cell_size.y)
 		y = _matrix.size.y - y - 1
 
-		var collider_parent = ray.collider.get_parent().get_parent()
+		var collider_parent = ray_areas.collider.get_parent().get_parent()
 		if collider_parent == shelter_map:
 			return
 
 		if _matrix._is_room_at(z, y):
-			_place_pointer(y, z)
+			var room = _matrix.get_room_at(z, y)
+			if room is Room and !room is EmptyLocation:
+				_place_pointer(y, z)
 
 		if _selected_build_room != null and event is InputEventMouseButton:
 			if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
@@ -77,9 +80,9 @@ func _input(event) -> void:
 	if event is InputEventMouseButton and event.button_index in [MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN, MOUSE_BUTTON_WHEEL_LEFT, MOUSE_BUTTON_WHEEL_RIGHT]:
 		return
 
-	if event is InputEventMouseButton and event.is_pressed() and ray.has("collider") and ray.collider is AnimatableBody3D:
+	if event is InputEventMouseButton and event.is_pressed() and ray_bodies.has("collider") and ray_bodies.collider is AnimatableBody3D:
 		camera.body_drag_mode = true
-		_selected_dweller = ray.collider.get_parent()
+		_selected_dweller = ray_bodies.collider.get_parent()
 	elif event is InputEventMouseButton and !event.is_pressed():
 		if _selected_dweller:
 			var dweller_room = _selected_dweller.assigned_room
@@ -243,7 +246,7 @@ func _remove_pointer():
 		var cell = shelter_map._get_cell(item_id)
 
 		if not cell:
-			return
+			continue
 
 		shelter_map._remove_instance(cell)
 

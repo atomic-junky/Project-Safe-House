@@ -1,15 +1,10 @@
 [gd_scene load_steps=3 format=3 uid="uid://klktocoyqruc"]
 
 [ext_resource type="PackedScene" uid="uid://buypg36u1uhrr" path="res://assets/meshes/build_location.glb" id="1_pmq5e"]
-
-[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_vwrro"]
-data = PackedVector3Array(0, -2, 0, 0, 0, -3, 0, -2, -3, 0, -2, 0, 0, 0, 0, 0, 0, -3)
+[ext_resource type="PackedScene" uid="uid://df03y6j0we2a1" path="res://objects/core/base_collisions/RoomCollider.tscn" id="2_qoclv"]
 
 [node name="BuildLocation" type="Node3D"]
 
 [node name="Mesh" parent="." instance=ExtResource("1_pmq5e")]
 
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
-shape = SubResource("ConcavePolygonShape3D_vwrro")
+[node name="Area3D" parent="." instance=ExtResource("2_qoclv")]
