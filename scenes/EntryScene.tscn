@@ -1,0 +1,29 @@
+[gd_scene load_steps=2 format=3 uid="uid://d2gjqruun10yh"]
+
+[sub_resource type="GDScript" id="GDScript_1kvg0"]
+script/source = "extends Node
+
+
+func _ready():
+	LoadManager.load_scene(\"res://scenes/Game.tscn\")
+"
+
+[node name="EntryScene" type="Node"]
+script = SubResource("GDScript_1kvg0")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)

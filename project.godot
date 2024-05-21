@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Fallout Shelter"
-run/main_scene="res://scenes/Game.tscn"
+run/main_scene="res://scenes/EntryScene.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
 run/max_fps=120
 boot_splash/bg_color=Color(0.176471, 0.407843, 0.709804, 1)
@@ -24,6 +24,7 @@ Instructions="*res://scripts/Global/Instructions.gd"
 Global="*res://scripts/Global/Variables.gd"
 GlobalSignal="*res://scripts/Core/GlobalSignal.gd"
 MeshLink="*res://scripts/Global/MeshLink.gd"
+LoadManager="*res://scripts/Global/LoadManager.gd"
 
 [debug]
 
@@ -38,7 +39,7 @@ window/stretch/aspect="expand"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/dictionary_resource/plugin.cfg", "res://addons/plugin_refresher/plugin.cfg", "res://addons/scene_map/plugin.cfg", "res://addons/script-ide/plugin.cfg")
+enabled=PackedStringArray("res://addons/dictionary_resource/plugin.cfg", "res://addons/scene_map/plugin.cfg", "res://addons/script-ide/plugin.cfg")
 
 [input]
 
