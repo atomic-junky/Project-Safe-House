@@ -10,3 +10,6 @@ var meshes = {
 
 func _constructor():
 	max_size = 2
+
+
+var room_name: String = "Vault Door"

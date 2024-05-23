@@ -3,6 +3,8 @@ class_name ShelterCore
 extends Node3D
 
 
+@export var roomSelectorInterface: PanelContainer = null
+
 @onready var shelter_map: AutoSceneMap = $AutoSceneMap
 @onready var platform_container = $PlatformContainer
 @onready var drag_body = $DragBody
@@ -48,6 +50,9 @@ func _input(event) -> void:
 	var ray_areas = camera.screen_point_to_ray(null, true, false)
 	var pos_on_plane = camera.get_mouse_position_on_plane()
 
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
+			roomSelectorInterface.hide()
+
 	if ray_areas.has("collider"):
 		var z = roundi((ray_areas.position.z+1.5)/ shelter_map.cell_size.z) * -1
 		var y = roundi((ray_areas.position.y)/ shelter_map.cell_size.y)
@@ -62,8 +67,13 @@ func _input(event) -> void:
 			if room is Room and !room is EmptyLocation:
 				_place_pointer(y, z)
 
-		if _selected_build_room != null and event is InputEventMouseButton:
-			if event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
+		if event is InputEventMouseButton:
+			var room = _matrix.get_room_at(z, y)
+			if room is Room and !room is EmptyLocation and roomSelectorInterface != null:
+				roomSelectorInterface.show()
+				roomSelectorInterface.bind(room)
+
+			if _selected_build_room != null and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
 				if not _is_a_build_location(z, y, _selected_build_room):
 					return
 			

@@ -28,7 +28,7 @@ func _compute_collision_size():
 	position.z = -1.5*room_size
 "
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_pk5wn"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_bwsph"]
 size = Vector3(3, 2, 3)
 
 [node name="Area3D" type="Area3D"]
@@ -36,4 +36,4 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, -1, -1.5)
 script = SubResource("GDScript_15thv")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("BoxShape3D_pk5wn")
+shape = SubResource("BoxShape3D_bwsph")

@@ -10,3 +10,4 @@ var meshes = {
 }
 
 
+var room_name: String = "Diner"

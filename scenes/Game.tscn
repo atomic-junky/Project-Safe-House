@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://bmnaptewe4c2t"]
+[gd_scene load_steps=28 format=3 uid="uid://bmnaptewe4c2t"]
 
 [ext_resource type="Texture2D" uid="uid://jb10j5512eug" path="res://assets/buttons/map.png" id="1_7tg0y"]
 [ext_resource type="Script" path="res://scripts/Game.gd" id="1_8jcqd"]
@@ -42,6 +42,44 @@ shadow_color = Color(0, 0, 0, 1)
 font = ExtResource("12_d5fum")
 font_size = 24
 font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0416f"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+bg_color = Color(0, 0, 0, 0.294118)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0, 0, 0, 1)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+
+[sub_resource type="GDScript" id="GDScript_bjlhj"]
+script/source = "extends PanelContainer
+
+
+var _room: Room
+
+
+func _ready():
+	hide()
+	
+
+func bind(room: Room):
+	_room = room
+	$RoomInfoContainer/RoomLabel.text = room.room_name
+"
+
+[sub_resource type="LabelSettings" id="LabelSettings_jxnii"]
+font = ExtResource("12_d5fum")
+font_size = 18
+font_color = Color(0.964844, 0.917969, 0.804688, 1)
+shadow_color = Color(0, 0, 0, 1)
 
 [sub_resource type="GDScript" id="GDScript_l14jj"]
 script/source = "extends TextureButton
@@ -176,7 +214,6 @@ mouse_filter = 2
 [node name="MiddleSubContainer" type="VBoxContainer" parent="Interface/MarginContainer/GridContainer/Middle"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 0
 
 [node name="TopVaultStats" type="CenterContainer" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer"]
 layout_mode = 2
@@ -231,6 +268,29 @@ text = "0 dwellers"
 layout_mode = 2
 text = "-
 "
+
+[node name="BottomContainer" type="VBoxContainer" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+alignment = 2
+
+[node name="RoomSelector" type="PanelContainer" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_0416f")
+script = SubResource("GDScript_bjlhj")
+
+[node name="RoomInfoContainer" type="VBoxContainer" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector"]
+layout_mode = 2
+
+[node name="RoomLabel" type="Label" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector/RoomInfoContainer"]
+layout_mode = 2
+text = "Room Name"
+label_settings = SubResource("LabelSettings_jxnii")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector/RoomInfoContainer"]
+layout_mode = 2
 
 [node name="Right" type="VBoxContainer" parent="Interface/MarginContainer/GridContainer"]
 custom_minimum_size = Vector2(200, 0)
@@ -295,6 +355,7 @@ grow_vertical = 2
 script = ExtResource("4_wk7e4")
 
 [node name="ColorRect" type="ColorRect" parent="BuildOverlay"]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -302,7 +363,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0, 0, 0, 0.490196)
+color = Color(0, 0, 0, 0.294118)
 
 [node name="Container" type="Control" parent="BuildOverlay"]
 layout_mode = 1
@@ -452,7 +513,8 @@ tab_alignment = 1
 tab_0/title = "Production"
 tab_1/title = "Support"
 
-[node name="Shelter" parent="." instance=ExtResource("18_tl8lo")]
+[node name="Shelter" parent="." node_paths=PackedStringArray("roomSelectorInterface") instance=ExtResource("18_tl8lo")]
+roomSelectorInterface = NodePath("../Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector")
 
 [connection signal="pressed" from="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer/AddDweller" to="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer" method="_on_add_dweller_pressed"]
 [connection signal="pressed" from="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer/RemoveDweller" to="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer" method="_on_remove_dweller_pressed"]
