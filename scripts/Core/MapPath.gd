@@ -72,7 +72,7 @@ func pop_next_target_pos() -> Vector3:
 	var z = room_pos.x * _cell_size.z * -1
 	var y = (_map_height - room_pos.y) * _cell_size.y - 0.905 - 2
 
-	var p_global_position = Vector3(-1, y, z)
+	var p_global_position = Vector3(-0.8, y, z)
 
 	prev_room = get_current_room()
 

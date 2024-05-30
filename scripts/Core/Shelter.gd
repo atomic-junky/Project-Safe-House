@@ -102,7 +102,7 @@ func _input(event) -> void:
 			)
 
 			if not (dweller_room != null and dweller_room == target_room) and target_room != null:
-				if not (target_room is ElevatorShaft or target_room is EmptyLocation):
+				if not (target_room is ElevatorShaft or target_room is EmptyLocation) and !target_room.is_full():
 					_selected_dweller.path_to_room(target_room)
 				
 		camera.body_drag_mode = false

@@ -16,6 +16,8 @@ var room_node: Node3D
 var dwellers: Array = []
 var working_spots: WorkingPool = WorkingPool.new()
 
+var region
+
 var position: Vector3 :
 	get:
 		return room_node.position
@@ -42,16 +44,24 @@ func _get_mesh():
 	return self.meshes[size]
 
 
-func _register_dweller(dweller: Dweller) -> void:
+func _register_dweller(dweller: Dweller) -> bool:
 	if not dwellers.has(dweller.id):
 		dwellers.append(dweller.id)
 	
-	working_spots._assign_dweller(size, dweller)
+	return working_spots._assign_dweller(size, dweller)
 
 
 func _forget_dweller(dweller: Dweller) -> void:
 	if dwellers.has(dweller.id):
 		dwellers.erase(dweller.id)
+
+
+func has_dweller(dweller: Dweller) -> bool:
+	return working_spots.has_dweller(size, dweller)
+
+
+func is_full() -> bool:
+	return working_spots.is_full(size)
 
 
 func get_work_position(dweller: Dweller):
@@ -62,6 +72,10 @@ func _sort_postions(a: Vector2, b: Vector2) -> bool:
 	if a.x < b.x:
 		return true
 	return false
+
+
+func get_navigation_region() -> NavigationRegion3D:
+	return room_node.get_node_or_null("NavigationRegion3D")
 
 
 func get_first_position():

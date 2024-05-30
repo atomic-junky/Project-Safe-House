@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://ci1ve6somicw7"]
+[gd_scene load_steps=14 format=3 uid="uid://ci1ve6somicw7"]
 
 [ext_resource type="Script" path="res://scripts/Dweller/Dweller.gd" id="1_vjmqo"]
 [ext_resource type="PackedScene" uid="uid://2dntu6ajnkfq" path="res://objects/dwellers/DwellerBody.tscn" id="2_mnvit"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://scripts/Core/StateMachine/States/Entity/IdleState.gd" id="5_8ejm0"]
 [ext_resource type="Script" path="res://scripts/StateMachineDebugLabel.gd" id="6_3himb"]
 [ext_resource type="Script" path="res://scripts/Core/StateMachine/States/Entity/RunningState.gd" id="6_wgd30"]
+[ext_resource type="Script" path="res://scripts/Core/StateMachine/States/Entity/NavigationRunningCState.gd" id="7_gbn3i"]
 [ext_resource type="Script" path="res://scripts/Core/StateMachine/States/Entity/ElevatorShaft/ElevatorShaftState.gd" id="7_n4ujv"]
 [ext_resource type="Script" path="res://scripts/Core/StateMachine/States/Entity/ElevatorShaft/ToPlatformTransitionCState.gd" id="8_aqd4w"]
 [ext_resource type="Script" path="res://scripts/Core/StateMachine/States/Entity/ElevatorPlatform/PlatformSpotCState.gd" id="9_fexeh"]
@@ -24,7 +25,7 @@ machine = NodePath("StateMachine")
 sync_to_physics = false
 
 [node name="DwellerBody" parent="Body" instance=ExtResource("2_mnvit")]
-transform = Transform3D(1, 0, 2.13163e-14, 0, 1, 0, -2.13163e-14, 0, 1, -9.41753e-05, 1.70961, -5.03111e-10)
+transform = Transform3D(1, 0, 2.13163e-14, 0, 1, 0, -2.13163e-14, 0, 1, -9.41753e-05, 1.60642, -5.03111e-10)
 
 [node name="HitBox" type="CollisionShape3D" parent="Body"]
 transform = Transform3D(1, 0, -2.4869e-14, 0, 1, 0, 2.4869e-14, 0, 1, 0, 1.65624, 0)
@@ -32,12 +33,17 @@ shape = SubResource("BoxShape3D_28lvu")
 
 [node name="StateMachineDebugLabel" type="Label3D" parent="." node_paths=PackedStringArray("machine")]
 transform = Transform3D(-3.7037, 0, -3.23788e-07, 0, 3.7037, 0, 3.23788e-07, 0, -3.7037, 0, 3.33333, 0)
+visible = false
 pixel_size = 0.001
 no_depth_test = true
 fixed_size = true
 text = "null"
 script = ExtResource("6_3himb")
 machine = NodePath("../StateMachine")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+path_max_distance = 9.01
+path_postprocessing = 1
 
 [node name="Timer" type="Node" parent="."]
 
@@ -59,10 +65,14 @@ node = NodePath("..")
 script = ExtResource("5_8ejm0")
 running_state = NodePath("../ERunningState")
 
-[node name="ERunningState" type="Node" parent="StateMachine" node_paths=PackedStringArray("idle_state", "elevator_shaft_state")]
+[node name="ERunningState" type="Node" parent="StateMachine" node_paths=PackedStringArray("idle_state", "elevator_shaft_state", "nav_running_cstate")]
 script = ExtResource("6_wgd30")
 idle_state = NodePath("../EIdleState")
 elevator_shaft_state = NodePath("../EElevatorShaft")
+nav_running_cstate = NodePath("ENavigationRunningCState")
+
+[node name="ENavigationRunningCState" type="Node" parent="StateMachine/ERunningState"]
+script = ExtResource("7_gbn3i")
 
 [node name="EElevatorShaft" type="Node" parent="StateMachine" node_paths=PackedStringArray("platform_transition_state", "platform_spot_state", "idle_platform_state")]
 script = ExtResource("7_n4ujv")

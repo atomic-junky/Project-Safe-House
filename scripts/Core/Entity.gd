@@ -6,6 +6,10 @@ extends Node3D
 
 signal elevator_transfer
 
+@onready var _agent: NavigationAgent3D = get_node_or_null("NavigationAgent3D")
+
+var vel: Vector3 = Vector3.ZERO
+
 var id: String = UUID.v4()
 
 var assigned_room = null
@@ -49,7 +53,22 @@ func _vector_to_id(vec):
 	return int(str(vec.y) + str(vec.x))
 
 
-func move_to_position(delta: float, target_pos: Vector3, speed: float):
-	global_position.y = move_toward(global_position.y, target_pos.y, delta * speed)
-	global_position.z = move_toward(global_position.z, target_pos.z, delta * speed)
-	global_position.x = move_toward(global_position.x, target_pos.x, delta * speed)
+func move_to_position(delta: float, target_pos: Vector3, h_speed: float=1.5, v_speed: float=0.5):
+	# vel.x = appr(vel.x, h_speed, .05)
+	# vel.y = appr(vel.y, v_speed, .05)
+	# vel.z = appr(vel.z, h_speed, .05)
+
+	# global_position.y = move_toward(global_position.y, target_pos.y, delta * vel.y)
+	# global_position.z = move_toward(global_position.z, target_pos.z, delta * vel.z)
+	# global_position.x = move_toward(global_position.x, target_pos.x, delta * vel.x)
+	global_position.y = move_toward(global_position.y, target_pos.y, delta * v_speed)
+	global_position.z = move_toward(global_position.z, target_pos.z, delta * h_speed)
+	global_position.x = move_toward(global_position.x, target_pos.x, delta * h_speed)
+
+	
+func appr(val: float, target: float, amount: float):
+	return max(val-amount, target) if val >= target else min(val+amount, target)
+
+
+func _get_navigation_agent():
+	return _agent

@@ -7,6 +7,7 @@ const MAX_SPEED = 1.5
 
 func _ready():
 	position.y = 47.095
+	position.x = -0.8
 	
 
 func _process(_delta: float) -> void:

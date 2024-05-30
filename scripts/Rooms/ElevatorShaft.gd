@@ -23,12 +23,10 @@ func _constructor():
 
 		var working_pool_param = WorkingPoolParameters.new()
 		working_pool_param.append_positions(
-			1, MeshLink.get_spots(el.name)
+			key, MeshLink.get_spots(el.name)
 		)
 
 		working_spots = WorkingPool.new(working_pool_param)
-
-	set_process(true)
 
 
 func _process(_delta):

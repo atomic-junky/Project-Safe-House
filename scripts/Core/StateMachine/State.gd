@@ -44,4 +44,4 @@ func do_branch(delta: float) -> void:
 
 
 func _get_node():
-	return parent.node
+	return parent.node if parent else null

@@ -20,5 +20,5 @@ func _start_outro_animation() -> void:
 	self.queue_free()
 
 
-func _process(delta):
+func _process(_delta):
 	cog_texture.rotation_degrees += 1

@@ -11,11 +11,11 @@ func _process(delta):
 
 
 func do() -> void:
-    _enter()
     _active = true
+    _enter()
     await completed
-    _active = false
     _exit()
+    _active = false
 
 
 func _get_node():

@@ -3,20 +3,19 @@
 [ext_resource type="Texture2D" uid="uid://jb10j5512eug" path="res://assets/buttons/map.png" id="1_7tg0y"]
 [ext_resource type="Script" path="res://scripts/Game.gd" id="1_8jcqd"]
 [ext_resource type="Texture2D" uid="uid://dq7cypl6amu1j" path="res://assets/buttons/build.png" id="2_i05tw"]
-[ext_resource type="Script" path="res://scripts/FPSLabel.gd" id="3_2eupc"]
 [ext_resource type="PackedScene" uid="uid://cri5e323f124r" path="res://assets/BuildCard.tscn" id="4_730yh"]
 [ext_resource type="Script" path="res://scripts/BuildOverlay.gd" id="4_wk7e4"]
 [ext_resource type="Texture2D" uid="uid://dptv4jqgsnw8b" path="res://assets/buttons/Vault_icon.png" id="5_mkp1d"]
 [ext_resource type="Script" path="res://scripts/DwellerCountContainer.gd" id="6_qfpgm"]
 [ext_resource type="Texture2D" uid="uid://b2ejxjnuy3410" path="res://assets/buttons/ProgressBars/EnergyPB.png" id="6_yup7x"]
-[ext_resource type="FontFile" uid="uid://dhql20rabf7qu" path="res://assets/font/Oswald-Regular.ttf" id="7_euomt"]
-[ext_resource type="FontFile" uid="uid://b0t4p6p8hij5p" path="res://assets/font/Oswald-Medium.ttf" id="7_f8rk6"]
+[ext_resource type="Texture2D" uid="uid://cvllukb8x3s02" path="res://assets/UI/icons/Dweller_icon.png" id="7_jr173"]
 [ext_resource type="Texture2D" uid="uid://37agi533vmsm" path="res://assets/buttons/ProgressBars/Progress.png" id="7_m5fsr"]
 [ext_resource type="Texture2D" uid="uid://d2epuwtyew5ja" path="res://assets/buttons/ProgressBars/WaterPB.png" id="8_4q3pu"]
 [ext_resource type="Texture2D" uid="uid://bls70157lxo3m" path="res://assets/buttons/ProgressBars/FoodPB.png" id="9_xj0bp"]
-[ext_resource type="Texture2D" uid="uid://d1qu6i5lnpbcq" path="res://assets/buttons/CAPS_icon.png" id="11_s3fyp"]
 [ext_resource type="FontFile" uid="uid://ujrae3mp3ne8" path="res://assets/font/Oswald-Bold.ttf" id="12_d5fum"]
-[ext_resource type="Texture2D" uid="uid://ou3t0wgeq0fw" path="res://assets/buttons/Nuka_icon.png" id="13_ft80h"]
+[ext_resource type="Texture2D" uid="uid://3eht87i570ct" path="res://assets/UI/icons/Settings_icon.png" id="14_ciw8j"]
+[ext_resource type="Texture2D" uid="uid://dxkhj0oibudyd" path="res://assets/UI/icons/CAPS_icon.png" id="14_os77v"]
+[ext_resource type="Texture2D" uid="uid://cf5s0r5ew4c6q" path="res://assets/UI/icons/Nuka_icon.png" id="15_cixcu"]
 [ext_resource type="PackedScene" uid="uid://c7b68nqwdkfjp" path="res://scenes/Shelter.tscn" id="18_tl8lo"]
 
 [sub_resource type="GDScript" id="GDScript_iptw0"]
@@ -32,23 +31,28 @@ func _gui_input(_event):
 	get_viewport().set_input_as_handled()
 "
 
+[sub_resource type="LabelSettings" id="LabelSettings_xsh62"]
+font = ExtResource("12_d5fum")
+font_size = 24
+font_color = Color(0, 0, 0, 1)
+
 [sub_resource type="LabelSettings" id="LabelSettings_5ub2i"]
 font = ExtResource("12_d5fum")
 font_size = 20
 font_color = Color(0.964844, 0.917969, 0.804688, 1)
 shadow_color = Color(0, 0, 0, 1)
 
-[sub_resource type="LabelSettings" id="LabelSettings_xsh62"]
+[sub_resource type="LabelSettings" id="LabelSettings_oajef"]
 font = ExtResource("12_d5fum")
-font_size = 24
-font_color = Color(0, 0, 0, 1)
+font_color = Color(0.964844, 0.917969, 0.804688, 1)
+shadow_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0416f"]
-content_margin_left = 10.0
-content_margin_top = 10.0
-content_margin_right = 10.0
-content_margin_bottom = 10.0
-bg_color = Color(0, 0, 0, 0.294118)
+content_margin_left = 15.0
+content_margin_top = 15.0
+content_margin_right = 15.0
+content_margin_bottom = 15.0
+bg_color = Color(0, 0, 0, 0.392157)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
@@ -103,20 +107,6 @@ func _ready():
 [node name="Game" type="Node"]
 script = ExtResource("1_8jcqd")
 
-[node name="FPSCounter" type="RichTextLabel" parent="."]
-visible = false
-offset_left = 5.0
-offset_right = 246.0
-offset_bottom = 22.0
-theme_override_fonts/normal_font = ExtResource("7_euomt")
-theme_override_fonts/bold_font = ExtResource("7_f8rk6")
-theme_override_font_sizes/normal_font_size = 14
-theme_override_font_sizes/bold_font_size = 14
-bbcode_enabled = true
-fit_content = true
-scroll_active = false
-script = ExtResource("3_2eupc")
-
 [node name="Interface" type="Control" parent="."]
 clip_contents = true
 layout_mode = 3
@@ -152,43 +142,80 @@ columns = 3
 script = SubResource("GDScript_iptw0")
 
 [node name="Left" type="VBoxContainer" parent="Interface/MarginContainer/GridContainer"]
-custom_minimum_size = Vector2(200, 0)
+custom_minimum_size = Vector2(260, 0)
 layout_mode = 2
 alignment = 2
 
-[node name="DateContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Left"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Left"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 20
 
-[node name="Day" type="Label" parent="Interface/MarginContainer/GridContainer/Left/DateContainer"]
-custom_minimum_size = Vector2(0, 20)
-layout_mode = 2
-text = "Oct. 23 2077"
-label_settings = SubResource("LabelSettings_5ub2i")
-vertical_alignment = 1
-
-[node name="Hour" type="Label" parent="Interface/MarginContainer/GridContainer/Left/DateContainer"]
-custom_minimum_size = Vector2(0, 20)
-layout_mode = 2
-text = "00:03"
-label_settings = SubResource("LabelSettings_5ub2i")
-vertical_alignment = 1
-
-[node name="VaultContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Left"]
+[node name="VaultContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Left/HBoxContainer"]
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Interface/MarginContainer/GridContainer/Left/VaultContainer"]
+[node name="Sprite2D" type="Sprite2D" parent="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VaultContainer"]
 scale = Vector2(0.152439, 0.152439)
 texture = ExtResource("5_mkp1d")
 centered = false
 
-[node name="Label" type="Label" parent="Interface/MarginContainer/GridContainer/Left/VaultContainer"]
+[node name="Label" type="Label" parent="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VaultContainer"]
 custom_minimum_size = Vector2(70, 70)
 layout_mode = 2
 text = "999"
 label_settings = SubResource("LabelSettings_xsh62")
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Interface/MarginContainer/GridContainer/Left/HBoxContainer"]
+layout_mode = 2
+
+[node name="DateContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Day" type="Label" parent="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/DateContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+text = "Oct. 23 2077"
+label_settings = SubResource("LabelSettings_5ub2i")
+vertical_alignment = 1
+
+[node name="Hour" type="Label" parent="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/DateContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+text = "00:03"
+label_settings = SubResource("LabelSettings_5ub2i")
+vertical_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="DwellerIcon" type="TextureRect" parent="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(20, 20)
+layout_mode = 2
+texture = ExtResource("7_jr173")
+expand_mode = 4
+stretch_mode = 5
+
+[node name="DwellerCountLabel" type="Label" parent="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "13
+"
+label_settings = SubResource("LabelSettings_oajef")
+
+[node name="DwellerCountContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+script = ExtResource("6_qfpgm")
+
+[node name="AddDweller" type="Button" parent="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer/DwellerCountContainer"]
+layout_mode = 2
+text = "+"
+
+[node name="RemoveDweller" type="Button" parent="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer/DwellerCountContainer"]
+layout_mode = 2
+text = "-
+"
 
 [node name="Bottom" type="VBoxContainer" parent="Interface/MarginContainer/GridContainer/Left"]
 layout_mode = 2
@@ -247,28 +274,6 @@ nine_patch_stretch = true
 texture_over = ExtResource("9_xj0bp")
 texture_progress = ExtResource("7_m5fsr")
 
-[node name="CenterContainer" type="CenterContainer" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 0
-
-[node name="DwellerCountContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer"]
-layout_mode = 2
-script = ExtResource("6_qfpgm")
-
-[node name="AddDweller" type="Button" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer"]
-layout_mode = 2
-text = "+"
-
-[node name="DwellerCount" type="Label" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer"]
-layout_mode = 2
-text = "0 dwellers"
-
-[node name="RemoveDweller" type="Button" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer"]
-layout_mode = 2
-text = "-
-"
-
 [node name="BottomContainer" type="VBoxContainer" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer"]
 layout_mode = 2
 size_flags_vertical = 3
@@ -292,8 +297,22 @@ vertical_alignment = 1
 [node name="HBoxContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector/RoomInfoContainer"]
 layout_mode = 2
 
+[node name="HBoxContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector/RoomInfoContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector/RoomInfoContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="DwellerIcon" type="TextureRect" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector/RoomInfoContainer/HBoxContainer/HBoxContainer2"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+texture = ExtResource("14_ciw8j")
+expand_mode = 4
+stretch_mode = 5
+
 [node name="Right" type="VBoxContainer" parent="Interface/MarginContainer/GridContainer"]
-custom_minimum_size = Vector2(200, 0)
+custom_minimum_size = Vector2(260, 0)
 layout_direction = 2
 layout_mode = 2
 size_flags_vertical = 3
@@ -304,9 +323,11 @@ layout_mode = 2
 alignment = 2
 
 [node name="CapsIcon" type="TextureRect" parent="Interface/MarginContainer/GridContainer/Right/CapsContainer"]
+custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
-texture = ExtResource("11_s3fyp")
-expand_mode = 2
+texture = ExtResource("14_os77v")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Label" type="Label" parent="Interface/MarginContainer/GridContainer/Right/CapsContainer"]
 layout_mode = 2
@@ -318,9 +339,11 @@ layout_mode = 2
 alignment = 2
 
 [node name="NukaIcon" type="TextureRect" parent="Interface/MarginContainer/GridContainer/Right/NukaContainer"]
+custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
-texture = ExtResource("13_ft80h")
-expand_mode = 3
+texture = ExtResource("15_cixcu")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Label" type="Label" parent="Interface/MarginContainer/GridContainer/Right/NukaContainer"]
 layout_mode = 2
@@ -355,7 +378,6 @@ grow_vertical = 2
 script = ExtResource("4_wk7e4")
 
 [node name="ColorRect" type="ColorRect" parent="BuildOverlay"]
-visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -363,7 +385,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-color = Color(0, 0, 0, 0.294118)
+color = Color(0, 0, 0, 0.392157)
 
 [node name="Container" type="Control" parent="BuildOverlay"]
 layout_mode = 1
@@ -514,9 +536,10 @@ tab_0/title = "Production"
 tab_1/title = "Support"
 
 [node name="Shelter" parent="." node_paths=PackedStringArray("roomSelectorInterface") instance=ExtResource("18_tl8lo")]
+unique_name_in_owner = true
 roomSelectorInterface = NodePath("../Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector")
 
-[connection signal="pressed" from="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer/AddDweller" to="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer" method="_on_add_dweller_pressed"]
-[connection signal="pressed" from="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer/RemoveDweller" to="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/CenterContainer/DwellerCountContainer" method="_on_remove_dweller_pressed"]
+[connection signal="pressed" from="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer/DwellerCountContainer/AddDweller" to="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer/DwellerCountContainer" method="_on_add_dweller_pressed"]
+[connection signal="pressed" from="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer/DwellerCountContainer/RemoveDweller" to="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer/DwellerCountContainer" method="_on_remove_dweller_pressed"]
 [connection signal="pressed" from="Interface/MarginContainer/GridContainer/Right/Bottom/BottomSubContainer/BuildButton" to="Interface/MarginContainer/GridContainer/Right/Bottom/BottomSubContainer/BuildButton" method="_on_pressed"]
 [connection signal="tab_changed" from="BuildOverlay/Container/TabBarContainer/CenterContainer/TabBar" to="BuildOverlay" method="_on_tab_bar_tab_changed"]

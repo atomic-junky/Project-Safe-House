@@ -2,13 +2,18 @@ extends HBoxContainer
 
 var DwellerObject = preload("res://objects/dwellers/Dweller.tscn")
 
-@onready var main = $"../../../../../../../Shelter"
-@onready var dweller_count = $DwellerCount
+@onready var main = %Shelter
+@onready var dweller_count = %DwellerCountLabel
+
+
+func _ready():
+	await main.ready
+	update_dweller_count()
 
 
 func update_dweller_count():
 	var count = main.dweller_container.get_child_count()
-	dweller_count.text = str(count) + (" dwellers" if count > 1 else " dweller")
+	dweller_count.text = str(count)
 
 
 func _on_add_dweller_pressed():	
@@ -21,7 +26,7 @@ func _on_add_dweller_pressed():
 func _on_remove_dweller_pressed():
 	var dwellers = main.dweller_container.get_children()
 	if len(dwellers) > 0:
-		dwellers[len(dwellers) - 1].queue_free()
+		dwellers[len(dwellers) - 1].free()
 	update_dweller_count()
 
 

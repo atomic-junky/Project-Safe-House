@@ -26,12 +26,13 @@ func is_empty(room_size):
 	return len(taken_spots) <= 0
 
 
-func _assign_dweller(room_size, dweller: Dweller):
+func _assign_dweller(room_size, dweller: Dweller) -> bool:
 	if is_full(room_size):
-		return
+		return false
 	
 	var slot = _spots[room_size].filter(func(s): return s.dweller == null)[0]
 	slot.dweller = dweller
+	return true
 
 
 func _deassign_dweller(room_size, dweller: Dweller):
@@ -67,3 +68,7 @@ func get_all(room_size):
 func get_all_taken(room_size):
 	var taken_spots = _spots[room_size].filter(func(s): return s.dweller != null)
 	return taken_spots
+
+
+func has_dweller(room_size, dweller):
+	return get_dweller_spot(room_size, dweller) != null

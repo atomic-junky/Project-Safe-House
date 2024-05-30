@@ -15,7 +15,7 @@ script = ExtResource("1_73ywb")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -1.5)
 
 [node name="Camera" type="Camera3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 8.50539, 0, 0)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 8.505, 48.095, 0)
 keep_aspect = 0
 current = true
 script = ExtResource("3_mbaw0")
@@ -33,7 +33,7 @@ omni_attenuation = 1e-05
 script = ExtResource("4_u5mf0")
 
 [node name="Dweller" parent="DwellerContainer" instance=ExtResource("5_qq4nu")]
-transform = Transform3D(-1.18021e-08, 0, -0.27, 0, 0.27, 0, 0.27, 0, -1.18021e-08, -1, 47.095, -1)
+transform = Transform3D(-1.18021e-08, 0, -0.27, 0, 0.27, 0, 0.27, 0, -1.18021e-08, -0.8, 47.095, -1)
 
 [node name="DragBody" type="Sprite3D" parent="."]
 transform = Transform3D(-1.09278e-08, 0, 0.25, 0, 0.25, 0, -0.25, 0, -1.09278e-08, 0, 39.306, 19.264)
