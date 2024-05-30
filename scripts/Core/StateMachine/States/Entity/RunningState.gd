@@ -11,10 +11,18 @@ const TRAVEL_SPEED = 1.5
 var target_room: Room
 var _target_pos: Vector3
 var nav_state: bool = false
-
+var waiting: bool = false
 
 func _enter(_msg={}) -> void:
+    var next_room = node.map_path.get_next_room()
+    if next_room is VaultDoor:
+        waiting = true
+        next_room.ask_to_open()
+        await next_room.open
+        waiting = false
+
     _target_pos = node.map_path.pop_next_target_pos()
+
 
 
 func _exit() -> void:
@@ -22,10 +30,10 @@ func _exit() -> void:
 
 
 func _do(delta: float) -> void:
-    if nav_state:
+    if nav_state or waiting:
         return
 
-    if _target_pos == node.global_position:
+    if _target_pos and _target_pos == node.global_position:
         if node.map_path.is_empty():
             if node.assigned_room.has_dweller(node) and !nav_state:
                 nav_state = true

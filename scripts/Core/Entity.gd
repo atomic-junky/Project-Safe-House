@@ -65,6 +65,16 @@ func move_to_position(delta: float, target_pos: Vector3, h_speed: float=1.5, v_s
 	global_position.z = move_toward(global_position.z, target_pos.z, delta * h_speed)
 	global_position.x = move_toward(global_position.x, target_pos.x, delta * h_speed)
 
+	var body_node = get_node_or_null("Body")
+	if !body_node:
+		return
+
+	if target_pos.z > global_position.z:
+		body_node.scale.x = -1
+	elif target_pos.z < global_position.z:
+		body_node.scale.x = 1
+
+
 	
 func appr(val: float, target: float, amount: float):
 	return max(val-amount, target) if val >= target else min(val+amount, target)
