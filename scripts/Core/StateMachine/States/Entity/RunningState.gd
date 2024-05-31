@@ -15,7 +15,8 @@ var waiting: bool = false
 
 func _enter(_msg={}) -> void:
     var next_room = node.map_path.get_next_room()
-    if next_room is VaultDoor:
+    var current_room = node.map_path.get_current_room()
+    if current_room is EmptyLocation and next_room is VaultDoor:
         waiting = true
         next_room.ask_to_open()
         await next_room.open
