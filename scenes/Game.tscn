@@ -76,7 +76,9 @@ func _ready():
 
 func bind(room: Room):
 	_room = room
-	$RoomInfoContainer/RoomLabel.text = room.room_name
+	
+	var short_id = room.id.split(\"-\")[0]
+	$RoomInfoContainer/RoomLabel.text = room.room_name + \" (\" + short_id + \")\"
 "
 
 [sub_resource type="LabelSettings" id="LabelSettings_jxnii"]

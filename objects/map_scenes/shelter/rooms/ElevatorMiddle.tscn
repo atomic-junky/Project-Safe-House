@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://cr1j5tv0c7y1k"]
+[gd_scene load_steps=9 format=3 uid="uid://cr1j5tv0c7y1k"]
 
 [ext_resource type="PackedScene" uid="uid://df03y6j0we2a1" path="res://objects/core/base_collisions/RoomCollider.tscn" id="1_uhie5"]
 [ext_resource type="PackedScene" uid="uid://dqy1fe8j1q7hf" path="res://assets/meshes/rooms/silhouettes/elevator_shaft_silhouette.glb" id="2_2861u"]
 [ext_resource type="PackedScene" uid="uid://ckmuopjnbc22c" path="res://assets/meshes/rooms/elevator_middle.glb" id="3_m6i30"]
+[ext_resource type="PackedScene" uid="uid://btvteuomnrupg" path="res://assets/meshes/rooms/elevator_shaft.glb" id="4_kdgq5"]
 
 [sub_resource type="Animation" id="Animation_1fx3i"]
 length = 0.001
@@ -70,6 +71,9 @@ libraries = {
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
 
 [node name="elevator_middle" parent="." instance=ExtResource("3_m6i30")]
+visible = false
+
+[node name="elevator_shaft" parent="." instance=ExtResource("4_kdgq5")]
 
 [node name="SlotMarkers" type="Node" parent="."]
 
@@ -103,6 +107,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.2, -1.91, -1.5)
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.875, -0.675, -0.25)
+visible = false
 shadow_enabled = true
 distance_fade_begin = 0.0
 omni_range = 2.0
@@ -110,6 +115,7 @@ omni_attenuation = 0.5
 
 [node name="OmniLight3D3" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.875, -0.675, -2.75)
+visible = false
 shadow_enabled = true
 distance_fade_begin = 0.0
 omni_range = 2.0
@@ -117,6 +123,7 @@ omni_attenuation = 0.5
 
 [node name="OmniLight3D2" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.915377, -0.898381, -1.51163)
+visible = false
 light_indirect_energy = 10.0
 light_volumetric_fog_energy = 10.0
 distance_fade_begin = 0.0
