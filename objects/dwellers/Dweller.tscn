@@ -25,7 +25,7 @@ machine = NodePath("StateMachine")
 sync_to_physics = false
 
 [node name="DwellerBody" parent="Body" instance=ExtResource("2_mnvit")]
-transform = Transform3D(1, 0, 2.13163e-14, 0, 1, 0, -2.13163e-14, 0, 1, -9.41753e-05, 1.60642, -5.03111e-10)
+transform = Transform3D(1, 0, 2.13163e-14, 0, 1, 0, -2.13163e-14, 0, 1, -9.41753e-05, 1.76681, -5.03111e-10)
 
 [node name="HitBox" type="CollisionShape3D" parent="Body"]
 transform = Transform3D(1, 0, -2.4869e-14, 0, 1, 0, 2.4869e-14, 0, 1, 0, 1.65624, 0)

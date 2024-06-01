@@ -1,8 +1,7 @@
-[gd_scene load_steps=9 format=3 uid="uid://cr1j5tv0c7y1k"]
+[gd_scene load_steps=8 format=3 uid="uid://cr1j5tv0c7y1k"]
 
 [ext_resource type="PackedScene" uid="uid://df03y6j0we2a1" path="res://objects/core/base_collisions/RoomCollider.tscn" id="1_uhie5"]
 [ext_resource type="PackedScene" uid="uid://dqy1fe8j1q7hf" path="res://assets/meshes/rooms/silhouettes/elevator_shaft_silhouette.glb" id="2_2861u"]
-[ext_resource type="PackedScene" uid="uid://ckmuopjnbc22c" path="res://assets/meshes/rooms/elevator_middle.glb" id="3_m6i30"]
 [ext_resource type="PackedScene" uid="uid://btvteuomnrupg" path="res://assets/meshes/rooms/elevator_shaft.glb" id="4_kdgq5"]
 
 [sub_resource type="Animation" id="Animation_1fx3i"]
@@ -10,29 +9,54 @@ length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("elevator_middle/Door:position")
+tracks/0/path = NodePath("elevator_shaft/DoorLeft:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(-1.9053, -1.49564, -1.5)]
+"values": [Vector3(-1.88621, -1.3703, -1.5)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("elevator_shaft/DoorRight:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-1.88621, -1.3703, -1.5)]
 }
 
-[sub_resource type="Animation" id="Animation_c0ks5"]
+[sub_resource type="Animation" id="Animation_2aujq"]
 resource_name = "close_door"
+length = 1.5
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("elevator_middle/Door:position")
-tracks/0/interp = 1
+tracks/0/path = NodePath("elevator_shaft/DoorLeft:position")
+tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.5, 0.7, 1.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
-"values": [Vector3(-1.9053, -0.639831, -1.5), Vector3(-1.9053, -0.667217, -1.5), Vector3(-1.9053, -0.858918, -1.5), Vector3(-1.9053, -1.27655, -1.5), Vector3(-1.9053, -1.46825, -1.5), Vector3(-1.9053, -1.49564, -1.5)]
+"values": [Vector3(-1.88621, -1.3703, -1.01105), Vector3(-1.88621, -1.3703, -1.46373), Vector3(-1.88621, -1.3703, -1.46373), Vector3(-1.88621, -1.3703, -1.5)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("elevator_shaft/DoorRight:position")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5, 0.7, 1.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(-1.886, -1.37, -1.989), Vector3(-1.886, -1.37, -1.536), Vector3(-1.886, -1.37, -1.536), Vector3(-1.88621, -1.3703, -1.5)]
 }
 
 [sub_resource type="Animation" id="Animation_2gtov"]
@@ -41,20 +65,32 @@ length = 2.0
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("elevator_middle/Door:position")
-tracks/0/interp = 1
+tracks/0/path = NodePath("elevator_shaft/DoorLeft:position")
+tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.3, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
-"values": [Vector3(-1.9053, -1.49564, -1.5), Vector3(-1.9053, -1.4456, -1.5), Vector3(-1.9053, -1.4456, -1.5), Vector3(-1.9053, -1.4393, -1.5), Vector3(-1.9053, -1.39524, -1.5), Vector3(-1.9053, -1.27563, -1.5), Vector3(-1.9053, -1.04271, -1.5), Vector3(-1.9053, -0.809797, -1.5), Vector3(-1.9053, -0.690191, -1.5), Vector3(-1.9053, -0.646126, -1.5), Vector3(-1.9053, -0.639831, -1.5)]
+"values": [Vector3(-1.88621, -1.3703, -1.5), Vector3(-1.88621, -1.3703, -1.46373), Vector3(-1.88621, -1.3703, -1.46373), Vector3(-1.88621, -1.3703, -1.01105)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("elevator_shaft/DoorRight:position")
+tracks/1/interp = 2
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(-1.88621, -1.3703, -1.5), Vector3(-1.886, -1.37, -1.536), Vector3(-1.886, -1.37, -1.536), Vector3(-1.886, -1.37, -1.989)]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_e8dcr"]
 _data = {
 "RESET": SubResource("Animation_1fx3i"),
-"close_door": SubResource("Animation_c0ks5"),
+"close_door": SubResource("Animation_2aujq"),
 "open_door": SubResource("Animation_2gtov")
 }
 
@@ -70,10 +106,13 @@ libraries = {
 [node name="elevator_shaft_silhouette" parent="." instance=ExtResource("2_2861u")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
 
-[node name="elevator_middle" parent="." instance=ExtResource("3_m6i30")]
-visible = false
-
 [node name="elevator_shaft" parent="." instance=ExtResource("4_kdgq5")]
+
+[node name="DoorLeft" parent="elevator_shaft" index="4"]
+transform = Transform3D(0.719345, 0, 0, 0, -3.14436e-08, -0.719345, 0, 0.719345, -3.14436e-08, -1.88621, -1.3703, -1.5)
+
+[node name="DoorRight" parent="elevator_shaft" index="5"]
+transform = Transform3D(0.719345, 0, 0, 0, 0, -0.719345, 0, 0.719345, 0, -1.88621, -1.3703, -1.5)
 
 [node name="SlotMarkers" type="Node" parent="."]
 
@@ -128,3 +167,5 @@ light_indirect_energy = 10.0
 light_volumetric_fog_energy = 10.0
 distance_fade_begin = 0.0
 omni_range = 2.48611
+
+[editable path="elevator_shaft"]

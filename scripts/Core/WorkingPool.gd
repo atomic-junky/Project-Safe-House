@@ -27,6 +27,9 @@ func is_empty(room_size):
 
 
 func _assign_dweller(room_size, dweller: Dweller) -> bool:
+	if has_dweller(room_size, dweller):
+		return true
+
 	if is_full(room_size):
 		return false
 	

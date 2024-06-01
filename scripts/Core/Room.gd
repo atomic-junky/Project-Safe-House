@@ -54,6 +54,9 @@ func _register_dweller(dweller: Dweller) -> bool:
 func _forget_dweller(dweller: Dweller) -> void:
 	if dwellers.has(dweller.id):
 		dwellers.erase(dweller.id)
+	
+	if working_spots.has_dweller(size, dweller):
+		working_spots._deassign_dweller(size, dweller)
 
 
 func has_dweller(dweller: Dweller) -> bool:

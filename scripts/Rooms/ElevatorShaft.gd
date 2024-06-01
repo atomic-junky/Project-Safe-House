@@ -4,6 +4,7 @@ class_name ElevatorShaft
 
 
 signal open
+signal close
 
 var _platform: ElevatorPlatform
 var is_open = false
@@ -43,8 +44,10 @@ func _process(_delta):
 		open.emit()
 	
 	if is_open and _platform._current_elevator != self:
-		is_open = false
 		_get_animation_player().play("close_door")
+		await _get_animation_player().animation_finished
+		is_open = false
+		close.emit()
 
 
 func _get_animation_player() -> AnimationPlayer:

@@ -42,6 +42,10 @@ func _transfer_dwellers(dwellers: Array):
 func _process(_delta):
 	_current_elevator = null
 	for elevator in network:
+		if machine.state is EPMovingState:
+			_current_elevator = null
+			return
+
 		if elevator.room_node.global_position.y == global_position.y:
 			_current_elevator = elevator
 			_requests.erase(_current_elevator)

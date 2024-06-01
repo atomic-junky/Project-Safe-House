@@ -23,14 +23,8 @@ func _do(_delta: float) -> void:
     if _idle_exit:
         return
 
-    if !_is_waiting and node._can_go() and (node.is_full() or node._current_elevator.is_empty()):
-        _exit()
+    if node._can_go() and (node.is_full() or node._current_elevator.is_empty()):
+        parent.transition_to(moving_state, {"shaft": node._current_elevator})
 
         _idle_exit = true
         node.accept_dweller = false
-
-
-func _exit() -> void:
-    await get_tree().create_timer(1.0).timeout
-
-    parent.transition_to(moving_state)
