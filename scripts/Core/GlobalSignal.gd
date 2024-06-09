@@ -10,7 +10,6 @@ func add_listener(signal_name: String, method: Callable) -> void:
 		
 	_listeners[signal_name].append(method)
 
-
 # Remove registered method linked to a signal_name.
 func remove_listener(signal_name: String, method: Callable) -> void:
 	if not _listeners.has(signal_name): return
@@ -19,7 +18,7 @@ func remove_listener(signal_name: String, method: Callable) -> void:
 	_listeners[signal_name].erase(method)
 
 # Call all the methods linked with a signal_name.
-func emit(signal_name: String, args: Array = []):
+func emit(signal_name: String, args: Array=[]):
 	if not _listeners.has(signal_name):
 		return
 	

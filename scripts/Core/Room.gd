@@ -1,13 +1,14 @@
 extends Node
 class_name Room
 
-
 var id: String = UUID.v4()
-var positions: Array[Vector2]
 var max_size: int = 3
 var size: int = 1 :
 	get:
 		return len(positions)
+var destroyable: bool = true
+var room_level: int = 0
+var positions: Array[Vector2]
 
 var mesh: Dictionary :
 	get = _get_mesh
@@ -17,6 +18,7 @@ var dwellers: Array = []
 var working_spots: WorkingPool = WorkingPool.new()
 
 var region
+var _matrix: Matrix
 
 var position: Vector3 :
 	get:
@@ -34,22 +36,18 @@ func _init() -> void:
 		return
 	Logger.info("Room(" + id + ") created")
 
-
-# Overwritable function called at initialization
+# Fonction pouvant être écrasée appelée à l'initialisation
 func _constructor() -> void:
 	pass
 
-
 func _get_mesh():
 	return self.meshes[size]
-
 
 func _register_dweller(dweller: Dweller) -> bool:
 	if not dwellers.has(dweller.id):
 		dwellers.append(dweller.id)
 	
 	return working_spots._assign_dweller(size, dweller)
-
 
 func _forget_dweller(dweller: Dweller) -> void:
 	if dwellers.has(dweller.id):
@@ -58,28 +56,22 @@ func _forget_dweller(dweller: Dweller) -> void:
 	if working_spots.has_dweller(size, dweller):
 		working_spots._deassign_dweller(size, dweller)
 
-
 func has_dweller(dweller: Dweller) -> bool:
 	return working_spots.has_dweller(size, dweller)
-
 
 func is_full() -> bool:
 	return working_spots.is_full(size)
 
-
 func get_work_position(dweller: Dweller):
 	return working_spots.get_position(size, dweller)
-
 
 func _sort_postions(a: Vector2, b: Vector2) -> bool:
 	if a.x < b.x:
 		return true
 	return false
 
-
 func get_navigation_region() -> NavigationRegion3D:
 	return room_node.get_node_or_null("NavigationRegion3D")
-
 
 func get_first_position():
 	var result = positions.duplicate()
@@ -87,6 +79,11 @@ func get_first_position():
 	
 	return result[0]
 
-
 static func get_room_mesh(_size):
 	return 0
+
+func destroy():
+	_matrix.remove_room(self)
+
+func upgrade():
+	room_level += 1

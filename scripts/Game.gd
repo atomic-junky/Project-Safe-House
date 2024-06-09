@@ -1,7 +1,9 @@
 extends Node
 
 
-# Called when the node enters the scene tree for the first time.
+@export var build_overlay: Control
+
+
 func _ready():
-	$BuildOverlay.hide()
+	build_overlay.hide()
 

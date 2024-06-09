@@ -12,7 +12,7 @@ extends Node3D
 
 @onready var elevator_platform = preload("res://objects/map_scenes/shelter/ElevatorPlatform.tscn")
 
-var _matrix = Matrix.new(14, 25)
+var _matrix: Matrix = Matrix.new(14, 25)
 var _selected_build_room = null
 var _selected_dweller = null
 var _elevator_networks = []
@@ -20,6 +20,7 @@ var _elevator_networks = []
 
 func _ready():
 	GlobalSignal.add_listener("build_card_selected", _on_build_mode_enabled)
+	_matrix.room_removed.connect(_on_matrix_room_removed)
 	
 	# Place the vault door
 	var _vault_door = VaultDoor.new()
@@ -42,7 +43,7 @@ func _ready():
 	_update_elevator_networks()
 
 
-func _input(event) -> void:
+func _unhandled_input(event) -> void:
 	_remove_pointer()
 
 	var camera = $Camera
@@ -180,7 +181,6 @@ func _update_elevator_networks() -> void:
 		if freeable:
 			platform.queue_free()
 
-
 	for network in new_networks:
 		var already_have_platform = false
 		for platform: ElevatorPlatform in platform_container.get_children():
@@ -284,3 +284,7 @@ func _place_pointer(y: int, z: int):
 
 	shelter_map.set_cell_item(coordinate, mesh.name)
 	
+
+func _on_matrix_room_removed():
+	_update_rooms()
+	_update_elevator_networks()

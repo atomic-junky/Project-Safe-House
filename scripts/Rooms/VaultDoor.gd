@@ -2,10 +2,9 @@ extends Room
 
 class_name VaultDoor
 
-
 signal open
 
-@onready var t_cooldown: Timer : 
+@onready var t_cooldown: Timer:
 	get: return room_node.get_node("tCooldown")
 
 var meshes = {
@@ -16,14 +15,12 @@ var room_name: String = "Vault Door"
 var is_open = false
 var _asked_for_opening: bool = false
 
-var animation_player: AnimationPlayer :
+var animation_player: AnimationPlayer:
 	get: return _get_animation_player()
-
-
-
 
 func _constructor():
 	max_size = 2
+	destroyable = false
 
 	for key in meshes:
 		var el = meshes[key]
@@ -35,7 +32,6 @@ func _constructor():
 
 		working_spots = WorkingPool.new(working_pool_param)
 
-
 func _process(_delta: float) -> void:
 	if animation_player.is_playing():
 		return
@@ -46,20 +42,20 @@ func _process(_delta: float) -> void:
 		t_cooldown.start()
 	
 	if _asked_for_opening and !is_open:
+		_asked_for_opening = false
+
 		animation_player.play("open_door")
 		await animation_player.animation_finished
 		open.emit()
-		_asked_for_opening = false
 		is_open = true
+		
 		t_cooldown.start()
-	elif !_asked_for_opening and is_open and t_cooldown.is_stopped():
+	elif !_asked_for_opening and is_open and t_cooldown.is_stopped() and !animation_player.is_playing():
 		is_open = false
 		animation_player.play_backwards("open_door")
 
-
 func _get_animation_player() -> AnimationPlayer:
 	return room_node.get_node("AnimationPlayer")
-
 
 func ask_to_open() -> void:
 	_asked_for_opening = true

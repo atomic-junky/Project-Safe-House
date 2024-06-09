@@ -367,3 +367,4 @@ $RECYCLE.BIN/
 *.lnk
 
 .godot/
+filesystem_drawer/

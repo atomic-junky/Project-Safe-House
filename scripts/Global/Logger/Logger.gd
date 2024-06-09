@@ -8,7 +8,7 @@ enum Levels {
 	INFO,
 	WARN,
 	ERROR,
-	FATAl
+	FATAL
 }
 
 static var LEVEL: Levels = Levels.INFO
@@ -39,5 +39,5 @@ static func error(text: String) -> void:
 	return log_msg(Levels.ERROR, text)
 
 static func fatal(text: String) -> void:
-	return log_msg(Levels.FATAl, text)
+	return log_msg(Levels.FATAL, text)
 

@@ -1,7 +1,8 @@
-[gd_scene load_steps=28 format=3 uid="uid://bmnaptewe4c2t"]
+[gd_scene load_steps=34 format=3 uid="uid://bmnaptewe4c2t"]
 
 [ext_resource type="Texture2D" uid="uid://jb10j5512eug" path="res://assets/buttons/map.png" id="1_7tg0y"]
 [ext_resource type="Script" path="res://scripts/Game.gd" id="1_8jcqd"]
+[ext_resource type="Script" path="res://scripts/Interface.gd" id="2_i4uft"]
 [ext_resource type="Texture2D" uid="uid://dq7cypl6amu1j" path="res://assets/buttons/build.png" id="2_i05tw"]
 [ext_resource type="PackedScene" uid="uid://cri5e323f124r" path="res://assets/BuildCard.tscn" id="4_730yh"]
 [ext_resource type="Script" path="res://scripts/BuildOverlay.gd" id="4_wk7e4"]
@@ -16,20 +17,12 @@
 [ext_resource type="Texture2D" uid="uid://3eht87i570ct" path="res://assets/UI/icons/Settings_icon.png" id="14_ciw8j"]
 [ext_resource type="Texture2D" uid="uid://dxkhj0oibudyd" path="res://assets/UI/icons/CAPS_icon.png" id="14_os77v"]
 [ext_resource type="Texture2D" uid="uid://cf5s0r5ew4c6q" path="res://assets/UI/icons/Nuka_icon.png" id="15_cixcu"]
+[ext_resource type="Script" path="res://scripts/PopupsOverlay.gd" id="18_gxbv2"]
 [ext_resource type="PackedScene" uid="uid://c7b68nqwdkfjp" path="res://scenes/Shelter.tscn" id="18_tl8lo"]
-
-[sub_resource type="GDScript" id="GDScript_iptw0"]
-script/source = "extends GridContainer
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
-
-
-func _gui_input(_event):
-	get_viewport().set_input_as_handled()
-"
+[ext_resource type="Script" path="res://scripts/ui/RoomWindow.gd" id="19_2e0vn"]
+[ext_resource type="PackedScene" uid="uid://co371q2fu4hb5" path="res://objects/ui/ui_button.tscn" id="19_cqucc"]
+[ext_resource type="Texture2D" uid="uid://cfrovvrta3ohf" path="res://assets/UI/icons/Upgrade_icon.png" id="20_ewbgq"]
+[ext_resource type="Texture2D" uid="uid://bg686knjvuxhl" path="res://assets/UI/icons/Nuke_icon.png" id="21_wcifg"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_xsh62"]
 font = ExtResource("12_d5fum")
@@ -47,25 +40,11 @@ font = ExtResource("12_d5fum")
 font_color = Color(0.964844, 0.917969, 0.804688, 1)
 shadow_color = Color(0, 0, 0, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0416f"]
-content_margin_left = 15.0
-content_margin_top = 15.0
-content_margin_right = 15.0
-content_margin_bottom = 15.0
-bg_color = Color(0, 0, 0, 0.392157)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0, 0, 0, 1)
-corner_radius_top_left = 5
-corner_radius_top_right = 5
-corner_radius_bottom_right = 5
-corner_radius_bottom_left = 5
-
 [sub_resource type="GDScript" id="GDScript_bjlhj"]
 script/source = "extends PanelContainer
 
+
+@export var popups_overlay: PopupsOverlay
 
 var _room: Room
 
@@ -79,13 +58,16 @@ func bind(room: Room):
 	
 	var short_id = room.id.split(\"-\")[0]
 	$RoomInfoContainer/RoomLabel.text = room.room_name + \" (\" + short_id + \")\"
+
+
+func _on_texture_button_pressed():
+	popups_overlay.show_room_window(_room)
 "
 
 [sub_resource type="LabelSettings" id="LabelSettings_jxnii"]
 font = ExtResource("12_d5fum")
 font_size = 18
-font_color = Color(0.964844, 0.917969, 0.804688, 1)
-shadow_color = Color(0, 0, 0, 1)
+font_color = Color(0.964706, 0.917647, 0.803922, 1)
 
 [sub_resource type="GDScript" id="GDScript_l14jj"]
 script/source = "extends TextureButton
@@ -93,6 +75,24 @@ script/source = "extends TextureButton
 
 func _on_pressed():
 	GlobalSignal.emit(\"build_button_pressed\")
+"
+
+[sub_resource type="GDScript" id="GDScript_r8j1n"]
+script/source = "extends ColorRect
+
+
+@export var build_overlay: BuildOverlay
+@export var popups_overlay: PopupsOverlay
+
+
+func _ready():
+	hide()
+
+
+func hide_all():
+	hide()
+	build_overlay.hide()
+	popups_overlay._hide_all()
 "
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_woi11"]
@@ -106,12 +106,40 @@ func _ready():
 	pass # Replace with function body.
 "
 
-[node name="Game" type="Node"]
-script = ExtResource("1_8jcqd")
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_il4uk"]
+content_margin_left = 10.0
+content_margin_top = 5.0
+content_margin_right = 10.0
+content_margin_bottom = 5.0
+bg_color = Color(0.592157, 0.239216, 0.27451, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.956863, 0.913725, 0.796078, 1)
 
-[node name="Interface" type="Control" parent="."]
-clip_contents = true
+[node name="Game" type="Node" node_paths=PackedStringArray("build_overlay")]
+script = ExtResource("1_8jcqd")
+build_overlay = NodePath("Interface/BuildOverlay")
+
+[node name="Interface" type="Control" parent="." node_paths=PackedStringArray("shelter", "background_overlay", "build_overlay", "popus_overlay")]
 layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+mouse_force_pass_scroll_events = false
+script = ExtResource("2_i4uft")
+shelter = NodePath("../Shelter")
+background_overlay = NodePath("BackgroudOverlay")
+build_overlay = NodePath("BuildOverlay")
+popus_overlay = NodePath("PopupsOverlay")
+
+[node name="MainGUI" type="Control" parent="Interface"]
+clip_contents = true
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -119,9 +147,9 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 6
 size_flags_vertical = 6
-mouse_filter = 2
+mouse_filter = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="Interface"]
+[node name="MarginContainer" type="MarginContainer" parent="Interface/MainGUI"]
 clip_contents = true
 layout_direction = 2
 layout_mode = 1
@@ -131,36 +159,33 @@ anchor_bottom = 1.0
 offset_bottom = -2.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
 theme_override_constants/margin_left = 20
 theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="GridContainer" type="GridContainer" parent="Interface/MarginContainer"]
+[node name="GridContainer" type="GridContainer" parent="Interface/MainGUI/MarginContainer"]
 layout_mode = 2
-mouse_filter = 2
 columns = 3
-script = SubResource("GDScript_iptw0")
 
-[node name="Left" type="VBoxContainer" parent="Interface/MarginContainer/GridContainer"]
+[node name="Left" type="VBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer"]
 custom_minimum_size = Vector2(260, 0)
 layout_mode = 2
 alignment = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Left"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer/Left"]
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="VaultContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Left/HBoxContainer"]
+[node name="VaultContainer" type="HBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer"]
 layout_mode = 2
 
-[node name="Sprite2D" type="Sprite2D" parent="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VaultContainer"]
+[node name="Sprite2D" type="Sprite2D" parent="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/VaultContainer"]
 scale = Vector2(0.152439, 0.152439)
 texture = ExtResource("5_mkp1d")
 centered = false
 
-[node name="Label" type="Label" parent="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VaultContainer"]
+[node name="Label" type="Label" parent="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/VaultContainer"]
 custom_minimum_size = Vector2(70, 70)
 layout_mode = 2
 text = "999"
@@ -168,91 +193,91 @@ label_settings = SubResource("LabelSettings_xsh62")
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Interface/MarginContainer/GridContainer/Left/HBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer"]
 layout_mode = 2
 
-[node name="DateContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer"]
+[node name="DateContainer" type="HBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="Day" type="Label" parent="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/DateContainer"]
+[node name="Day" type="Label" parent="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/DateContainer"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 text = "Oct. 23 2077"
 label_settings = SubResource("LabelSettings_5ub2i")
 vertical_alignment = 1
 
-[node name="Hour" type="Label" parent="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/DateContainer"]
+[node name="Hour" type="Label" parent="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/DateContainer"]
 custom_minimum_size = Vector2(0, 20)
 layout_mode = 2
 text = "00:03"
 label_settings = SubResource("LabelSettings_5ub2i")
 vertical_alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="DwellerIcon" type="TextureRect" parent="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="DwellerIcon" type="TextureRect" parent="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(20, 20)
 layout_mode = 2
 texture = ExtResource("7_jr173")
 expand_mode = 4
 stretch_mode = 5
 
-[node name="DwellerCountLabel" type="Label" parent="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer"]
-unique_name_in_owner = true
+[node name="DwellerCountLabel" type="Label" parent="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
 text = "13
 "
 label_settings = SubResource("LabelSettings_oajef")
 
-[node name="DwellerCountContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer"]
+[node name="DwellerCountContainer" type="HBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer" node_paths=PackedStringArray("shelter", "dweller_count_label")]
 layout_mode = 2
 script = ExtResource("6_qfpgm")
+shelter = NodePath("../../../../../../../../../Shelter")
+dweller_count_label = NodePath("../DwellerCountLabel")
 
-[node name="AddDweller" type="Button" parent="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer/DwellerCountContainer"]
+[node name="AddDweller" type="Button" parent="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer/DwellerCountContainer"]
 layout_mode = 2
 text = "+"
 
-[node name="RemoveDweller" type="Button" parent="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer/DwellerCountContainer"]
+[node name="RemoveDweller" type="Button" parent="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer/DwellerCountContainer"]
 layout_mode = 2
 text = "-
 "
 
-[node name="Bottom" type="VBoxContainer" parent="Interface/MarginContainer/GridContainer/Left"]
+[node name="Bottom" type="VBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer/Left"]
 layout_mode = 2
 size_flags_vertical = 3
 alignment = 2
 
-[node name="BottomSubContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Left/Bottom"]
+[node name="BottomSubContainer" type="HBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer/Left/Bottom"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="MapButton" type="TextureButton" parent="Interface/MarginContainer/GridContainer/Left/Bottom/BottomSubContainer"]
+[node name="MapButton" type="TextureButton" parent="Interface/MainGUI/MarginContainer/GridContainer/Left/Bottom/BottomSubContainer"]
 layout_mode = 2
 size_flags_vertical = 8
 mouse_default_cursor_shape = 2
 texture_normal = ExtResource("1_7tg0y")
 stretch_mode = 4
 
-[node name="Middle" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-mouse_filter = 2
-
-[node name="MiddleSubContainer" type="VBoxContainer" parent="Interface/MarginContainer/GridContainer/Middle"]
+[node name="Middle" type="HBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="TopVaultStats" type="CenterContainer" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer"]
+[node name="MiddleSubContainer" type="VBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer/Middle"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TopVaultStats" type="CenterContainer" parent="Interface/MainGUI/MarginContainer/GridContainer/Middle/MiddleSubContainer"]
 layout_mode = 2
 size_flags_vertical = 0
 
-[node name="ProgressBarContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/TopVaultStats"]
+[node name="ProgressBarContainer" type="HBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer/Middle/MiddleSubContainer/TopVaultStats"]
 layout_mode = 2
 theme_override_constants/separation = 15
 
-[node name="EnergyProgressBar" type="TextureProgressBar" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/TopVaultStats/ProgressBarContainer"]
+[node name="EnergyProgressBar" type="TextureProgressBar" parent="Interface/MainGUI/MarginContainer/GridContainer/Middle/MiddleSubContainer/TopVaultStats/ProgressBarContainer"]
 custom_minimum_size = Vector2(150, 30)
 layout_mode = 2
 value = 50.0
@@ -260,7 +285,7 @@ nine_patch_stretch = true
 texture_over = ExtResource("6_yup7x")
 texture_progress = ExtResource("7_m5fsr")
 
-[node name="WaterProgressBar" type="TextureProgressBar" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/TopVaultStats/ProgressBarContainer"]
+[node name="WaterProgressBar" type="TextureProgressBar" parent="Interface/MainGUI/MarginContainer/GridContainer/Middle/MiddleSubContainer/TopVaultStats/ProgressBarContainer"]
 custom_minimum_size = Vector2(150, 30)
 layout_mode = 2
 value = 50.0
@@ -268,7 +293,7 @@ nine_patch_stretch = true
 texture_over = ExtResource("8_4q3pu")
 texture_progress = ExtResource("7_m5fsr")
 
-[node name="FoodProgressBar" type="TextureProgressBar" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/TopVaultStats/ProgressBarContainer"]
+[node name="FoodProgressBar" type="TextureProgressBar" parent="Interface/MainGUI/MarginContainer/GridContainer/Middle/MiddleSubContainer/TopVaultStats/ProgressBarContainer"]
 custom_minimum_size = Vector2(150, 30)
 layout_mode = 2
 value = 50.0
@@ -276,120 +301,127 @@ nine_patch_stretch = true
 texture_over = ExtResource("9_xj0bp")
 texture_progress = ExtResource("7_m5fsr")
 
-[node name="BottomContainer" type="VBoxContainer" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer"]
+[node name="BottomContainer" type="VBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer/Middle/MiddleSubContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 alignment = 2
 
-[node name="RoomSelector" type="PanelContainer" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer"]
+[node name="RoomSelector" type="PanelContainer" parent="Interface/MainGUI/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer" node_paths=PackedStringArray("popups_overlay")]
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_0416f")
 script = SubResource("GDScript_bjlhj")
+popups_overlay = NodePath("../../../../../../../PopupsOverlay")
 
-[node name="RoomInfoContainer" type="VBoxContainer" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector"]
+[node name="RoomInfoContainer" type="VBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector"]
 layout_mode = 2
 
-[node name="RoomLabel" type="Label" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector/RoomInfoContainer"]
+[node name="RoomLabel" type="Label" parent="Interface/MainGUI/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector/RoomInfoContainer"]
 layout_mode = 2
 text = "Room Name"
 label_settings = SubResource("LabelSettings_jxnii")
 horizontal_alignment = 1
 vertical_alignment = 1
+uppercase = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector/RoomInfoContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector/RoomInfoContainer"]
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector/RoomInfoContainer/HBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector/RoomInfoContainer/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector/RoomInfoContainer/HBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector/RoomInfoContainer/HBoxContainer"]
 layout_mode = 2
 
-[node name="DwellerIcon" type="TextureRect" parent="Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector/RoomInfoContainer/HBoxContainer/HBoxContainer2"]
+[node name="TextureButton" type="TextureButton" parent="Interface/MainGUI/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector/RoomInfoContainer/HBoxContainer/HBoxContainer2"]
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
-texture = ExtResource("14_ciw8j")
-expand_mode = 4
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("14_ciw8j")
+ignore_texture_size = true
 stretch_mode = 5
 
-[node name="Right" type="VBoxContainer" parent="Interface/MarginContainer/GridContainer"]
+[node name="Right" type="VBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer"]
 custom_minimum_size = Vector2(260, 0)
 layout_direction = 2
 layout_mode = 2
 size_flags_vertical = 3
 alignment = 2
 
-[node name="CapsContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Right"]
+[node name="CapsContainer" type="HBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer/Right"]
 layout_mode = 2
 alignment = 2
 
-[node name="CapsIcon" type="TextureRect" parent="Interface/MarginContainer/GridContainer/Right/CapsContainer"]
+[node name="CapsIcon" type="TextureRect" parent="Interface/MainGUI/MarginContainer/GridContainer/Right/CapsContainer"]
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 texture = ExtResource("14_os77v")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="Interface/MarginContainer/GridContainer/Right/CapsContainer"]
+[node name="Label" type="Label" parent="Interface/MainGUI/MarginContainer/GridContainer/Right/CapsContainer"]
 layout_mode = 2
 text = "999 999"
 label_settings = SubResource("LabelSettings_5ub2i")
 
-[node name="NukaContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Right"]
+[node name="NukaContainer" type="HBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer/Right"]
 layout_mode = 2
 alignment = 2
 
-[node name="NukaIcon" type="TextureRect" parent="Interface/MarginContainer/GridContainer/Right/NukaContainer"]
+[node name="NukaIcon" type="TextureRect" parent="Interface/MainGUI/MarginContainer/GridContainer/Right/NukaContainer"]
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 texture = ExtResource("15_cixcu")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="Interface/MarginContainer/GridContainer/Right/NukaContainer"]
+[node name="Label" type="Label" parent="Interface/MainGUI/MarginContainer/GridContainer/Right/NukaContainer"]
 layout_mode = 2
 text = "999"
 label_settings = SubResource("LabelSettings_5ub2i")
 
-[node name="Bottom" type="VBoxContainer" parent="Interface/MarginContainer/GridContainer/Right"]
+[node name="Bottom" type="VBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer/Right"]
 layout_mode = 2
 size_flags_vertical = 3
 alignment = 2
 
-[node name="BottomSubContainer" type="HBoxContainer" parent="Interface/MarginContainer/GridContainer/Right/Bottom"]
+[node name="BottomSubContainer" type="HBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer/Right/Bottom"]
 layout_mode = 2
 size_flags_vertical = 3
 alignment = 2
 
-[node name="BuildButton" type="TextureButton" parent="Interface/MarginContainer/GridContainer/Right/Bottom/BottomSubContainer"]
+[node name="BuildButton" type="TextureButton" parent="Interface/MainGUI/MarginContainer/GridContainer/Right/Bottom/BottomSubContainer"]
 layout_mode = 2
 size_flags_vertical = 8
 mouse_default_cursor_shape = 2
 texture_normal = ExtResource("2_i05tw")
 script = SubResource("GDScript_l14jj")
 
-[node name="BuildOverlay" type="Control" parent="."]
+[node name="BackgroudOverlay" type="ColorRect" parent="Interface" node_paths=PackedStringArray("build_overlay", "popups_overlay")]
 visible = false
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("4_wk7e4")
-
-[node name="ColorRect" type="ColorRect" parent="BuildOverlay"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
 color = Color(0, 0, 0, 0.392157)
+script = SubResource("GDScript_r8j1n")
+build_overlay = NodePath("../BuildOverlay")
+popups_overlay = NodePath("../PopupsOverlay")
 
-[node name="Container" type="Control" parent="BuildOverlay"]
+[node name="BuildOverlay" type="Control" parent="Interface" node_paths=PackedStringArray("tabs_container", "background_overlay")]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("4_wk7e4")
+tabs_container = NodePath("Container/TabsContainer")
+background_overlay = NodePath("../BackgroudOverlay")
+
+[node name="Container" type="Control" parent="Interface/BuildOverlay"]
 layout_mode = 1
 anchor_top = 0.361
 anchor_right = 1.0
@@ -399,7 +431,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="TabsContainer" type="Control" parent="BuildOverlay/Container"]
+[node name="TabsContainer" type="Control" parent="Interface/BuildOverlay/Container"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -408,7 +440,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="Production" type="Control" parent="BuildOverlay/Container/TabsContainer"]
+[node name="Production" type="Control" parent="Interface/BuildOverlay/Container/TabsContainer"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -417,7 +449,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="BuildOverlay/Container/TabsContainer/Production"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Interface/BuildOverlay/Container/TabsContainer/Production"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -425,51 +457,52 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 0
+mouse_force_pass_scroll_events = false
 vertical_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Interface/BuildOverlay/Container/TabsContainer/Production/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/margin_left = 50
 theme_override_constants/margin_right = 50
 
-[node name="HBoxContainer" type="HBoxContainer" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Interface/BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 6
 mouse_filter = 2
 theme_override_constants/separation = 25
 
-[node name="LivingRoomBuildCard" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
+[node name="LivingRoomBuildCard" parent="Interface/BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
 layout_mode = 2
 room = 3
 
-[node name="PowerGeneratorBuildCard" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
+[node name="PowerGeneratorBuildCard" parent="Interface/BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
 layout_mode = 2
 room = 4
 
-[node name="DinerBuildCard" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
+[node name="DinerBuildCard" parent="Interface/BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
 layout_mode = 2
 room = 5
 
-[node name="WaterTreatmentBuildCard" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
+[node name="WaterTreatmentBuildCard" parent="Interface/BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
 layout_mode = 2
 room = 6
 
-[node name="StorageRoomBuildCard" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
+[node name="StorageRoomBuildCard" parent="Interface/BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
 layout_mode = 2
 room = 7
 
-[node name="MedbayBuildCard" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
+[node name="MedbayBuildCard" parent="Interface/BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
 layout_mode = 2
 room = 8
 
-[node name="ScienceLabBuildCard" parent="BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
+[node name="ScienceLabBuildCard" parent="Interface/BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
 layout_mode = 2
 room = 9
 
-[node name="Support" type="Control" parent="BuildOverlay/Container/TabsContainer"]
+[node name="Support" type="Control" parent="Interface/BuildOverlay/Container/TabsContainer"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -478,7 +511,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="ScrollContainer" type="ScrollContainer" parent="BuildOverlay/Container/TabsContainer/Support"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Interface/BuildOverlay/Container/TabsContainer/Support"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -489,25 +522,25 @@ mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxEmpty_woi11")
 vertical_scroll_mode = 0
 
-[node name="MarginContainer" type="MarginContainer" parent="BuildOverlay/Container/TabsContainer/Support/ScrollContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Interface/BuildOverlay/Container/TabsContainer/Support/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/margin_left = 50
 theme_override_constants/margin_right = 50
 
-[node name="HBoxContainer" type="HBoxContainer" parent="BuildOverlay/Container/TabsContainer/Support/ScrollContainer/MarginContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Interface/BuildOverlay/Container/TabsContainer/Support/ScrollContainer/MarginContainer"]
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 6
 mouse_filter = 2
 theme_override_constants/separation = 25
 
-[node name="ElevatorBuildCard" parent="BuildOverlay/Container/TabsContainer/Support/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
+[node name="ElevatorBuildCard" parent="Interface/BuildOverlay/Container/TabsContainer/Support/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
 layout_mode = 2
 room = 2
 
-[node name="TabBarContainer" type="Control" parent="BuildOverlay/Container"]
+[node name="TabBarContainer" type="Control" parent="Interface/BuildOverlay/Container"]
 layout_mode = 1
 anchor_top = 0.853
 anchor_right = 0.998
@@ -517,7 +550,7 @@ offset_right = 0.303955
 mouse_filter = 2
 script = SubResource("GDScript_2lohv")
 
-[node name="CenterContainer" type="CenterContainer" parent="BuildOverlay/Container/TabBarContainer"]
+[node name="CenterContainer" type="CenterContainer" parent="Interface/BuildOverlay/Container/TabBarContainer"]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.002
@@ -526,7 +559,7 @@ offset_right = -0.300049
 offset_bottom = -0.0248489
 mouse_filter = 2
 
-[node name="TabBar" type="TabBar" parent="BuildOverlay/Container/TabBarContainer/CenterContainer"]
+[node name="TabBar" type="TabBar" parent="Interface/BuildOverlay/Container/TabBarContainer/CenterContainer"]
 clip_contents = true
 custom_minimum_size = Vector2(225, 0)
 layout_direction = 2
@@ -537,11 +570,73 @@ tab_alignment = 1
 tab_0/title = "Production"
 tab_1/title = "Support"
 
+[node name="PopupsOverlay" type="Control" parent="Interface" node_paths=PackedStringArray("background_overlay", "room_window")]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("18_gxbv2")
+background_overlay = NodePath("../BackgroudOverlay")
+room_window = NodePath("RoomWindow")
+
+[node name="RoomWindow" type="MarginContainer" parent="Interface/PopupsOverlay" node_paths=PackedStringArray("room_label", "destroy_btn")]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 250
+theme_override_constants/margin_top = 100
+theme_override_constants/margin_right = 250
+theme_override_constants/margin_bottom = 150
+script = ExtResource("19_2e0vn")
+room_label = NodePath("PanelContainer/VBoxContainer/RoomLabel")
+destroy_btn = NodePath("PanelContainer/VBoxContainer/HBoxContainer/DestroyBtn")
+
+[node name="PanelContainer" type="PanelContainer" parent="Interface/PopupsOverlay/RoomWindow"]
+layout_mode = 2
+size_flags_vertical = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Interface/PopupsOverlay/RoomWindow/PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="RoomLabel" type="Label" parent="Interface/PopupsOverlay/RoomWindow/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Room Name"
+label_settings = SubResource("LabelSettings_jxnii")
+horizontal_alignment = 1
+vertical_alignment = 1
+uppercase = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Interface/PopupsOverlay/RoomWindow/PanelContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="UIButton" parent="Interface/PopupsOverlay/RoomWindow/PanelContainer/VBoxContainer/HBoxContainer" instance=ExtResource("19_cqucc")]
+layout_mode = 2
+text = "Upgrade"
+icon = ExtResource("20_ewbgq")
+
+[node name="DestroyBtn" parent="Interface/PopupsOverlay/RoomWindow/PanelContainer/VBoxContainer/HBoxContainer" instance=ExtResource("19_cqucc")]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_il4uk")
+text = "Destroy
+"
+icon = ExtResource("21_wcifg")
+
 [node name="Shelter" parent="." node_paths=PackedStringArray("roomSelectorInterface") instance=ExtResource("18_tl8lo")]
 unique_name_in_owner = true
-roomSelectorInterface = NodePath("../Interface/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector")
+roomSelectorInterface = NodePath("../Interface/MainGUI/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector")
 
-[connection signal="pressed" from="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer/DwellerCountContainer/AddDweller" to="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer/DwellerCountContainer" method="_on_add_dweller_pressed"]
-[connection signal="pressed" from="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer/DwellerCountContainer/RemoveDweller" to="Interface/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer/DwellerCountContainer" method="_on_remove_dweller_pressed"]
-[connection signal="pressed" from="Interface/MarginContainer/GridContainer/Right/Bottom/BottomSubContainer/BuildButton" to="Interface/MarginContainer/GridContainer/Right/Bottom/BottomSubContainer/BuildButton" method="_on_pressed"]
-[connection signal="tab_changed" from="BuildOverlay/Container/TabBarContainer/CenterContainer/TabBar" to="BuildOverlay" method="_on_tab_bar_tab_changed"]
+[connection signal="pressed" from="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer/DwellerCountContainer/AddDweller" to="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer/DwellerCountContainer" method="_on_add_dweller_pressed"]
+[connection signal="pressed" from="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer/DwellerCountContainer/RemoveDweller" to="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer/DwellerCountContainer" method="_on_remove_dweller_pressed"]
+[connection signal="pressed" from="Interface/MainGUI/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector/RoomInfoContainer/HBoxContainer/HBoxContainer2/TextureButton" to="Interface/MainGUI/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector" method="_on_texture_button_pressed"]
+[connection signal="pressed" from="Interface/MainGUI/MarginContainer/GridContainer/Right/Bottom/BottomSubContainer/BuildButton" to="Interface/MainGUI/MarginContainer/GridContainer/Right/Bottom/BottomSubContainer/BuildButton" method="_on_pressed"]
+[connection signal="tab_changed" from="Interface/BuildOverlay/Container/TabBarContainer/CenterContainer/TabBar" to="Interface/BuildOverlay" method="_on_tab_bar_tab_changed"]
+[connection signal="pressed" from="Interface/PopupsOverlay/RoomWindow/PanelContainer/VBoxContainer/HBoxContainer/DestroyBtn" to="Interface/PopupsOverlay/RoomWindow" method="_on_destroy_btn_pressed"]

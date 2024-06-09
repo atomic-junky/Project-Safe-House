@@ -28,7 +28,7 @@ func _ready():
 	
 	_target_zoom = 0.2
 
-func _input(event) -> void:
+func _unhandled_input(event) -> void:
 	if _disabled or body_drag_mode:
 		return
 	
@@ -89,17 +89,14 @@ func _physics_process(delta):
 	var m_pos = get_viewport().get_mouse_position()
 	var centered_m_pos = (m_pos - screensize / 2) / (screensize / 2)
 
-	# Constrain the centered mouse position to the range [-1, 1]
 	centered_m_pos.x = clamp(centered_m_pos.x, -1, 1)
 	centered_m_pos.y = clamp(centered_m_pos.y, -1, 1)
 
-	# Apply a quadratic function for smoother and more gradual tilt
 	var tilt_x = centered_m_pos.y * abs(centered_m_pos.y)
 	var tilt_y = centered_m_pos.x * abs(centered_m_pos.x)
 
-	# Update the rotation degrees
-	rotation_degrees.x = tilt_x * -3  # Adjust multiplier for desired tilt strength
-	rotation_degrees.y = 90 + tilt_y * -3  # Adjust multiplier for desired tilt strength
+	rotation_degrees.x = tilt_x * -1.5
+	rotation_degrees.y = 90 + tilt_y * -1.5
 
 
 

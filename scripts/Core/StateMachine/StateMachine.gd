@@ -1,23 +1,20 @@
 class_name StateMachine
 extends Node
 
-
 @export var initial_state: State
 
 @export_group("Reference")
 @export var node: Node
 
 var state: State
-var last_state: State :
-	get: 
+var last_state: State:
+	get:
 		return state.state
-
 
 func _ready() -> void:
 	_set_state(initial_state)
 
-
-func transition_to(target_state: State, msg={}, force_reset: bool = false):
+func transition_to(target_state: State, msg={}, force_reset: bool=false):
 	if !target_state:
 		Logger.warn("Can't transition to target state because state is Nil")
 		return
@@ -26,8 +23,7 @@ func transition_to(target_state: State, msg={}, force_reset: bool = false):
 
 	_set_state(target_state, msg, force_reset)
 
-
-func _set_state(new_state: State, msg={}, force_reset: bool = false) -> State:
+func _set_state(new_state: State, msg={}, force_reset: bool=false) -> State:
 	if state != new_state or force_reset:
 		if state:
 			state._exit()
@@ -38,13 +34,11 @@ func _set_state(new_state: State, msg={}, force_reset: bool = false) -> State:
 
 	return state
 
-
 func _process(delta: float):
 	if state:
 		state.do_branch(delta)
 
-
-func get_active_state_branch(list = null):
+func get_active_state_branch(list=null):
 	if list == null:
 		list = []
 	

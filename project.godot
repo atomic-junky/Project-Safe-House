@@ -39,7 +39,12 @@ window/stretch/aspect="expand"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/dictionary_resource/plugin.cfg", "res://addons/scene_map/plugin.cfg", "res://addons/script-ide/plugin.cfg")
+enabled=PackedStringArray("res://addons/dictionary_resource/plugin.cfg", "res://addons/filesystem_drawer/plugin.cfg", "res://addons/scene_map/plugin.cfg", "res://addons/script-ide/plugin.cfg")
+
+[gui]
+
+theme/custom="res://ressources/themes/main.tres"
+theme/custom_font="res://assets/font/Oswald-Medium.ttf"
 
 [input]
 

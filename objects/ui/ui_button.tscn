@@ -1,0 +1,44 @@
+[gd_scene load_steps=4 format=3 uid="uid://co371q2fu4hb5"]
+
+[ext_resource type="Texture2D" uid="uid://cvllukb8x3s02" path="res://assets/UI/icons/Dweller_icon.png" id="1_ogoeh"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8dtil"]
+content_margin_left = 10.0
+content_margin_top = 5.0
+content_margin_right = 10.0
+content_margin_bottom = 5.0
+bg_color = Color(0.164706, 0.180392, 0.180392, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.956863, 0.913725, 0.796078, 1)
+
+[sub_resource type="GDScript" id="GDScript_cf3sp"]
+script/source = "extends Button
+
+
+func _ready():
+	var tos_normal: StyleBoxFlat = get(\"theme_override_styles/normal\")
+	# Duplicate StyleBox don't work due to https://github.com/godotengine/godot/issues/80797
+	#var tos_pressed: StyleBoxFlat = tos_normal.duplicate(true)
+	#tos_pressed.set_bg_color(Color(\"f4e9cb\"))
+	
+	add_theme_stylebox_override(\"hover\", tos_normal)
+	add_theme_stylebox_override(\"focus\", tos_normal)
+	#add_theme_stylebox_override(\"pressed\", tos_pressed)
+	add_theme_stylebox_override(\"pressed\", tos_normal)
+"
+
+[node name="UIButton" type="Button"]
+custom_minimum_size = Vector2(100, 0)
+size_flags_horizontal = 4
+mouse_default_cursor_shape = 2
+theme_override_colors/font_color = Color(0.956863, 0.913725, 0.796078, 1)
+theme_override_constants/h_separation = 5
+theme_override_constants/icon_max_width = 16
+theme_override_font_sizes/font_size = 13
+theme_override_styles/normal = SubResource("StyleBoxFlat_8dtil")
+text = "Placeholder"
+icon = ExtResource("1_ogoeh")
+script = SubResource("GDScript_cf3sp")

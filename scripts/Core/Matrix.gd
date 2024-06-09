@@ -1,6 +1,8 @@
 class_name Matrix
 
 
+signal room_removed
+
 var size: Vector2 = Vector2.ZERO
 var matrix: Array[Array]
 
@@ -16,6 +18,7 @@ func _init(width: int, height: int) -> void:
 
 
 func add_room(room: Room, positions: Array[Vector2]) -> void:
+	room._matrix = self
 	for _pos in positions:
 		# Checking limits
 		if _pos.x < 0 or _pos.x >= size.x or _pos.y < 0 or _pos.y >= size.y:
@@ -46,6 +49,7 @@ func remove_room(room: Room) -> void:
 		matrix[_pos.y][_pos.x] = null
 		
 	room.queue_free()
+	room_removed.emit()
 
 
 func _merge_rooms(base_room: Room, new_room: Room) -> Room:
