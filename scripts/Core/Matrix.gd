@@ -101,7 +101,7 @@ func _build_astar_path() -> AStar2D:
 	for y in range(size.y):
 		for x in range(size.x):
 			var room = get_room_at(x, y)
-			if room == null:
+			if room == null or room is EmptyLocation:
 				continue
 			
 			var point_id = Matrix._vector_to_astar_id(Vector2i(x, y))
@@ -152,3 +152,14 @@ func _vector_to_center_room_position(vec):
 		return r_positions[0] + modifier
 		
 	return r_positions[(len(r_positions))/2]
+
+
+func get_all_rooms():
+	var result = []
+	for y in matrix:
+		result.append_array(y)
+	return result
+
+
+func get_start_room():
+	return get_room_at(1, 0)

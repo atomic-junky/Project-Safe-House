@@ -14,7 +14,7 @@ func set_room(room: Room):
 	var short_id = room.id.split("-")[0]
 	room_label.text = room.room_name + " (" + short_id + ")"
 
-	destroy_btn.visible = room.destroyable
+	destroy_btn.visible = room.can_be_destroy()
 
 
 func _on_destroy_btn_pressed():

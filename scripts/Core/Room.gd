@@ -87,3 +87,32 @@ func destroy():
 
 func upgrade():
 	room_level += 1
+
+func can_be_destroy():
+	if !destroyable:
+		return false
+	
+	var astar: AStar2D = _matrix._build_astar_path()
+	var end_index = Matrix._vector_to_astar_id(_matrix.get_start_room().positions[0])
+	for pos in positions:
+		var s_index = Matrix._vector_to_astar_id(pos)
+		astar.remove_point(s_index)
+
+	var neighbors = [
+		_matrix.get_room_at(positions[0].x-1, positions[0].y),
+		_matrix.get_room_at(positions.back().x+1, positions.back().y)
+	]
+	if self is ElevatorShaft:
+		neighbors.append_array([
+			_matrix.get_room_at(positions[0].x, positions[0].y-1),
+			_matrix.get_room_at(positions.back().x, positions.back().y+1)
+		])
+
+	for neighbor in neighbors:
+		if neighbor == null or neighbor is EmptyLocation:
+			continue
+
+		var start_index = Matrix._vector_to_astar_id(neighbor.positions[0])
+		if astar.get_point_path(start_index, end_index).size() <= 0:
+			return false
+	return true
