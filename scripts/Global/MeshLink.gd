@@ -44,15 +44,15 @@ const _meshes = {
 	},
 	LIVING_ROOM_1L = {
 		name="living_room_1l",
-		path="res://assets/meshes/rooms/base_1l_room.glb"
+		path="res://objects/map_scenes/shelter/rooms/BaseRoom/BaseRoom1L.tscn"
 	},
 	LIVING_ROOM_2L = {
 		name="living_room_2l",
-		path="res://assets/meshes/rooms/base_2l_room.glb"
+		path="res://objects/map_scenes/shelter/rooms/BaseRoom/BaseRoom2L.tscn"
 	},
 	LIVING_ROOM_3L = {
 		name="living_room_3l",
-		path="res://assets/meshes/rooms/base_3l_room.glb"
+		path="res://objects/map_scenes/shelter/rooms/BaseRoom/BaseRoom3L.tscn"
 	}
 }
 

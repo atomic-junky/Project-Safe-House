@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://lha51vrvni65"]
+
+[ext_resource type="PackedScene" uid="uid://df03y6j0we2a1" path="res://objects/core/base_collisions/RoomCollider.tscn" id="1_3ujof"]
+[ext_resource type="PackedScene" uid="uid://74r5vkrorp81" path="res://assets/meshes/rooms/base_3l_room.glb" id="2_4ojku"]
+[ext_resource type="PackedScene" uid="uid://3ovj45w4cfeu" path="res://assets/meshes/rooms/silhouettes/base_3l_silhouette.glb" id="3_3jidj"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Area3D" parent="." instance=ExtResource("1_3ujof")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, -1, -4.5)
+room_size = 3
+
+[node name="base_3l_room" parent="." instance=ExtResource("2_4ojku")]
+
+[node name="base_3l_silhouette" parent="." instance=ExtResource("3_3jidj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
