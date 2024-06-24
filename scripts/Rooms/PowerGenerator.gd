@@ -10,3 +10,7 @@ var meshes = {
 }
 
 var room_name: String = "Power Generator"
+
+func _constructor() -> void:
+    var params = WorkingPoolParameters._default()
+    working_spots = WorkingPool.new(params)

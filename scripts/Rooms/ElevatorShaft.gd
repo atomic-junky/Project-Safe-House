@@ -5,6 +5,7 @@ class_name ElevatorShaft
 signal open
 signal close
 
+var _close_cooldown: Timer
 var _platform: ElevatorPlatform
 var is_open = false
 
@@ -15,6 +16,10 @@ var meshes = {
 var room_name: String = "Elevator Shaft"
 
 func _constructor():
+	_close_cooldown = Timer.new()
+	_close_cooldown.one_shot = true
+	_close_cooldown.wait_time = 0.5
+	
 	max_size = 1
 
 	for key in meshes:
@@ -42,9 +47,10 @@ func _process(_delta):
 	if is_open and (p_current_elevator != self or _platform._can_go()):
 		_get_animation_player().play("close_door")
 		await _get_animation_player().animation_finished
+		_close_cooldown.start()
 		is_open = false
 		close.emit()
-	elif p_current_elevator == self and !is_open and _platform.is_idle() and _platform.accept_dweller:
+	elif p_current_elevator == self and !is_open and _platform.is_idle() and _platform.accept_dweller and _close_cooldown.is_stopped():
 		_get_animation_player().play("open_door")
 		await _get_animation_player().animation_finished
 		is_open = true

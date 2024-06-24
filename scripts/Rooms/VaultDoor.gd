@@ -41,16 +41,18 @@ func _process(_delta: float) -> void:
 		_asked_for_opening = false
 		t_cooldown.start()
 	
-	if _asked_for_opening and !is_open:
-		_asked_for_opening = false
+	if animation_player.is_playing():
+		return
 
+	if _asked_for_opening and !is_open:
 		animation_player.play("open_door")
 		await animation_player.animation_finished
 		open.emit()
 		is_open = true
 		
 		t_cooldown.start()
-	elif !_asked_for_opening and is_open and t_cooldown.is_stopped() and !animation_player.is_playing():
+	elif !_asked_for_opening and is_open and t_cooldown.is_stopped():
+		_asked_for_opening = false
 		is_open = false
 		animation_player.play_backwards("open_door")
 

@@ -45,7 +45,7 @@ func get_dweller_pos(dweller: Dweller):
 	return global_position + spots_pool.get_position(1, dweller)
 
 func request(elevator: ElevatorShaft):
-	if elevator == _current_elevator:
+	if elevator == _current_elevator or elevator in _requests:
 		return
 	_requests.append(elevator)
 
