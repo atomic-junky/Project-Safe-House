@@ -1,27 +1,31 @@
-class_name EToPlatformTransitionCState
-extends CompositeState
+class_name EShaftToPlatformTransition extends Transition
 
 
 const TRAVEL_SPEED = 1.5
 
-var current_elevator: ElevatorShaft
-var _target_pos: Array[Vector3]
+var elevator: ElevatorShaft
+var target_pos: Array[Vector3]
 
 
-func _enter(_msg={}) -> void:
-    current_elevator = node.map_path.prev_room
-
-    _target_pos.append(current_elevator._get_first_transfer_position())
-    _target_pos.append(current_elevator._get_second_transfer_position())
+func _load(actor: Node) -> void:
+	register_signal(actor.elevator_transfer)
 
 
-func _do(delta: float) -> void:
-    if _target_pos[0] == node.global_position:
-        _target_pos.pop_front()
+func _enter(actor: Node) -> void:
+	elevator = actor.map_path.prev_room
 
-        if len(_target_pos) <= 0:
-            completed.emit()
-            return
+	target_pos.append(elevator._get_first_transfer_position())
+	target_pos.append(elevator._get_second_transfer_position())
+	target_pos.append(elevator._platform.get_dweller_pos(actor))
 
-    node.move_to_position(delta, _target_pos[0], TRAVEL_SPEED)
-    
+
+func _update(delta: float, actor: Node) -> void:
+	if target_pos[0] == actor.global_position:
+		target_pos.pop_front()
+
+		if len(target_pos) <= 0:
+			completed.emit()
+			return
+
+	actor.move_to_position(delta, target_pos[0], TRAVEL_SPEED)
+	

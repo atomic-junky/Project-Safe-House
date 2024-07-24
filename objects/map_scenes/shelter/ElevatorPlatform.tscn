@@ -37,10 +37,10 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.26886, -1.91, -1.75)
 [node name="tDeparture" type="Timer" parent="Timers"]
 one_shot = true
 
-[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state", "node")]
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("actor", "initial_state")]
 script = ExtResource("3_pcofr")
+actor = NodePath("..")
 initial_state = NodePath("EPIdleState")
-node = NodePath("..")
 
 [node name="EPIdleState" type="Node" parent="StateMachine" node_paths=PackedStringArray("moving_state")]
 script = ExtResource("4_8xt2g")

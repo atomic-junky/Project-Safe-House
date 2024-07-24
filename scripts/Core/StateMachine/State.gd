@@ -1,47 +1,70 @@
-class_name State
-extends Node
+@tool
+@icon("res://assets/editor/icons/State.svg")
+class_name State extends Node
+## Base class for all states.
+## 
+## A [State] must be a child of a [StateMachine] and it executes logic when active.[br]
+## To implement your logic you can override the [code]_on_enter[/code], [code]_on_update[/code] and [code]_on_exit[/code] methods when extending the node's script.[br]
+## A [State] can be composed of [Transition] to transition automatically to another [State].
 
 
-signal completed
+## Signal used by a [StateMachine] to transition between states.
+signal transitioned(new_state: State)
 
-var start_time: float
-var is_complete: bool = false
-var time: float
-
-var machine: StateMachine
-var parent: StateMachine
-
-var node: Node :
-	get = _get_node
+## List of [Transition] from this state.
+var transitions: Array[Transition] = []
 
 
-var state: State :
-	get:
-		return machine.state if machine else null
+func _ready() -> void:
+	# Don't run in editor
+	if Engine.is_editor_hint():
+		set_physics_process(false)
+		set_process(false)
+		return
+	
+	for transition: Node in get_children():
+		if transition is Transition:
+			transitions.append(transition)
+		else:
+			push_warning("State contains child which is not 'Transition'")
 
 
-func set_state(new_state: State, msg={}, force_reset: bool = false) -> State:
-	return machine._set_state(new_state, msg, force_reset)
+func _load_process(actor: Node) -> void:
+	_load(actor)
+	for transition: Transition in transitions:
+		transition._load(actor)
 
 
-func initialise(_parent: StateMachine) -> void:
-	parent = _parent
-	machine = StateMachine.new()
-	is_complete = false
-	start_time = Time.get_unix_time_from_system()
+## Call to load parent [StateMachine].
+func _load(_actor: Node) -> void: pass
 
 
-func _enter(_msg={}) -> void: pass
-func _do(_delta: float) -> void: pass
-func _exit() -> void: pass
+## Executes when the state is entered.
+func _enter(_actor: Node) -> void: pass
 
 
-func do_branch(delta: float) -> void:
-	_do(delta)
-
-	if state:
-		state.do_branch(delta)
+## Executes every process call, if the state is active.
+func _update(_delta: float, _actor: Node) -> void: pass
 
 
-func _get_node():
-	return parent.node if parent else null
+## Executes every physics process call, if the state is active.
+func _physics_update(_delta: float, _actor: Node) -> void: pass
+
+
+## Executes before the state is exited.
+func _exit(_actor: Node) -> void: pass
+
+
+func _get_configuration_warnings() -> PackedStringArray:
+	var warnings: Array = []
+ 
+	if !get_parent() is StateMachine:
+		warnings.append("Parent of this node is not a StateMachine.")
+	
+	var children: Array = get_children()
+
+	for child in children:
+		if not child is Transition:
+			warnings.append("Node '" + child.get_name() + "' is not a Transition.")
+
+	return warnings

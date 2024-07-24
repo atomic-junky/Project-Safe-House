@@ -3,18 +3,18 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://b8a4p7ldhfkdg"
-path="res://.godot/imported/groud.blend-bbc7706aba74e8b72da8004fa03ce459.scn"
+uid="uid://bepr1frwxv12g"
+path="res://.godot/imported/elevator_platform.blend-ab27faf6b7d4a9e0e09241be9d3adff9.scn"
 
 [deps]
 
-source_file="res://assets/wasteland/groud.blend"
-dest_files=["res://.godot/imported/groud.blend-bbc7706aba74e8b72da8004fa03ce459.scn"]
+source_file="res://assets/meshes/blender/elevator_platform.blend"
+dest_files=["res://.godot/imported/elevator_platform.blend-ab27faf6b7d4a9e0e09241be9d3adff9.scn"]
 
 [params]
 
-nodes/root_type="Node3D"
-nodes/root_name="Scene Root"
+nodes/root_type=""
+nodes/root_name=""
 nodes/apply_root_scale=true
 nodes/root_scale=1.0
 nodes/import_as_skeleton_bones=false
@@ -32,10 +32,10 @@ animation/remove_immutable_tracks=true
 animation/import_rest_as_RESET=false
 import_script/path=""
 _subresources={}
-fbx/importer=1
+fbx/importer=0
 fbx/allow_geometry_helper_nodes=false
 fbx/embedded_image_handling=1
-gltf/naming_version=0
+gltf/naming_version=1
 gltf/embedded_image_handling=1
 blender/nodes/visible=0
 blender/nodes/active_collection_only=false

@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://ci1ve6somicw7"]
+[gd_scene load_steps=13 format=3 uid="uid://ci1ve6somicw7"]
 
 [ext_resource type="Script" path="res://scripts/Dweller/Dweller.gd" id="1_vjmqo"]
 [ext_resource type="PackedScene" uid="uid://2dntu6ajnkfq" path="res://objects/dwellers/DwellerBody.tscn" id="2_mnvit"]
@@ -6,10 +6,9 @@
 [ext_resource type="Script" path="res://scripts/Core/StateMachine/States/Entity/IdleState.gd" id="5_8ejm0"]
 [ext_resource type="Script" path="res://scripts/StateMachineDebugLabel.gd" id="6_3himb"]
 [ext_resource type="Script" path="res://scripts/Core/StateMachine/States/Entity/RunningState.gd" id="6_wgd30"]
-[ext_resource type="Script" path="res://scripts/Core/StateMachine/States/Entity/NavigationRunningCState.gd" id="7_gbn3i"]
+[ext_resource type="Script" path="res://scripts/Core/StateMachine/States/Entity/NavigationRunningTransition.gd" id="7_gbn3i"]
 [ext_resource type="Script" path="res://scripts/Core/StateMachine/States/Entity/ElevatorShaft/ElevatorShaftState.gd" id="7_n4ujv"]
 [ext_resource type="Script" path="res://scripts/Core/StateMachine/States/Entity/ElevatorShaft/ToPlatformTransitionCState.gd" id="8_aqd4w"]
-[ext_resource type="Script" path="res://scripts/Core/StateMachine/States/Entity/ElevatorPlatform/PlatformSpotCState.gd" id="9_fexeh"]
 [ext_resource type="Script" path="res://scripts/Core/StateMachine/States/Entity/ElevatorPlatform/IdlePlatformState.gd" id="10_7h7ep"]
 [ext_resource type="Script" path="res://scripts/Core/StateMachine/States/Entity/ElevatorShaft/ToShaftTransitionCState.gd" id="10_tjv64"]
 
@@ -33,7 +32,6 @@ shape = SubResource("BoxShape3D_28lvu")
 
 [node name="StateMachineDebugLabel" type="Label3D" parent="." node_paths=PackedStringArray("machine")]
 transform = Transform3D(-3.7037, 0, -3.23788e-07, 0, 3.7037, 0, 3.23788e-07, 0, -3.7037, 0, 3.33333, 0)
-visible = false
 pixel_size = 0.001
 no_depth_test = true
 fixed_size = true
@@ -56,43 +54,39 @@ one_shot = true
 [node name="t_MoveElevator" type="Timer" parent="Timer"]
 one_shot = true
 
-[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state", "node")]
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("actor", "initial_state")]
 script = ExtResource("4_prg0n")
-initial_state = NodePath("EIdleState")
-node = NodePath("..")
+actor = NodePath("..")
+initial_state = NodePath("EIdle")
 
-[node name="EIdleState" type="Node" parent="StateMachine" node_paths=PackedStringArray("running_state")]
+[node name="EIdle" type="Node" parent="StateMachine" node_paths=PackedStringArray("running_state")]
 script = ExtResource("5_8ejm0")
-running_state = NodePath("../ERunningState")
+running_state = NodePath("../ERunning")
 
-[node name="ERunningState" type="Node" parent="StateMachine" node_paths=PackedStringArray("idle_state", "elevator_shaft_state", "nav_running_cstate")]
+[node name="ERunning" type="Node" parent="StateMachine" node_paths=PackedStringArray("idle_state", "elevator_shaft_state")]
 script = ExtResource("6_wgd30")
-idle_state = NodePath("../EIdleState")
+idle_state = NodePath("../EIdle")
 elevator_shaft_state = NodePath("../EElevatorShaft")
-nav_running_cstate = NodePath("ENavigationRunningCState")
 
-[node name="ENavigationRunningCState" type="Node" parent="StateMachine/ERunningState"]
+[node name="ENavigationRunning" type="Node" parent="StateMachine/ERunning" node_paths=PackedStringArray("next_state")]
 script = ExtResource("7_gbn3i")
+next_state = NodePath("../../EIdle")
 
-[node name="EElevatorShaft" type="Node" parent="StateMachine" node_paths=PackedStringArray("platform_transition_state", "platform_spot_state", "idle_platform_state")]
+[node name="EElevatorShaft" type="Node" parent="StateMachine" node_paths=PackedStringArray("idle_platform_state")]
 script = ExtResource("7_n4ujv")
-platform_transition_state = NodePath("EToPlatformTransitionCState")
-platform_spot_state = NodePath("EPlatformSpotCState")
 idle_platform_state = NodePath("../EIdlePlatformState")
 
-[node name="EToPlatformTransitionCState" type="Node" parent="StateMachine/EElevatorShaft"]
+[node name="EShaftToPlatform" type="Node" parent="StateMachine/EElevatorShaft" node_paths=PackedStringArray("next_state")]
 script = ExtResource("8_aqd4w")
+next_state = NodePath("../../EIdlePlatformState")
 
-[node name="EPlatformSpotCState" type="Node" parent="StateMachine/EElevatorShaft"]
-script = ExtResource("9_fexeh")
-
-[node name="EIdlePlatformState" type="Node" parent="StateMachine" node_paths=PackedStringArray("shaft_transtion_state", "running_state")]
+[node name="EIdlePlatformState" type="Node" parent="StateMachine" node_paths=PackedStringArray("running_state")]
 script = ExtResource("10_7h7ep")
-shaft_transtion_state = NodePath("EToShaftTransitionCState")
-running_state = NodePath("../ERunningState")
+running_state = NodePath("../ERunning")
 
-[node name="EToShaftTransitionCState" type="Node" parent="StateMachine/EIdlePlatformState"]
+[node name="EPlatformToShaft" type="Node" parent="StateMachine/EIdlePlatformState" node_paths=PackedStringArray("next_state")]
 script = ExtResource("10_tjv64")
+next_state = NodePath("../../ERunning")
 
 [connection signal="timeout" from="Timer/t_EnterElevator" to="." method="_on_t_enter_elevator_timeout"]
 [connection signal="timeout" from="Timer/t_ExitElevator" to="." method="_on_t_exit_elevator_timeout"]

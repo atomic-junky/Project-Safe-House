@@ -20,6 +20,8 @@ func _constructor():
 	_close_cooldown.one_shot = true
 	_close_cooldown.wait_time = 0.5
 	
+	add_child(_close_cooldown)
+	
 	max_size = 1
 
 	for key in meshes:

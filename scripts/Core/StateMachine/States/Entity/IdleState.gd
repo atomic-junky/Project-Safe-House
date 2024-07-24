@@ -1,5 +1,4 @@
-class_name EIdleState
-extends State
+class_name EIdleState extends State
 
 
 @export var running_state: ERunningState
@@ -13,10 +12,10 @@ func randomize_wander() -> void:
 	wander_time = randf_range(1, 3)
 
 
-func enter() -> void:
+func _enter(_actor: Node) -> void:
 	randomize_wander()
 
 
-func _do(_delta: float) -> void:
-	if node.map_path != null and !node.map_path.is_empty():
-		parent.transition_to(running_state)
+func _update(_delta: float, actor: Node) -> void:
+	if actor.map_path != null and !actor.map_path.is_empty():
+		transitioned.emit(running_state)

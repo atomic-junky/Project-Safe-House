@@ -1,5 +1,5 @@
-extends Node3D
-class_name ElevatorPlatform
+class_name ElevatorPlatform extends Node3D
+
 
 @export var machine: StateMachine
 
@@ -16,6 +16,7 @@ var _requests: Array = []
 
 var spots_pool: WorkingPool
 var accept_dweller: bool = true
+
 
 func _ready():
 	var working_pool_param = WorkingPoolParameters.new()
@@ -55,8 +56,8 @@ func _can_go() -> bool:
 
 	# Check if all dwellers are in place
 	for spot in spots_pool.get_all_taken(1):
-		var dweller = spot.dweller
-		if !dweller.machine.state is EIdlePlatformState:
+		var dweller: Dweller = spot.dweller
+		if !dweller.machine.active_state is EIdlePlatformState:
 			return false
 
 	return true
@@ -95,4 +96,4 @@ func _move_to_floor(delta: float, pos_y: float):
 		spot.dweller.global_position = get_dweller_pos(spot.dweller)
 
 func is_idle() -> bool:
-	return machine.state is EPIdleState
+	return machine.active_state is EPIdleState
