@@ -4,8 +4,8 @@ extends Camera3D
 const DEBUG_SPEED = 0.5
 const DRAG_SPEED = 0.0015
 
-const MIN_ZOOM: float = 0.001
-const MAX_ZOOM: float = 0.45
+const MIN_ZOOM: float = 0.01
+const MAX_ZOOM: float = 0.3
 const ZOOM_INCREMENT: float = 0.025
 const ZOOM_RATE: float = 10.0
 const MIN_HORIZONTAL_SCROLL: float = 3.0

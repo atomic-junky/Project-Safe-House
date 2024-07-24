@@ -6,7 +6,7 @@
 [ext_resource type="Script" path="res://scripts/OnHold.gd" id="4_u5mf0"]
 [ext_resource type="PackedScene" uid="uid://ci1ve6somicw7" path="res://objects/dwellers/Dweller.tscn" id="5_qq4nu"]
 [ext_resource type="Texture2D" uid="uid://bcmht1dwtrrhx" path="res://assets/Garterbeltb.png" id="6_p46bs"]
-[ext_resource type="PackedScene" uid="uid://c462qrwcqvtgc" path="res://assets/meshes/groud.glb" id="10_u8p67"]
+[ext_resource type="PackedScene" uid="uid://b8a4p7ldhfkdg" path="res://assets/wasteland/groud.blend" id="8_rayfl"]
 
 [node name="Shelter" type="Node3D"]
 script = ExtResource("1_73ywb")
@@ -43,7 +43,7 @@ no_depth_test = true
 render_priority = 99
 texture = ExtResource("6_p46bs")
 
-[node name="groud" parent="." instance=ExtResource("10_u8p67")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -1.5)
-
 [node name="PlatformContainer" type="Node" parent="."]
+
+[node name="groud3" parent="." instance=ExtResource("8_rayfl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -1.5)
