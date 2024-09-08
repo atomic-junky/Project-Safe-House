@@ -20,14 +20,9 @@ keep_aspect = 0
 current = true
 script = ExtResource("3_mbaw0")
 
-[node name="OmniLight3D" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.9303, 24, -8)
-light_color = Color(0.831373, 0.890196, 1, 1)
-light_energy = 1.5
-light_size = 1.0
-light_specular = 0.0
-omni_range = 100.0
-omni_attenuation = 1e-05
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 36.9303, 24, -8)
+light_energy = 0.5
 
 [node name="DwellerContainer" type="Node" parent="."]
 script = ExtResource("4_u5mf0")
