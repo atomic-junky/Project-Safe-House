@@ -10,6 +10,7 @@ class_name Transition extends Node
 
 
 ## Must be call when the transition is completed to transition to the next [State].
+@warning_ignore("unused_signal")
 signal completed
 
 ## The fallback [State] of this transition.

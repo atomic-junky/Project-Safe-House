@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://cri5e323f124r"]
 
-[ext_resource type="Script" path="res://scripts/BuildCard.gd" id="1_07hj3"]
+[ext_resource type="Script" uid="uid://he6sbvqarjdi" path="res://scripts/BuildCard.gd" id="1_07hj3"]
 [ext_resource type="Texture2D" uid="uid://cjhgwut7x66yb" path="res://assets/buttons/cards/card.png" id="2_uimop"]
 [ext_resource type="FontFile" uid="uid://b0t4p6p8hij5p" path="res://assets/font/Oswald-Medium.ttf" id="3_0pv7e"]
 

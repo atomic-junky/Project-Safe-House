@@ -61,8 +61,8 @@ tracks/1/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_xbo8l"]
 _data = {
-"RESET": SubResource("Animation_q2xa1"),
-"open_door": SubResource("Animation_5ve63")
+&"RESET": SubResource("Animation_q2xa1"),
+&"open_door": SubResource("Animation_5ve63")
 }
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_7x8vm"]

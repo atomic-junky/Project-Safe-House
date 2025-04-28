@@ -89,9 +89,9 @@ tracks/1/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_e8dcr"]
 _data = {
-"RESET": SubResource("Animation_1fx3i"),
-"close_door": SubResource("Animation_2aujq"),
-"open_door": SubResource("Animation_2gtov")
+&"RESET": SubResource("Animation_1fx3i"),
+&"close_door": SubResource("Animation_2aujq"),
+&"open_door": SubResource("Animation_2gtov")
 }
 
 [node name="ElevatorMiddle" type="Node3D"]

@@ -1,9 +1,9 @@
 [gd_scene load_steps=8 format=3 uid="uid://c7b68nqwdkfjp"]
 
-[ext_resource type="Script" path="res://scripts/Core/Shelter.gd" id="1_73ywb"]
-[ext_resource type="Script" path="res://scripts/Camera.gd" id="3_mbaw0"]
+[ext_resource type="Script" uid="uid://dsxdb0d1w8yy7" path="res://scripts/Core/Shelter.gd" id="1_73ywb"]
+[ext_resource type="Script" uid="uid://tyk45okg762h" path="res://scripts/Camera.gd" id="3_mbaw0"]
 [ext_resource type="PackedScene" uid="uid://ygg1dtk5whr5" path="res://objects/core/auto_scene_map.tscn" id="3_rbshk"]
-[ext_resource type="Script" path="res://scripts/OnHold.gd" id="4_u5mf0"]
+[ext_resource type="Script" uid="uid://g0nfn3unwhwu" path="res://scripts/OnHold.gd" id="4_u5mf0"]
 [ext_resource type="PackedScene" uid="uid://ci1ve6somicw7" path="res://objects/dwellers/Dweller.tscn" id="5_qq4nu"]
 [ext_resource type="Texture2D" uid="uid://bcmht1dwtrrhx" path="res://assets/Garterbeltb.png" id="6_p46bs"]
 [ext_resource type="PackedScene" uid="uid://b8a4p7ldhfkdg" path="res://assets/wasteland/groud.blend" id="8_rayfl"]

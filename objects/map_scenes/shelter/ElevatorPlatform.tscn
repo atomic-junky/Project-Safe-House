@@ -1,10 +1,10 @@
 [gd_scene load_steps=6 format=3 uid="uid://djuntgxl1uea6"]
 
-[ext_resource type="Script" path="res://scripts/ElevatorPlatform.gd" id="1_7gl2q"]
+[ext_resource type="Script" uid="uid://brlsy1epa5101" path="res://scripts/ElevatorPlatform.gd" id="1_7gl2q"]
 [ext_resource type="PackedScene" uid="uid://hfj0svft1xlw" path="res://assets/meshes/elevator_platform.glb" id="1_we87d"]
-[ext_resource type="Script" path="res://scripts/Core/StateMachine/StateMachine.gd" id="3_pcofr"]
-[ext_resource type="Script" path="res://scripts/Core/StateMachine/States/ElevatorPlatform/IdleState.gd" id="4_8xt2g"]
-[ext_resource type="Script" path="res://scripts/Core/StateMachine/States/ElevatorPlatform/MovingState.gd" id="5_smdp7"]
+[ext_resource type="Script" uid="uid://qqif7lbecrq0" path="res://scripts/Core/StateMachine/StateMachine.gd" id="3_pcofr"]
+[ext_resource type="Script" uid="uid://c8q6snj0f442n" path="res://scripts/Core/StateMachine/States/ElevatorPlatform/IdleState.gd" id="4_8xt2g"]
+[ext_resource type="Script" uid="uid://cf45g5e0lmhp4" path="res://scripts/Core/StateMachine/States/ElevatorPlatform/MovingState.gd" id="5_smdp7"]
 
 [node name="ElevatorPlatform" type="Node3D" node_paths=PackedStringArray("machine")]
 script = ExtResource("1_7gl2q")

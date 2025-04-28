@@ -1,3 +1,4 @@
+@tool
 class_name EPMovingState extends State
 
 

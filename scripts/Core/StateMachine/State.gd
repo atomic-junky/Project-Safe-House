@@ -9,6 +9,7 @@ class_name State extends Node
 
 
 ## Signal used by a [StateMachine] to transition between states.
+@warning_ignore("unused_signal")
 signal transitioned(new_state: State)
 
 ## List of [Transition] from this state.

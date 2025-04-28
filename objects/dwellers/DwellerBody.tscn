@@ -1,6 +1,6 @@
 [gd_scene load_steps=11 format=3 uid="uid://2dntu6ajnkfq"]
 
-[ext_resource type="Script" path="res://scripts/Dweller/DwellerBody.gd" id="1_ktm5x"]
+[ext_resource type="Script" uid="uid://bkfwqati31r5f" path="res://scripts/Dweller/DwellerBody.gd" id="1_ktm5x"]
 [ext_resource type="Texture2D" uid="uid://c2rxftswro7qs" path="res://assets/atlas/00f3f3bae99d2dd395388e949d809656.png-CAB_432b395adb721c9bcb74e542e5eae573--2903108146384342886.png" id="2_6kfbd"]
 [ext_resource type="Texture2D" uid="uid://d2q7lmxottb8m" path="res://assets/atlas/5bae2b7165e29fb59f59637decf58f1f.png-CAB_8af51097dd417595e6d897454c3aeb2b--2217908348079786120.png" id="3_i4bnn"]
 [ext_resource type="Texture2D" uid="uid://cglmh14r48s1c" path="res://assets/atlas/583640b9310906cf8a0c7a3bd50cfd6d.png-CAB_7a81beb76b158526bca269c91de49c1c--8612309448153429578.png" id="4_s6cfl"]
@@ -15,8 +15,8 @@ length = 0.001
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_cjhfn"]
 _data = {
-"Idle": SubResource("Animation_fbla4"),
-"RESET": SubResource("Animation_e05i6")
+&"Idle": SubResource("Animation_fbla4"),
+&"RESET": SubResource("Animation_e05i6")
 }
 
 [sub_resource type="Animation" id="Animation_vror3"]
@@ -125,8 +125,8 @@ tracks/3/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_60rrl"]
 _data = {
-"Idle": SubResource("Animation_vror3"),
-"RESET": SubResource("Animation_8lfkt")
+&"Idle": SubResource("Animation_vror3"),
+&"RESET": SubResource("Animation_8lfkt")
 }
 
 [node name="Body" type="Node3D"]

@@ -9,7 +9,7 @@ uniform vec4 color: source_color;
 
 void fragment() {
 	vec4 pos = inverse(MODEL_MATRIX) * INV_VIEW_MATRIX * vec4(VERTEX, 1.0);
-	
+
 	ALBEDO = color.rgb;
 	ALPHA = clamp(mix(1.0, 0.0, length(pos / radius)), 0.0, 1.0);
 }

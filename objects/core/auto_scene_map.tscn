@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://ygg1dtk5whr5"]
 
-[ext_resource type="Script" path="res://addons/scene_map/scene_map.gd" id="1_h88j2"]
-[ext_resource type="Script" path="res://scripts/Core/AutoSceneMap.gd" id="1_j5lcu"]
-[ext_resource type="Script" path="res://addons/scene_map/scene_palette.gd" id="3_0cabc"]
+[ext_resource type="Script" uid="uid://lvw0g331q0ai" path="res://addons/scene_map/scene_map.gd" id="1_h88j2"]
+[ext_resource type="Script" uid="uid://trd64qljjmkc" path="res://scripts/Core/AutoSceneMap.gd" id="1_j5lcu"]
+[ext_resource type="Script" uid="uid://bfn5gqm32myto" path="res://addons/scene_map/scene_palette.gd" id="3_0cabc"]
 
 [sub_resource type="Resource" id="Resource_myxbp"]
 script = ExtResource("3_0cabc")

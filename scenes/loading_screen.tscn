@@ -1,7 +1,7 @@
 [gd_scene load_steps=12 format=3 uid="uid://wf4rqjqfvlky"]
 
-[ext_resource type="Script" path="res://scripts/loading_screen.gd" id="1_6vvlg"]
-[ext_resource type="Shader" path="res://scripts/shaders/loading_screen.gdshader" id="1_fbm0q"]
+[ext_resource type="Script" uid="uid://c4pdjndn3fvm" path="res://scripts/loading_screen.gd" id="1_6vvlg"]
+[ext_resource type="Shader" uid="uid://buuabs2rnahdg" path="res://scripts/shaders/loading_screen.gdshader" id="1_fbm0q"]
 [ext_resource type="Texture2D" uid="uid://bntyp30l4bsf6" path="res://assets/please_stand_by.png" id="1_t5b2h"]
 [ext_resource type="Texture2D" uid="uid://dfqimuptyj3q2" path="res://assets/loading_cog.png" id="4_vldps"]
 [ext_resource type="FontFile" uid="uid://bcv87yqdamyl4" path="res://assets/font/Oswald-SemiBold.ttf" id="5_5eiq5"]
@@ -90,9 +90,9 @@ tracks/2/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_4x80t"]
 _data = {
-"RESET": SubResource("Animation_8bjpq"),
-"end_load": SubResource("Animation_cq746"),
-"start_load": SubResource("Animation_pclw1")
+&"RESET": SubResource("Animation_8bjpq"),
+&"end_load": SubResource("Animation_cq746"),
+&"start_load": SubResource("Animation_pclw1")
 }
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_mfvql"]

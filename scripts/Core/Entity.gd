@@ -4,6 +4,7 @@ extends Node3D
 
 @export var machine: StateMachine
 
+@warning_ignore("unused_signal")
 signal elevator_transfer
 
 @onready var _agent: NavigationAgent3D = get_node_or_null("NavigationAgent3D")
