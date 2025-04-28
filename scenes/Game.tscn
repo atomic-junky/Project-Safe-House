@@ -565,8 +565,9 @@ custom_minimum_size = Vector2(225, 0)
 layout_direction = 2
 layout_mode = 2
 mouse_default_cursor_shape = 2
-tab_count = 2
+current_tab = 0
 tab_alignment = 1
+tab_count = 2
 tab_0/title = "Production"
 tab_1/title = "Support"
 
