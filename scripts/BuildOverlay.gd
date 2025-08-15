@@ -6,7 +6,7 @@ class_name BuildOverlay
 @export var background_overlay: ColorRect
 
 
-func _ready():
+func _ready() -> void:
 	GlobalSignal.add_listener("build_button_pressed", _on_build_button_pressed)
 	GlobalSignal.add_listener("build_card_selected", _on_build_card_selected)
 	

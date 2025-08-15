@@ -26,5 +26,5 @@ static var _class_picker: Dictionary = {
 }
 
 
-static func pick(room_id: int):
+static func pick(room_id: int) -> Room:
 	return _class_picker.get(room_id)

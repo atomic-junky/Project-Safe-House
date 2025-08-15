@@ -23,7 +23,7 @@ func _init():
 	position.z = -4.85
 	position.y = 46.5
 
-func _ready():
+func _ready() -> void:
 	await get_tree().create_timer(0.2).timeout
 	
 	_target_zoom = 0.2

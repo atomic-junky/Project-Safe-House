@@ -18,7 +18,7 @@ var spots_pool: WorkingPool
 var accept_dweller: bool = true
 
 
-func _ready():
+func _ready() -> void:
 	var working_pool_param = WorkingPoolParameters.new()
 	working_pool_param._from_markers(1, _slot_markers)
 

@@ -18,7 +18,7 @@ var _selected_dweller = null
 var _elevator_networks = []
 
 
-func _ready():
+func _ready() -> void:
 	GlobalSignal.add_listener("build_card_selected", _on_build_mode_enabled)
 	_matrix.room_removed.connect(_on_matrix_room_removed)
 	

@@ -6,7 +6,7 @@ extends Control
 var mouse_hover: bool = false
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready() -> void:
 	var texture
 	match room:
 		RoomList.ELEVATOR:

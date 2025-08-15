@@ -49,7 +49,7 @@ script/source = "extends PanelContainer
 var _room: Room
 
 
-func _ready():
+func _ready() -> void:
 	hide()
 	
 
@@ -85,7 +85,7 @@ script/source = "extends ColorRect
 @export var popups_overlay: PopupsOverlay
 
 
-func _ready():
+func _ready() -> void:
 	hide()
 
 
@@ -102,7 +102,7 @@ script/source = "extends Control
 
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready() -> void:
 	pass # Replace with function body.
 "
 

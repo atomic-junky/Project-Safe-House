@@ -22,15 +22,13 @@ config/icon="res://icon.svg"
 RoomList="*res://scripts/Global/RoomList.gd"
 Instructions="*res://scripts/Global/Instructions.gd"
 Global="*res://scripts/Global/Variables.gd"
-GlobalSignal="*res://scripts/Core/GlobalSignal.gd"
+GlobalSignal="*res://scripts/core/GlobalSignal.gd"
 MeshLink="*res://scripts/Global/MeshLink.gd"
 LoadManager="*res://scripts/Global/LoadManager.gd"
 
 [debug]
 
-gdscript/warnings/incompatible_ternary=0
-gdscript/warnings/integer_division=0
-gdscript/warnings/narrowing_conversion=0
+gdscript/warnings/untyped_declaration=1
 
 [display]
 
@@ -39,7 +37,7 @@ window/stretch/aspect="expand"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/dictionary_resource/plugin.cfg", "res://addons/scene_map/plugin.cfg", "res://addons/script-ide/plugin.cfg")
+enabled=PackedStringArray("res://addons/dictionary_resource/plugin.cfg", "res://addons/format_on_save/plugin.cfg", "res://addons/scene_map/plugin.cfg")
 
 [gui]
 
@@ -70,6 +68,8 @@ textures/canvas_textures/default_texture_filter=2
 renderer/rendering_method.mobile="gl_compatibility"
 textures/vram_compression/import_etc2_astc=true
 textures/lossless_compression/force_png=true
+lights_and_shadows/directional_shadow/soft_shadow_filter_quality=4
+lights_and_shadows/positional_shadow/soft_shadow_filter_quality=4
 textures/default_filters/anisotropic_filtering_level=0
 anti_aliasing/quality/msaa_2d=2
 anti_aliasing/quality/msaa_3d=2

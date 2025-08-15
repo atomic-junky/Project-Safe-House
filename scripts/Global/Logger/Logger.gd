@@ -40,4 +40,3 @@ static func error(text: String) -> void:
 
 static func fatal(text: String) -> void:
 	return log_msg(Levels.FATAL, text)
-

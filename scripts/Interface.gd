@@ -9,7 +9,7 @@ extends Control
 @export var popus_overlay: Control
 
 
-func _ready():
+func _ready() -> void:
 	background_overlay.hide()
 	build_overlay.hide()
 	popus_overlay.hide()

@@ -18,7 +18,7 @@ border_color = Color(0.956863, 0.913725, 0.796078, 1)
 script/source = "extends Button
 
 
-func _ready():
+func _ready() -> void:
 	var tos_normal: StyleBoxFlat = get(\"theme_override_styles/normal\")
 	# Duplicate StyleBox don't work due to https://github.com/godotengine/godot/issues/80797
 	#var tos_pressed: StyleBoxFlat = tos_normal.duplicate(true)

@@ -1,12 +1,27 @@
-[gd_scene load_steps=8 format=3 uid="uid://c7b68nqwdkfjp"]
+[gd_scene load_steps=11 format=3 uid="uid://c7b68nqwdkfjp"]
 
-[ext_resource type="Script" uid="uid://dsxdb0d1w8yy7" path="res://scripts/Core/Shelter.gd" id="1_73ywb"]
+[ext_resource type="Script" uid="uid://dsxdb0d1w8yy7" path="res://scripts/core/Shelter.gd" id="1_73ywb"]
 [ext_resource type="Script" uid="uid://tyk45okg762h" path="res://scripts/Camera.gd" id="3_mbaw0"]
 [ext_resource type="PackedScene" uid="uid://ygg1dtk5whr5" path="res://objects/core/auto_scene_map.tscn" id="3_rbshk"]
 [ext_resource type="Script" uid="uid://g0nfn3unwhwu" path="res://scripts/OnHold.gd" id="4_u5mf0"]
 [ext_resource type="PackedScene" uid="uid://ci1ve6somicw7" path="res://objects/dwellers/Dweller.tscn" id="5_qq4nu"]
 [ext_resource type="Texture2D" uid="uid://bcmht1dwtrrhx" path="res://assets/Garterbeltb.png" id="6_p46bs"]
 [ext_resource type="PackedScene" uid="uid://b8a4p7ldhfkdg" path="res://assets/wasteland/groud.blend" id="8_rayfl"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_brjt8"]
+sky_top_color = Color(0.481333, 0.568822, 0.651841, 1)
+sky_horizon_color = Color(0.401754, 0.606749, 0.624331, 1)
+
+[sub_resource type="Sky" id="Sky_wocnw"]
+sky_material = SubResource("ProceduralSkyMaterial_brjt8")
+
+[sub_resource type="Environment" id="Environment_brjt8"]
+background_mode = 1
+sky = SubResource("Sky_wocnw")
+reflected_light_source = 2
+ssil_enabled = true
+sdfgi_enabled = true
+sdfgi_use_occlusion = true
 
 [node name="Shelter" type="Node3D"]
 script = ExtResource("1_73ywb")
@@ -21,8 +36,10 @@ current = true
 script = ExtResource("3_mbaw0")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 36.9303, 24, -8)
-light_energy = 0.5
+transform = Transform3D(-4.3366e-08, -0.125472, 0.992097, -5.48455e-09, 0.992097, 0.125472, -1, 0, -4.37114e-08, 36.9303, 24, -8)
+light_color = Color(0.801808, 0.775149, 0.875059, 1)
+light_energy = 0.75
+shadow_enabled = true
 
 [node name="DwellerContainer" type="Node" parent="."]
 script = ExtResource("4_u5mf0")
@@ -42,3 +59,6 @@ texture = ExtResource("6_p46bs")
 
 [node name="groud3" parent="." instance=ExtResource("8_rayfl")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0, -1.5)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_brjt8")

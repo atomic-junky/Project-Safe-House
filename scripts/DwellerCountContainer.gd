@@ -6,7 +6,7 @@ var DwellerObject = preload("res://objects/dwellers/Dweller.tscn")
 @export var dweller_count_label: Label
 
 
-func _ready():
+func _ready() -> void:
 	await shelter.ready
 	update_dweller_count()
 
@@ -30,5 +30,5 @@ func _on_remove_dweller_pressed():
 	update_dweller_count()
 
 
-func _on_main_ready():
+func _on_main_ready() -> void:
 	update_dweller_count()

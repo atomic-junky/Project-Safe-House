@@ -4,7 +4,7 @@ class_name PopupsOverlay
 @export var background_overlay: ColorRect
 @export var room_window: RoomWindow
 
-func _ready():
+func _ready() -> void:
 	_hide_all()
 
 func show_room_window(room: Room):

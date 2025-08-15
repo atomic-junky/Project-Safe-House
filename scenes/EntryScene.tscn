@@ -4,7 +4,7 @@
 script/source = "extends Node
 
 
-func _ready():
+func _ready() -> void:
 	LoadManager.load_scene(\"res://scenes/Game.tscn\")
 "
 

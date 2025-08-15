@@ -8,7 +8,7 @@ class_name AutoSceneMap
 		return _scene_map.cell_size
 
 
-func _ready():
+func _ready() -> void:
 	var pal: ScenePalette = MeshLink.build_palette()
 	_scene_map.palette = pal
 

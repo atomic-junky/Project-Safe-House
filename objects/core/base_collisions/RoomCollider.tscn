@@ -13,7 +13,7 @@ extends Area3D
 @onready var collision_shape: CollisionShape3D = $CollisionShape3D
 
 
-func _ready():
+func _ready() -> void:
 	_compute_collision_size()
 
 

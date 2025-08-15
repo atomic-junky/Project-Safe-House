@@ -1,5 +1,4 @@
-extends Node
-class_name Room
+class_name Room extends Node
 
 var id: String = UUID.v4()
 var max_size: int = 3
