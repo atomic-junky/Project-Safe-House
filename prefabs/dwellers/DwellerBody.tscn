@@ -1,9 +1,9 @@
 [gd_scene load_steps=11 format=3 uid="uid://2dntu6ajnkfq"]
 
-[ext_resource type="Script" uid="uid://bkfwqati31r5f" path="res://scripts/Dweller/DwellerBody.gd" id="1_ktm5x"]
-[ext_resource type="Texture2D" uid="uid://c2rxftswro7qs" path="res://assets/atlas/00f3f3bae99d2dd395388e949d809656.png-CAB_432b395adb721c9bcb74e542e5eae573--2903108146384342886.png" id="2_6kfbd"]
-[ext_resource type="Texture2D" uid="uid://d2q7lmxottb8m" path="res://assets/atlas/5bae2b7165e29fb59f59637decf58f1f.png-CAB_8af51097dd417595e6d897454c3aeb2b--2217908348079786120.png" id="3_i4bnn"]
-[ext_resource type="Texture2D" uid="uid://cglmh14r48s1c" path="res://assets/atlas/583640b9310906cf8a0c7a3bd50cfd6d.png-CAB_7a81beb76b158526bca269c91de49c1c--8612309448153429578.png" id="4_s6cfl"]
+[ext_resource type="Script" uid="uid://bkfwqati31r5f" path="res://scripts/Dweller/DwellerBody.gd" id="1_cnor3"]
+[ext_resource type="Texture2D" uid="uid://c2rxftswro7qs" path="res://assets/atlas/00f3f3bae99d2dd395388e949d809656.png-CAB_432b395adb721c9bcb74e542e5eae573--2903108146384342886.png" id="2_53m83"]
+[ext_resource type="Texture2D" uid="uid://d2q7lmxottb8m" path="res://assets/atlas/5bae2b7165e29fb59f59637decf58f1f.png-CAB_8af51097dd417595e6d897454c3aeb2b--2217908348079786120.png" id="3_unrn3"]
+[ext_resource type="Texture2D" uid="uid://cglmh14r48s1c" path="res://assets/atlas/583640b9310906cf8a0c7a3bd50cfd6d.png-CAB_7a81beb76b158526bca269c91de49c1c--8612309448153429578.png" id="4_s1i13"]
 
 [sub_resource type="Animation" id="Animation_fbla4"]
 resource_name = "Idle"
@@ -131,7 +131,7 @@ _data = {
 
 [node name="Body" type="Node3D"]
 transform = Transform3D(1, 0, 2.13163e-14, 0, 1, 0, -2.13163e-14, 0, 1, -9.41753e-05, 1.8628, -5.03111e-10)
-script = ExtResource("1_ktm5x")
+script = ExtResource("1_cnor3")
 
 [node name="Body" type="Node3D" parent="."]
 transform = Transform3D(0.9, 0, 0, 0, 0.9, 0, 0, 0, 0.9, 0, 0, 0)
@@ -139,14 +139,14 @@ transform = Transform3D(0.9, 0, 0, 0, 0.9, 0, 0, 0, 0.9, 0, 0, 0)
 [node name="Torso" type="Sprite3D" parent="Body"]
 transform = Transform3D(1, 0, -1.42109e-14, 0, 0.999718, -0.0237517, 0, 0.0237517, 0.999718, -0.0718615, 0, -1.55431e-15)
 shaded = true
-texture = ExtResource("2_6kfbd")
+texture = ExtResource("2_53m83")
 region_enabled = true
 region_rect = Rect2(128, 64, 128, 192)
 
 [node name="c_Torso" type="Sprite3D" parent="Body/Torso"]
 shaded = true
 render_priority = 1
-texture = ExtResource("3_i4bnn")
+texture = ExtResource("3_unrn3")
 region_enabled = true
 region_rect = Rect2(128, 320, 128, 192)
 
@@ -156,7 +156,7 @@ centered = false
 offset = Vector2(-70, -30)
 shaded = true
 render_priority = 2
-texture = ExtResource("2_6kfbd")
+texture = ExtResource("2_53m83")
 region_enabled = true
 region_rect = Rect2(0, 128, 128, 128)
 
@@ -167,7 +167,7 @@ centered = false
 offset = Vector2(-70, -30)
 shaded = true
 render_priority = 3
-texture = ExtResource("4_s6cfl")
+texture = ExtResource("4_s1i13")
 region_enabled = true
 region_rect = Rect2(240, 128, 112, 112)
 
@@ -181,7 +181,7 @@ centered = false
 offset = Vector2(-75, -35)
 shaded = true
 render_priority = 1
-texture = ExtResource("2_6kfbd")
+texture = ExtResource("2_53m83")
 region_enabled = true
 region_rect = Rect2(0, 48, 96, 64)
 
@@ -191,7 +191,7 @@ centered = false
 offset = Vector2(-75, -35)
 shaded = true
 render_priority = 2
-texture = ExtResource("3_i4bnn")
+texture = ExtResource("3_unrn3")
 region_enabled = true
 region_rect = Rect2(0, 304, 96, 64)
 
@@ -201,7 +201,7 @@ centered = false
 offset = Vector2(-10, -15)
 shaded = true
 render_priority = 1
-texture = ExtResource("2_6kfbd")
+texture = ExtResource("2_53m83")
 region_enabled = true
 region_rect = Rect2(272, 144, 64, 32)
 
@@ -210,15 +210,15 @@ centered = false
 offset = Vector2(-10, -15)
 shaded = true
 render_priority = 3
-texture = ExtResource("3_i4bnn")
+texture = ExtResource("3_unrn3")
 region_enabled = true
 region_rect = Rect2(272, 400, 64, 32)
 
 [node name="Hand1" type="Sprite3D" parent="Body/Torso/Arm1/Arm2"]
-transform = Transform3D(0.75, -8.90577e-09, 3.72529e-09, 1.34496e-08, 0.75, 0, -1.86265e-09, 2.32831e-10, 0.75, 0.398, -0.0560001, -7.45058e-09)
+transform = Transform3D(0.75, -3.12793e-08, 1.86265e-09, 1.34387e-08, 0.75, 0, 0, 0, 0.75, 0.398, -0.056, 0)
 offset = Vector2(25, -5)
 shaded = true
-texture = ExtResource("4_s6cfl")
+texture = ExtResource("4_s1i13")
 region_enabled = true
 region_rect = Rect2(720, 384, 64, 64)
 
@@ -240,7 +240,7 @@ centered = false
 offset = Vector2(-25, -25)
 shaded = true
 render_priority = -5
-texture = ExtResource("2_6kfbd")
+texture = ExtResource("2_53m83")
 region_enabled = true
 region_rect = Rect2(0, 0, 96, 48)
 
@@ -249,7 +249,7 @@ centered = false
 offset = Vector2(-25, -25)
 shaded = true
 render_priority = -4
-texture = ExtResource("3_i4bnn")
+texture = ExtResource("3_unrn3")
 region_enabled = true
 region_rect = Rect2(0, 256, 96, 48)
 
@@ -259,7 +259,7 @@ centered = false
 offset = Vector2(-50, -30)
 shaded = true
 render_priority = -4
-texture = ExtResource("2_6kfbd")
+texture = ExtResource("2_53m83")
 region_enabled = true
 region_rect = Rect2(272, 192, 80, 64)
 
@@ -269,16 +269,16 @@ centered = false
 offset = Vector2(-50, -30)
 shaded = true
 render_priority = -3
-texture = ExtResource("3_i4bnn")
+texture = ExtResource("3_unrn3")
 region_enabled = true
 region_rect = Rect2(272, 448, 80, 64)
 
 [node name="Hand2" type="Sprite3D" parent="Body/Torso/Arm2/Arm3"]
-transform = Transform3D(0.75, -8.51869e-08, 1.37836e-07, -1.81026e-08, 0.75, 9.47621e-08, -1.17347e-07, 2.56114e-09, 0.75, -0.341164, 0.0615708, -0.000567079)
+transform = Transform3D(0.75, 1.23433e-07, 1.37836e-07, -2.55422e-08, 0.75, 9.49949e-08, -1.22935e-07, 2.32831e-09, 0.75, -0.341164, 0.0615709, -0.000567071)
 offset = Vector2(-20, 5)
 shaded = true
 render_priority = -4
-texture = ExtResource("4_s6cfl")
+texture = ExtResource("4_s1i13")
 region_enabled = true
 region_rect = Rect2(720, 320, 64, 64)
 
@@ -308,7 +308,7 @@ offset = Vector2(25, 0)
 flip_v = true
 shaded = true
 render_priority = -2
-texture = ExtResource("2_6kfbd")
+texture = ExtResource("2_53m83")
 region_enabled = true
 region_rect = Rect2(256, 64, 128, 64)
 
@@ -317,7 +317,7 @@ offset = Vector2(25, 0)
 flip_v = true
 shaded = true
 render_priority = -1
-texture = ExtResource("3_i4bnn")
+texture = ExtResource("3_unrn3")
 region_enabled = true
 region_rect = Rect2(256, 320, 128, 64)
 
@@ -326,7 +326,7 @@ transform = Transform3D(0.998681, 0.051363, -3.12999e-05, -0.0513629, 0.99868, -
 offset = Vector2(30, 0)
 shaded = true
 render_priority = -3
-texture = ExtResource("2_6kfbd")
+texture = ExtResource("2_53m83")
 region_enabled = true
 region_rect = Rect2(384, 64, 128, 64)
 
@@ -334,16 +334,16 @@ region_rect = Rect2(384, 64, 128, 64)
 offset = Vector2(30, 0)
 shaded = true
 render_priority = -2
-texture = ExtResource("3_i4bnn")
+texture = ExtResource("3_unrn3")
 region_enabled = true
 region_rect = Rect2(384, 320, 128, 64)
 
 [node name="Foot1" type="Sprite3D" parent="Body/Torso/Leg1/Calf1"]
-transform = Transform3D(0.0506098, -0.998718, -3.03481e-05, 0.998717, 0.0506099, -0.00120251, 0.0012025, 3.05548e-05, 0.999999, 0.665058, 0.0546084, 0.00104642)
+transform = Transform3D(0.0506098, -0.998718, -3.03444e-05, 0.998717, 0.0506099, -0.00120251, 0.0012025, 3.05567e-05, 0.999999, 0.665058, 0.0546084, 0.00104642)
 offset = Vector2(-5, -5)
 shaded = true
 render_priority = -4
-texture = ExtResource("2_6kfbd")
+texture = ExtResource("2_53m83")
 region_enabled = true
 region_rect = Rect2(192, 0, 64, 48)
 
@@ -352,7 +352,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 1.86265e-09, 3.55271e-15, 1.86265e-09, 1,
 offset = Vector2(-5, -5)
 shaded = true
 render_priority = -3
-texture = ExtResource("3_i4bnn")
+texture = ExtResource("3_unrn3")
 region_enabled = true
 region_rect = Rect2(192, 256, 64, 48)
 
@@ -373,7 +373,7 @@ transform = Transform3D(0.0733531, -0.997304, -0.00174286, 0.997306, 0.0733531, 
 offset = Vector2(-25, 0)
 shaded = true
 render_priority = -3
-texture = ExtResource("2_6kfbd")
+texture = ExtResource("2_53m83")
 region_enabled = true
 region_rect = Rect2(256, 0, 128, 64)
 
@@ -382,7 +382,7 @@ transform = Transform3D(1, 3.9746e-14, 1.86265e-09, 3.90799e-14, 1, 7.10543e-15,
 offset = Vector2(-25, 0)
 shaded = true
 render_priority = -2
-texture = ExtResource("3_i4bnn")
+texture = ExtResource("3_unrn3")
 region_enabled = true
 region_rect = Rect2(256, 256, 128, 64)
 
@@ -391,7 +391,7 @@ transform = Transform3D(-0.998536, 0.0540958, 3.40678e-05, -0.0540958, -0.998534
 offset = Vector2(30, 0)
 shaded = true
 render_priority = -4
-texture = ExtResource("2_6kfbd")
+texture = ExtResource("2_53m83")
 region_enabled = true
 region_rect = Rect2(384, 0, 128, 64)
 
@@ -400,16 +400,16 @@ transform = Transform3D(1, -3.44669e-13, -1.86265e-09, 4.4853e-13, 1, 1.06581e-1
 offset = Vector2(30, 0)
 shaded = true
 render_priority = -3
-texture = ExtResource("3_i4bnn")
+texture = ExtResource("3_unrn3")
 region_enabled = true
 region_rect = Rect2(384, 256, 128, 64)
 
 [node name="Foot2" type="Sprite3D" parent="Body/Torso/Leg2/Calf2"]
-transform = Transform3D(-3.62746e-06, -1, 2.51457e-07, 1, -3.62394e-06, -3.60082e-10, -4.34383e-10, 2.27243e-07, 1, 0.707498, -0.0139726, 0.000238329)
+transform = Transform3D(-3.62001e-06, -1, 2.5332e-07, 1, -3.62767e-06, -3.87342e-10, -5.21709e-10, 2.23517e-07, 1, 0.707498, -0.0139725, 0.000238329)
 offset = Vector2(-5, -5)
 shaded = true
 render_priority = -5
-texture = ExtResource("2_6kfbd")
+texture = ExtResource("2_53m83")
 region_enabled = true
 region_rect = Rect2(112, 0, 64, 48)
 
@@ -418,7 +418,7 @@ transform = Transform3D(1, -1.11022e-16, 7.10543e-15, 1.11022e-16, 1, -1.86265e-
 offset = Vector2(-5, -5)
 shaded = true
 render_priority = -4
-texture = ExtResource("3_i4bnn")
+texture = ExtResource("3_unrn3")
 region_enabled = true
 region_rect = Rect2(112, 256, 64, 48)
 

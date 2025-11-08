@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://cr1j5tv0c7y1k"]
 
-[ext_resource type="PackedScene" uid="uid://df03y6j0we2a1" path="res://objects/core/base_collisions/RoomCollider.tscn" id="1_uhie5"]
+[ext_resource type="PackedScene" uid="uid://df03y6j0we2a1" path="res://prefabs/core/base_collisions/RoomCollider.tscn" id="1_uhie5"]
 [ext_resource type="PackedScene" uid="uid://dqy1fe8j1q7hf" path="res://assets/meshes/rooms/silhouettes/elevator_shaft_silhouette.glb" id="2_2861u"]
 [ext_resource type="PackedScene" uid="uid://btvteuomnrupg" path="res://assets/meshes/rooms/elevator_shaft.glb" id="4_kdgq5"]
 
@@ -98,7 +98,7 @@ _data = {
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_e8dcr")
+&"": SubResource("AnimationLibrary_e8dcr")
 }
 
 [node name="RoomCollider" parent="." instance=ExtResource("1_uhie5")]

@@ -1,6 +1,5 @@
 class_name ElevatorPlatform extends Node3D
 
-
 @export var machine: StateMachine
 
 const MAX_SPEED: float = 1.0
@@ -10,8 +9,8 @@ const MAX_SPEED: float = 1.0
 
 var network: Array = []
 
-var _current_elevator: Room
-var _target_elevator: Room
+var _current_elevator: AbstractRoom
+var _target_elevator: AbstractRoom
 var _requests: Array = []
 
 var spots_pool: WorkingPool
@@ -24,17 +23,21 @@ func _ready() -> void:
 
 	spots_pool = WorkingPool.new(working_pool_param)
 
+
 func _assign_dweller(dweller: Dweller):
 	spots_pool._assign_dweller(1, dweller)
 
+
 func _deassign_dweller(dweller: Dweller):
 	spots_pool._deassign_dweller(1, dweller)
+
 
 func _transfer_dwellers(dwellers: Array):
 	for dweller in dwellers:
 		spots_pool._assign_dweller(1, dweller)
 
-func _process(_delta):
+
+func _process(_delta: float) -> void:
 	for shaft in network:
 		if not is_instance_valid(shaft):
 			return
@@ -42,13 +45,16 @@ func _process(_delta):
 		if shaft.position.y == position.y:
 			_current_elevator = shaft
 
+
 func get_dweller_pos(dweller: Dweller):
 	return global_position + spots_pool.get_position(1, dweller)
+
 
 func request(elevator: ElevatorShaft):
 	if elevator == _current_elevator or elevator in _requests:
 		return
 	_requests.append(elevator)
+
 
 func _can_go() -> bool:
 	if len(_requests) <= 0:
@@ -62,16 +68,20 @@ func _can_go() -> bool:
 
 	return true
 
+
 func _sort_high_floors(a, b) -> bool:
 	return a.positions[0].y < b.positions[0].y
+
+
 func _sort_low_floors(a, b) -> bool:
 	return a.positions[0].y > b.positions[0].y
+
 
 func _get_next_floor():
 	var high_floors = _requests.duplicate()
 	high_floors.sort_custom(_sort_high_floors)
 	high_floors.filter(func(f): return f.positions[0].y < _current_elevator.positions[0].y)
-	
+
 	var low_floors = _requests.duplicate()
 	low_floors.sort_custom(_sort_low_floors)
 	high_floors.filter(func(f): return f.positions[0].y > _current_elevator.positions[0].y)
@@ -81,19 +91,25 @@ func _get_next_floor():
 
 	return ordered_requests[0]
 
+
 func is_full():
 	return spots_pool.is_full(1)
+
+
 func is_empty():
 	return spots_pool.is_empty(1)
 
+
 func _on_t_departure_timeout():
 	_target_elevator = _get_next_floor()
+
 
 func _move_to_floor(delta: float, pos_y: float):
 	global_position.y = move_toward(global_position.y, pos_y, delta * MAX_SPEED)
 
 	for spot in spots_pool.get_all_taken(1):
 		spot.dweller.global_position = get_dweller_pos(spot.dweller)
+
 
 func is_idle() -> bool:
 	return machine.active_state is EPIdleState

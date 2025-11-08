@@ -1,6 +1,5 @@
 class_name MapPath
 
-
 var _astar: AStar2D
 var _path: Array
 
@@ -9,7 +8,7 @@ var _map_height: int
 var _cell_size: Vector3
 
 var is_cleared: bool = false
-var prev_room: Room
+var prev_room: AbstractRoom
 
 
 func _init(astar: AStar2D, start_index: int, end_index: int, cell_size: Vector3, matrix: Matrix):
@@ -30,34 +29,37 @@ func _clean_path():
 	for p_index in _path:
 		var p_pos = _astar.get_point_position(p_index)
 		var room = _matrix.get_room_at(p_pos.x, p_pos.y)
-		
+
 		if room.id in _room_cache:
 			_path.erase(p_index)
 			continue
-		
+
 		_room_cache.append(room.id)
 
 	# Remove in between elevators
 	var cleaned_path = _path.duplicate()
-	
-	for i in len(_path)-1:
-		if i <= 0 or i >= len(_path)-1:
+
+	for i in len(_path) - 1:
+		if i <= 0 or i >= len(_path) - 1:
 			continue
 
 		var p_pos = _astar.get_point_position(_path[i])
 		var p_room = _matrix.get_room_at(p_pos.x, p_pos.y)
 
-		var prev_p_pos = _astar.get_point_position(_path[i-1])
+		var prev_p_pos = _astar.get_point_position(_path[i - 1])
 		var prev_p_room = _matrix.get_room_at(prev_p_pos.x, prev_p_pos.y)
 
-		
-		var next_p_pos = _astar.get_point_position(_path[i+1])
+		var next_p_pos = _astar.get_point_position(_path[i + 1])
 		var next_p_room = _matrix.get_room_at(next_p_pos.x, next_p_pos.y)
 
-		if prev_p_room is ElevatorShaft and p_room is ElevatorShaft and next_p_room is ElevatorShaft:
+		if (
+			prev_p_room is ElevatorShaft
+			and p_room is ElevatorShaft
+			and next_p_room is ElevatorShaft
+		):
 			if prev_p_pos.x == p_pos.x and next_p_pos.x == p_pos.x:
 				cleaned_path.erase(_path[i])
-	
+
 	_path = cleaned_path
 
 

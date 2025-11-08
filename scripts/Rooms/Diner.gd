@@ -1,13 +1,10 @@
-extends Room
+extends AbstractRoom
 
 class_name Diner
 
 
-var meshes = {
-	1: MeshLink._meshes.LIVING_ROOM_1L,
-	2: MeshLink._meshes.LIVING_ROOM_2L,
-	3: MeshLink._meshes.LIVING_ROOM_3L
-}
+func _constructor() -> void:
+	type = GlobalRoomManager.RoomType.ROOM_DINER
 
 
 var room_name: String = "Diner"

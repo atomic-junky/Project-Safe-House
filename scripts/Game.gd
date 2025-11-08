@@ -6,4 +6,3 @@ extends Node
 
 func _ready() -> void:
 	build_overlay.hide()
-

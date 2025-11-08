@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://c5tk1qo30gp3c"]
 
-[ext_resource type="PackedScene" uid="uid://df03y6j0we2a1" path="res://objects/core/base_collisions/RoomCollider.tscn" id="1_fxybf"]
+[ext_resource type="PackedScene" uid="uid://df03y6j0we2a1" path="res://prefabs/core/base_collisions/RoomCollider.tscn" id="1_fxybf"]
 [ext_resource type="PackedScene" uid="uid://uyqimtn0hmg2" path="res://assets/meshes/rooms/base_2l_room.glb" id="2_xvrk6"]
 [ext_resource type="PackedScene" uid="uid://iad8g7j7x6o7" path="res://assets/meshes/rooms/silhouettes/base_2l_silhouette.glb" id="3_416so"]
 

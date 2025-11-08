@@ -1,10 +1,8 @@
-class_name VaultDoor extends Room
+class_name VaultDoor extends AbstractRoom
 
 @onready var t_cooldown: Timer:
 	get:
 		return room_node.get_node("tCooldown")
-
-var meshes = {2: MeshLink._meshes.VAULTDOOR}
 
 var room_name: String = "Vault Door"
 var is_open = false
@@ -13,26 +11,19 @@ var _opening_callback: Array[Callable] = []
 
 var animation_player: AnimationPlayer:
 	get:
-		return _get_animation_player()
+		if room_node:
+			return room_node.get_node("AnimationPlayer")
+		return
 
 
-func _constructor():
+func _constructor() -> void:
+	type = GlobalRoomManager.RoomType.ROOM_VAULTDOOR
 	max_size = 2
 	destroyable = false
 
-	for key in meshes:
-		var el = meshes[key]
-
-		var working_pool_param = WorkingPoolParameters.new()
-		working_pool_param.append_positions(key, MeshLink.get_spots(el.name))
-
-		working_spots = WorkingPool.new(working_pool_param)
-
 
 func _process(_delta: float) -> void:
-	if animation_player.is_playing():
-		return
-
+	# TODO: redo this shit
 	if is_open:
 		for callback in _opening_callback:
 			callback.call()
@@ -42,7 +33,7 @@ func _process(_delta: float) -> void:
 		_asked_for_opening = false
 		t_cooldown.start()
 
-	if animation_player.is_playing():
+	if not animation_player or animation_player.is_playing():
 		return
 
 	if _asked_for_opening and !is_open:
@@ -55,10 +46,6 @@ func _process(_delta: float) -> void:
 		_asked_for_opening = false
 		is_open = false
 		animation_player.play_backwards("open_door")
-
-
-func _get_animation_player() -> AnimationPlayer:
-	return room_node.get_node("AnimationPlayer")
 
 
 func open_request(callback: Callable) -> void:

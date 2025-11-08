@@ -1,15 +1,14 @@
 extends Node3D
 class_name AutoSceneMap
 
-
 @onready var _scene_map: SceneMap = $SceneMap
-@onready var cell_size: Vector3 :
+@onready var cell_size: Vector3:
 	get:
 		return _scene_map.cell_size
 
 
 func _ready() -> void:
-	var pal: ScenePalette = MeshLink.build_palette()
+	var pal: ScenePalette = GlobalRoomManager.build_palette()
 	_scene_map.palette = pal
 
 	_scene_map.cell_size = Vector3(2, 2, 3)
@@ -54,7 +53,7 @@ func _remove_instance(coordinate: Vector3) -> bool:
 
 func get_cell(p_coordinate: Vector3):
 	var coordinate = p_coordinate.floor()
-	
+
 	if _scene_map.cell_map.has(coordinate):
 		var data := _scene_map.cell_map.get(coordinate) as Dictionary
 		return data

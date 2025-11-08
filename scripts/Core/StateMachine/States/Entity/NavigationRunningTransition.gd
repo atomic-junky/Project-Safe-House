@@ -1,10 +1,9 @@
 @tool
 class_name ENavigationRunning extends Transition
 
-
 const TRAVEL_SPEED = 1.0
 
-var room: Room
+var room: AbstractRoom
 var _target_pos: Vector3
 var _nav_height: float
 
@@ -16,6 +15,7 @@ func _is_valid(actor: Node) -> bool:
 			if actor.assigned_room.has_dweller(actor) and !state.nav_state:
 				return true
 	return false
+
 
 func _enter(actor: Node) -> void:
 	room = actor.assigned_room
@@ -36,14 +36,14 @@ func _enter(actor: Node) -> void:
 func _update(delta: float, actor: Node) -> void:
 	if room.get_navigation_region() == null:
 		completed.emit()
-		Logger.warn("Ended on room that as no NavigationRegion3D!")
+		FSLogger.warn("Ended on room that as no NavigationRegion3D!")
 		return
 
 	if _target_pos == actor.global_position:
 		if actor._agent.is_navigation_finished():
 			completed.emit()
 			return
-		
+
 		_target_pos = actor._agent.get_next_path_position()
 		_target_pos.y -= _nav_height
 

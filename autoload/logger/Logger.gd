@@ -1,6 +1,6 @@
 @tool
 
-class_name Logger
+class_name FSLogger
 
 enum Levels {
 	TRACE,

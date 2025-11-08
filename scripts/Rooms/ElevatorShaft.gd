@@ -1,6 +1,4 @@
-extends Room
-
-class_name ElevatorShaft
+class_name ElevatorShaft extends AbstractRoom
 
 signal open
 signal close
@@ -9,12 +7,11 @@ var _close_cooldown: Timer
 var _platform: ElevatorPlatform
 var is_open = false
 
-var meshes = {1: MeshLink._meshes.ELEVATOR_MIDDLE}
-
 var room_name: String = "Elevator Shaft"
 
 
-func _constructor():
+func _constructor() -> void:
+	type = GlobalRoomManager.RoomType.ROOM_ELEVATOR
 	_close_cooldown = Timer.new()
 	_close_cooldown.one_shot = true
 	_close_cooldown.wait_time = 0.5
@@ -23,16 +20,8 @@ func _constructor():
 
 	max_size = 1
 
-	for key in meshes:
-		var el = meshes[key]
 
-		var working_pool_param = WorkingPoolParameters.new()
-		working_pool_param.append_positions(key, MeshLink.get_spots(el.name))
-
-		working_spots = WorkingPool.new(working_pool_param)
-
-
-func _process(_delta):
+func _process(_delta: float) -> void:
 	if (
 		is_open
 		and !working_spots.is_empty(size)
@@ -77,7 +66,7 @@ func wait_for_elevator(dweller: Dweller):
 	var s_position: Vector3 = working_spots.get_position(size, dweller)
 
 	if !err and !s_position:
-		Logger.error("Can't assign the dweller to the elevator shaft")
+		FSLogger.error("Can't assign the dweller to the elevator shaft")
 
 	return self.room_node.global_position + s_position
 

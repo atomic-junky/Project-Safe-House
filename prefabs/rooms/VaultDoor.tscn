@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://di108753nv2ai"]
 
 [ext_resource type="PackedScene" uid="uid://dacyqnhhe31i3" path="res://assets/meshes/rooms/vault_door.glb" id="1_na6rj"]
-[ext_resource type="PackedScene" uid="uid://df03y6j0we2a1" path="res://objects/core/base_collisions/RoomCollider.tscn" id="2_607xf"]
+[ext_resource type="PackedScene" uid="uid://df03y6j0we2a1" path="res://prefabs/core/base_collisions/RoomCollider.tscn" id="2_607xf"]
 [ext_resource type="PackedScene" uid="uid://bqus1pqulwr52" path="res://assets/meshes/rooms/silhouettes/vault_door_silhouette.glb" id="3_y0erd"]
 
 [sub_resource type="Animation" id="Animation_q2xa1"]
@@ -78,7 +78,7 @@ agent_max_climb = 0.1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_xbo8l")
+&"": SubResource("AnimationLibrary_xbo8l")
 }
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]

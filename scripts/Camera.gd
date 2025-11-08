@@ -74,7 +74,7 @@ func screen_point_to_ray(to = null, collide_with_areas: bool = true, collide_wit
 	return space.intersect_ray(ray_query)
 
 
-func _physics_process(delta):
+func _physics_process(delta: float) -> void:
 	var _zoom = lerp(
 		zoom(),
 		_target_zoom * 1,

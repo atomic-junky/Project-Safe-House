@@ -12,7 +12,7 @@ func _process(_delta: float) -> void:
 	pass
 
 
-func path_to_room(target_room: Room) -> void:
+func path_to_room(target_room: AbstractRoom) -> void:
 	var parent = _get_main_parent()
 	var matrix: Matrix = parent._matrix
 	var max_height = matrix.size.y

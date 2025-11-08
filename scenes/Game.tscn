@@ -20,7 +20,7 @@
 [ext_resource type="Script" uid="uid://kd6kjin0pk66" path="res://scripts/PopupsOverlay.gd" id="18_gxbv2"]
 [ext_resource type="PackedScene" uid="uid://c7b68nqwdkfjp" path="res://scenes/Shelter.tscn" id="18_tl8lo"]
 [ext_resource type="Script" uid="uid://dkno8w7rovr5v" path="res://scripts/ui/RoomWindow.gd" id="19_2e0vn"]
-[ext_resource type="PackedScene" uid="uid://co371q2fu4hb5" path="res://objects/ui/ui_button.tscn" id="19_cqucc"]
+[ext_resource type="PackedScene" uid="uid://co371q2fu4hb5" path="res://prefabs/ui/ui_button.tscn" id="19_cqucc"]
 [ext_resource type="Texture2D" uid="uid://cfrovvrta3ohf" path="res://assets/UI/icons/Upgrade_icon.png" id="20_ewbgq"]
 [ext_resource type="Texture2D" uid="uid://bg686knjvuxhl" path="res://assets/UI/icons/Nuke_icon.png" id="21_wcifg"]
 
@@ -46,14 +46,14 @@ script/source = "extends PanelContainer
 
 @export var popups_overlay: PopupsOverlay
 
-var _room: Room
+var _room: AbstractRoom
 
 
 func _ready() -> void:
 	hide()
 	
 
-func bind(room: Room):
+func bind(room: AbstractRoom):
 	_room = room
 	
 	var short_id = room.id.split(\"-\")[0]
@@ -177,17 +177,24 @@ alignment = 2
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="VaultContainer" type="HBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer"]
+[node name="TextureRect" type="TextureRect" parent="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer"]
+custom_minimum_size = Vector2(87, 87)
 layout_mode = 2
-
-[node name="Sprite2D" type="Sprite2D" parent="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/VaultContainer"]
-scale = Vector2(0.152439, 0.152439)
 texture = ExtResource("5_mkp1d")
-centered = false
+expand_mode = 1
+stretch_mode = 5
 
-[node name="Label" type="Label" parent="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/VaultContainer"]
+[node name="Label" type="Label" parent="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/TextureRect"]
 custom_minimum_size = Vector2(70, 70)
-layout_mode = 2
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -10.0
+offset_bottom = -9.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
 text = "999"
 label_settings = SubResource("LabelSettings_xsh62")
 horizontal_alignment = 1
@@ -195,6 +202,7 @@ vertical_alignment = 1
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 0
 
 [node name="DateContainer" type="HBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer"]
 layout_mode = 2
@@ -216,6 +224,7 @@ vertical_alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 0
 
 [node name="DwellerIcon" type="TextureRect" parent="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer"]
 custom_minimum_size = Vector2(20, 20)
@@ -226,12 +235,14 @@ stretch_mode = 5
 
 [node name="DwellerCountLabel" type="Label" parent="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer"]
 layout_mode = 2
+size_flags_vertical = 0
 text = "13
 "
 label_settings = SubResource("LabelSettings_oajef")
 
 [node name="DwellerCountContainer" type="HBoxContainer" parent="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer" node_paths=PackedStringArray("shelter", "dweller_count_label")]
 layout_mode = 2
+size_flags_vertical = 0
 script = ExtResource("6_qfpgm")
 shelter = NodePath("../../../../../../../../../Shelter")
 dweller_count_label = NodePath("../DwellerCountLabel")

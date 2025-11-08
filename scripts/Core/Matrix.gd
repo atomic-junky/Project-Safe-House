@@ -16,7 +16,7 @@ func _init(width: int, height: int) -> void:
 			matrix[y].append(null)
 
 
-func add_room(room: Room, positions: Array[Vector2]) -> void:
+func add_room(room: AbstractRoom, positions: Array[Vector2]) -> void:
 	room._matrix = self
 	for _pos in positions:
 		# Checking limits
@@ -50,7 +50,7 @@ func add_room(room: Room, positions: Array[Vector2]) -> void:
 			room = _merge_rooms(right_neighbour, room)
 
 
-func remove_room(room: Room) -> void:
+func remove_room(room: AbstractRoom) -> void:
 	for _pos in room.positions:
 		# Delete room at all room positions on the matrix
 		matrix[_pos.y][_pos.x] = null
@@ -59,9 +59,9 @@ func remove_room(room: Room) -> void:
 	room_removed.emit()
 
 
-func _merge_rooms(base_room: Room, new_room: Room) -> Room:
+func _merge_rooms(base_room: AbstractRoom, new_room: AbstractRoom) -> AbstractRoom:
 	base_room.positions.append_array(new_room.positions)
-	Logger.info("Room(" + new_room.id + ") merged with Room(" + base_room.id + ")")
+	FSLogger.info("Room(" + new_room.id + ") merged with Room(" + base_room.id + ")")
 	new_room.free()
 
 	for pos in base_room.positions:
@@ -80,12 +80,12 @@ func _sort_postions(a: Vector2, b: Vector2) -> bool:
 	return false
 
 
-func get_room_at(x: int, y: int) -> Room:
+func get_room_at(x: int, y: int) -> AbstractRoom:
 	return matrix[y][x] if _is_room_at(x, y) else null
 
 
 func get_room_at_first_position(x: int, y: int):
-	var room: Room = get_room_at(x, y)
+	var room: AbstractRoom = get_room_at(x, y)
 	if room == null:
 		return
 

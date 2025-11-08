@@ -6,7 +6,7 @@ const TRAVEL_SPEED = 1.5
 @export var idle_state: EIdleState
 @export var elevator_shaft_state: EElevatorShaft
 
-var target_room: Room
+var target_room: AbstractRoom
 var _target_pos: Vector3
 var nav_state: bool = false
 var waiting: bool = false

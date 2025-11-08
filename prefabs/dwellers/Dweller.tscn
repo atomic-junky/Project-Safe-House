@@ -1,7 +1,7 @@
 [gd_scene load_steps=13 format=3 uid="uid://ci1ve6somicw7"]
 
 [ext_resource type="Script" uid="uid://d3kcx65ffk1cs" path="res://scripts/Dweller/Dweller.gd" id="1_vjmqo"]
-[ext_resource type="PackedScene" uid="uid://2dntu6ajnkfq" path="res://objects/dwellers/DwellerBody.tscn" id="2_mnvit"]
+[ext_resource type="PackedScene" uid="uid://2dntu6ajnkfq" path="res://prefabs/dwellers/DwellerBody.tscn" id="2_mnvit"]
 [ext_resource type="Script" uid="uid://qqif7lbecrq0" path="res://scripts/core/StateMachine/StateMachine.gd" id="4_prg0n"]
 [ext_resource type="Script" uid="uid://bfnbm2fwtqr1m" path="res://scripts/core/StateMachine/States/Entity/IdleState.gd" id="5_8ejm0"]
 [ext_resource type="Script" uid="uid://dysusabmepeog" path="res://scripts/StateMachineDebugLabel.gd" id="6_3himb"]

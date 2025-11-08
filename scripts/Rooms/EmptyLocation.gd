@@ -1,9 +1,8 @@
-extends Room
-
-class_name EmptyLocation
+class_name EmptyLocation extends AbstractRoom
 
 
-func _constructor():
+func _constructor() -> void:
+	type = GlobalRoomManager.RoomType.ROOM_OUTSIDE
 	max_size = 1
 
 

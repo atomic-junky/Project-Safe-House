@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://klktocoyqruc"]
 
 [ext_resource type="PackedScene" uid="uid://buypg36u1uhrr" path="res://assets/meshes/build_location.glb" id="1_pmq5e"]
-[ext_resource type="PackedScene" uid="uid://df03y6j0we2a1" path="res://objects/core/base_collisions/RoomCollider.tscn" id="2_qoclv"]
+[ext_resource type="PackedScene" uid="uid://df03y6j0we2a1" path="res://prefabs/core/base_collisions/RoomCollider.tscn" id="2_qoclv"]
 
 [node name="BuildLocation" type="Node3D"]
 
