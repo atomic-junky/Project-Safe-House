@@ -4,9 +4,9 @@ enum SpecialTexture { S, P, E, C, I, A, L }
 
 @export var room: GlobalRoomManager.RoomType
 @export var room_name: String = ""
-@export var special_texture: SpecialTexture
-@onready var main_game = get_tree().current_scene.find_child("Main")
+@export var special_texture: SpecialTexture = SpecialTexture.S
 var mouse_hover: bool = false
+@onready var main_game: Node = get_tree().current_scene.find_child("Main")
 
 
 # Called when the node enters the scene tree for the first time.

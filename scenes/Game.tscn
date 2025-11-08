@@ -74,7 +74,7 @@ script/source = "extends TextureButton
 
 
 func _on_pressed():
-	GlobalSignal.emit(\"build_button_pressed\")
+	SignalBus.build_button_pressed.emit()
 "
 
 [sub_resource type="GDScript" id="GDScript_r8j1n"]
@@ -488,30 +488,44 @@ theme_override_constants/separation = 25
 [node name="LivingRoomBuildCard" parent="Interface/BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
 layout_mode = 2
 room = 3
+room_name = "Living Quarters"
+special_texture = 3
 
 [node name="PowerGeneratorBuildCard" parent="Interface/BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
 layout_mode = 2
 room = 4
+room_name = "Power Generator"
+special_texture = 0
 
 [node name="DinerBuildCard" parent="Interface/BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
 layout_mode = 2
 room = 5
+room_name = "Diner"
+special_texture = 5
 
 [node name="WaterTreatmentBuildCard" parent="Interface/BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
 layout_mode = 2
 room = 6
+room_name = "Water Treatment"
+special_texture = 1
 
 [node name="StorageRoomBuildCard" parent="Interface/BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
 layout_mode = 2
 room = 7
+room_name = "Storage Room"
+special_texture = 2
 
 [node name="MedbayBuildCard" parent="Interface/BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
 layout_mode = 2
 room = 8
+room_name = "Medbay"
+special_texture = 4
 
 [node name="ScienceLabBuildCard" parent="Interface/BuildOverlay/Container/TabsContainer/Production/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
 layout_mode = 2
 room = 9
+room_name = "Science Lab"
+special_texture = 6
 
 [node name="Support" type="Control" parent="Interface/BuildOverlay/Container/TabsContainer"]
 layout_mode = 1
@@ -550,6 +564,8 @@ theme_override_constants/separation = 25
 [node name="ElevatorBuildCard" parent="Interface/BuildOverlay/Container/TabsContainer/Support/ScrollContainer/MarginContainer/HBoxContainer" instance=ExtResource("4_730yh")]
 layout_mode = 2
 room = 2
+room_name = "Elevator"
+special_texture = 0
 
 [node name="TabBarContainer" type="Control" parent="Interface/BuildOverlay/Container"]
 layout_mode = 1
@@ -642,9 +658,9 @@ text = "Destroy
 "
 icon = ExtResource("21_wcifg")
 
-[node name="Shelter" parent="." node_paths=PackedStringArray("roomSelectorInterface") instance=ExtResource("18_tl8lo")]
+[node name="Shelter" parent="." node_paths=PackedStringArray("room_selector_interface") instance=ExtResource("18_tl8lo")]
 unique_name_in_owner = true
-roomSelectorInterface = NodePath("../Interface/MainGUI/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector")
+room_selector_interface = NodePath("../Interface/MainGUI/MarginContainer/GridContainer/Middle/MiddleSubContainer/BottomContainer/RoomSelector")
 
 [connection signal="pressed" from="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer/DwellerCountContainer/AddDweller" to="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer/DwellerCountContainer" method="_on_add_dweller_pressed"]
 [connection signal="pressed" from="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer/DwellerCountContainer/RemoveDweller" to="Interface/MainGUI/MarginContainer/GridContainer/Left/HBoxContainer/VBoxContainer/HBoxContainer/DwellerCountContainer" method="_on_remove_dweller_pressed"]

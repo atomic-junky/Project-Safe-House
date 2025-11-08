@@ -1,10 +1,7 @@
-extends Node3D
 class_name AutoSceneMap
+extends Node3D
 
 @onready var _scene_map: SceneMap = $SceneMap
-@onready var cell_size: Vector3:
-	get:
-		return _scene_map.cell_size
 
 
 func _ready() -> void:
@@ -26,9 +23,9 @@ func _get_coordinates():
 
 func _get_item_index(item_name: String) -> int:
 	for index in _scene_map.palette.items:
-		var _name = _scene_map.palette.get_item_name(index)
+		var palette_item_name = _scene_map.palette.get_item_name(index)
 
-		if _name == item_name:
+		if palette_item_name == item_name:
 			return index
 	return -1
 
@@ -65,3 +62,31 @@ func _get_cell_node(p_coordinate: Vector3):
 	if _scene_map.cell_map.has(coordinate):
 		var data := _scene_map.cell_map.get(coordinate) as Dictionary
 		return _scene_map.get_node(data.path)
+
+
+func get_cell_size() -> Vector3:
+	return _scene_map.cell_size
+
+
+func get_cell_position(coordinate: Vector3) -> Vector3:
+	return _scene_map.get_cell_position(coordinate)
+
+
+func add_temporary_node(node: Node3D, coordinate: Vector3) -> Node3D:
+	if node == null:
+		return null
+	var spatial := node as Node3D
+	if spatial == null:
+		node.queue_free()
+		return null
+	spatial.position = _scene_map.get_cell_position(coordinate)
+	_scene_map.add_child(spatial, true)
+
+	var parent: Node = self
+	while parent:
+		if parent.owner:
+			spatial.owner = parent.owner
+			break
+		parent = parent.get_parent()
+
+	return spatial

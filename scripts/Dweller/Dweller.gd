@@ -17,7 +17,10 @@ func path_to_room(target_room: AbstractRoom) -> void:
 	var matrix: Matrix = parent._matrix
 	var max_height = matrix.size.y
 
-	var start: Vector2i = Vector2i(matrix_position.x, max_height - matrix_position.y - 1)
+	var current_matrix_position: Vector2i = get_matrix_position()
+	var start: Vector2i = Vector2i(
+		current_matrix_position.x, max_height - current_matrix_position.y - 1
+	)
 	var end: Vector2i = target_room.positions[0]
 
 	# Unassigned the dweller from the old room

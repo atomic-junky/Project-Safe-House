@@ -16,7 +16,7 @@ const MAX_VERTICAL_SCROLL: float = 0
 var _target_zoom: float = 0.01
 
 var _disabled: bool = false
-var body_drag_mode: bool = false
+var _body_drag_mode: bool = false
 
 func _init():
 	position.x = 3.6
@@ -29,7 +29,7 @@ func _ready() -> void:
 	_target_zoom = 0.2
 
 func _unhandled_input(event) -> void:
-	if _disabled or body_drag_mode:
+	if _disabled or _body_drag_mode:
 		return
 	
 	var build_overlay = get_tree().current_scene.get_node_or_null("BuildOverlay")
@@ -58,7 +58,13 @@ func zoom_out() -> void:
 	_target_zoom = min(_target_zoom + ZOOM_INCREMENT, MAX_ZOOM)
 	set_physics_process(true)
 
-func screen_point_to_ray(to = null, collide_with_areas: bool = true, collide_with_bodies: bool = true):
+func screen_point_to_ray(
+	to = null,
+	collide_with_areas: bool = true,
+	collide_with_bodies: bool = true,
+	exclude: Array = [],
+	collision_mask: int = 0
+):
 	var space = get_world_3d().direct_space_state
 	var mouse_pos = get_viewport().get_mouse_position()
 	
@@ -71,11 +77,13 @@ func screen_point_to_ray(to = null, collide_with_areas: bool = true, collide_wit
 	ray_query.to = to
 	ray_query.collide_with_areas = collide_with_areas
 	ray_query.collide_with_bodies = collide_with_bodies
+	ray_query.exclude = exclude
+	ray_query.collision_mask = collision_mask
 	return space.intersect_ray(ray_query)
 
 
 func _physics_process(delta: float) -> void:
-	var _zoom = lerp(
+	var zoom_value = lerp(
 		zoom(),
 		_target_zoom * 1,
 		ZOOM_RATE * delta
@@ -83,7 +91,7 @@ func _physics_process(delta: float) -> void:
 	
 	# TODO: Limit the camera in y and z axis
 
-	position.x = _zoom
+	position.x = zoom_value
 
 	var screensize = get_viewport().get_visible_rect().size
 	var m_pos = get_viewport().get_mouse_position()
@@ -113,3 +121,7 @@ func disable() -> void:
 
 func enable() -> void:
 	_disabled = false
+
+
+func set_body_drag_mode(active: bool) -> void:
+	_body_drag_mode = active

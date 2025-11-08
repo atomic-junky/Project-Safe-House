@@ -1,22 +1,33 @@
 class_name Shelter extends Node3D
 
-@export var roomSelectorInterface: PanelContainer = null
+const WORKSPOT_ROOM_TYPES := [
+	GlobalRoomManager.RoomType.ROOM_LIVING_ROOM,
+	GlobalRoomManager.RoomType.ROOM_POWER_GENERATOR,
+	GlobalRoomManager.RoomType.ROOM_DINER,
+	GlobalRoomManager.RoomType.ROOM_WATER_TREATMENT
+]
 
-@onready var shelter_map: AutoSceneMap = $AutoSceneMap
-@onready var platform_container = $PlatformContainer
-@onready var drag_body = $DragBody
-@onready var dweller_container = $DwellerContainer
+const NO_SELECTION := GlobalRoomManager.RoomType.ROOM_OUTSIDE
 
-@onready var elevator_platform = preload("res://prefabs/shelter/ElevatorPlatform.tscn")
+@export var room_selector_interface: PanelContainer = null
 
 var _matrix: Matrix = Matrix.new(14, 25)
-var _selected_build_room: GlobalRoomManager.RoomType
-var _selected_dweller = null
-var _elevator_networks = []
+var _selected_build_room: GlobalRoomManager.RoomType = NO_SELECTION
+var _selected_dweller: Dweller = null
+var _elevator_networks: Array[Array] = []
+var _build_locations: Array[Node3D] = []
+
+@onready var shelter_map: AutoSceneMap = $AutoSceneMap
+@onready var platform_container: Node = $PlatformContainer
+@onready var drag_body: Sprite3D = $DragBody
+@onready var dweller_container: Node = $DwellerContainer
+
+@onready var elevator_platform: PackedScene = preload("res://prefabs/shelter/ElevatorPlatform.tscn")
 
 
 func _ready() -> void:
 	SignalBus.build_card_selected.connect(_on_build_mode_enabled)
+	SignalBus.build_mode_disabled.connect(_on_build_mode_disabled)
 
 	_matrix.room_removed.connect(_on_matrix_room_removed)
 
@@ -28,7 +39,7 @@ func _ready() -> void:
 		_matrix.add_room(ElevatorShaft.new(), [Vector2(3, y)])
 
 	# Empty locations
-	for x in _matrix.size.x:
+	for x: int in _matrix.size.x:
 		if _matrix._is_room_at(x, 0):
 			continue
 
@@ -38,57 +49,51 @@ func _ready() -> void:
 	_update_elevator_networks()
 
 
-func _unhandled_input(event) -> void:
+func _unhandled_input(event: InputEvent) -> void:
 	_remove_pointer()
 
-	var camera = $Camera
-	var ray_bodies = camera.screen_point_to_ray(null, false, true)
-	var ray_areas = camera.screen_point_to_ray(null, true, false)
-	var pos_on_plane = camera.get_mouse_position_on_plane()
+	var camera: Camera3D = $Camera
+	var ray_bodies: Dictionary = _pick_dweller_hit(camera)
+	var ray_areas: Dictionary = camera.screen_point_to_ray(null, true, false)
+	var pos_on_plane: Vector3 = camera.get_mouse_position_on_plane()
+	var map_cell_size: Vector3 = shelter_map.get_cell_size()
+	var build_target: Dictionary = {}
+	if _selected_build_room != NO_SELECTION:
+		build_target = _get_build_target_under_cursor(camera)
+		var build_attempt = (
+			event is InputEventMouseButton
+			and event.button_index == MOUSE_BUTTON_LEFT
+			and event.is_pressed()
+		)
+		if build_attempt and _try_place_room(build_target):
+			return
 
 	if (
 		event is InputEventMouseButton
 		and event.button_index == MOUSE_BUTTON_LEFT
 		and event.is_pressed()
 	):
-		roomSelectorInterface.hide()
+		room_selector_interface.hide()
 
 	if ray_areas.has("collider"):
-		var z = roundi((ray_areas.position.z + 1.5) / shelter_map.cell_size.z) * -1
-		var y = roundi((ray_areas.position.y) / shelter_map.cell_size.y)
-		y = _matrix.size.y - y - 1
+		var z: int = roundi((ray_areas.position.z + 1.5) / map_cell_size.z) * -1
+		var y: int = roundi((ray_areas.position.y) / map_cell_size.y)
+		y = int(_matrix.size.y - y - 1)
 
-		var collider_parent = ray_areas.collider.get_parent().get_parent()
+		var collider_parent: Node3D = ray_areas.collider.get_parent().get_parent()
 		if collider_parent == shelter_map:
 			return
 
 		if _matrix._is_room_at(z, y):
-			var room = _matrix.get_room_at(z, y)
+			var room: Node = _matrix.get_room_at(z, y)
 			if room is AbstractRoom and !room is EmptyLocation:
 				_place_pointer(y, z)
 
 		if event is InputEventMouseButton:
-			var room = _matrix.get_room_at(z, y)
-			if room is AbstractRoom and !room is EmptyLocation and roomSelectorInterface != null:
-				roomSelectorInterface.show()
-				roomSelectorInterface.bind(room)
-
-			if (
-				_selected_build_room != null
-				and event.button_index == MOUSE_BUTTON_LEFT
-				and event.is_pressed()
-			):
-				if not _is_a_build_location(z, y, _selected_build_room):
-					return
-
-				var _room = GlobalRoomManager.pick(_selected_build_room).new()
-				_matrix.add_room(_room, [Vector2(z, y)])
-
-				_update_rooms()
-				_update_elevator_networks()
-
-				_selected_build_room
-				return
+			var room: Node = _matrix.get_room_at(z, y)
+			if room is AbstractRoom and !room is EmptyLocation and room_selector_interface != null:
+				room_selector_interface.show()
+				room_selector_interface.bind(room)
 
 	# Dweller Drag and Drop Handler
 	if (
@@ -111,14 +116,14 @@ func _unhandled_input(event) -> void:
 		and ray_bodies.has("collider")
 		and ray_bodies.collider is AnimatableBody3D
 	):
-		camera.body_drag_mode = true
+		camera.set_body_drag_mode(true)
 		_selected_dweller = ray_bodies.collider.get_parent()
 	elif event is InputEventMouseButton and !event.is_pressed():
 		if _selected_dweller:
-			var dweller_room = _selected_dweller.assigned_room
-			var target_room = _matrix.get_room_at(
-				roundi((pos_on_plane.z + 1) / shelter_map.cell_size.z) * -1,
-				_matrix.size.y - roundi(pos_on_plane.y / shelter_map.cell_size.y) - 1
+			var dweller_room: AbstractRoom = _selected_dweller.assigned_room
+			var target_room: AbstractRoom = _matrix.get_room_at(
+				roundi((pos_on_plane.z + 1) / map_cell_size.z) * -1,
+				_matrix.size.y - roundi(pos_on_plane.y / map_cell_size.y) - 1
 			)
 
 			if not (dweller_room != null and dweller_room == target_room) and target_room != null:
@@ -128,7 +133,7 @@ func _unhandled_input(event) -> void:
 				):
 					_selected_dweller.path_to_room(target_room)
 
-		camera.body_drag_mode = false
+		camera.set_body_drag_mode(false)
 		_selected_dweller = null
 		drag_body.hide()
 
@@ -140,25 +145,36 @@ func _unhandled_input(event) -> void:
 
 
 func _on_build_mode_enabled(selected_room: GlobalRoomManager.RoomType) -> void:
-	for y in _matrix.size.y:
-		for z in _matrix.size.x:
-			if not _is_a_build_location(z, y, selected_room):
-				continue
-
-			_place_build_location(y, z)
-
 	_selected_build_room = selected_room
+	_refresh_build_locations()
 
 
-func _is_a_build_location(z, y, build_room) -> bool:
-	var room = _matrix.get_room_at(z, y)
-	if room != null or room is EmptyLocation:
+func _is_a_build_location(z: int, y: int, build_room: GlobalRoomManager.RoomType) -> bool:
+	if z < 0 or z >= int(_matrix.size.x) or y < 0 or y >= int(_matrix.size.y):
 		return false
 
-	var prev_room = _matrix.get_room_at(z - 1, y) if z > 0 else null
-	var next_room = _matrix.get_room_at(z + 1, y) if z < _matrix.size.x else null
-	var top_room = _matrix.get_room_at(z, y - 1) if y > 0 else null
-	var bottom_room = _matrix.get_room_at(z, y + 1) if y < _matrix.size.y else null
+	# Prevent building on the surface row
+	if y == 0:
+		return false
+
+	var room: Variant = _matrix.get_room_at(z, y)
+	if room is EmptyLocation:
+		room = null
+	if room != null:
+		return false
+
+	var prev_room: Variant = _matrix.get_room_at(z - 1, y) if z > 0 else null
+	if prev_room is EmptyLocation:
+		prev_room = null
+	var next_room: Variant = _matrix.get_room_at(z + 1, y) if z < _matrix.size.x else null
+	if next_room is EmptyLocation:
+		next_room = null
+	var top_room: Variant = _matrix.get_room_at(z, y - 1) if y > 0 else null
+	if top_room is EmptyLocation:
+		top_room = null
+	var bottom_room: Variant = _matrix.get_room_at(z, y + 1) if y < _matrix.size.y else null
+	if bottom_room is EmptyLocation:
+		bottom_room = null
 
 	# If the selected room is an elevator
 	if build_room == GlobalRoomManager.RoomType.ROOM_ELEVATOR:
@@ -179,12 +195,12 @@ func _update_rooms() -> void:
 	# FIXME: It's too complex to get a room from either the room type or the class.
 	# It must be more simple. And update rooms could be a lot more simpler.
 	# A new room could only affet the postion where it is and the room nearby if they connects.
+	_clear_build_locations()
 	shelter_map.clear()
 
 	for y in range(_matrix.size.y):
 		for z in range(_matrix.size.x):
 			var room: AbstractRoom = _matrix.get_room_at_first_position(z, y)
-			var _next_room = _matrix.get_room_at(z + 1, y) if z < _matrix.size.y else null
 
 			# Nothing
 			if room == null or room is EmptyLocation:
@@ -196,13 +212,15 @@ func _update_rooms() -> void:
 				add_child(room)
 			_place_room(y, z, room.type, room.size, room)
 
+	_refresh_build_locations()
+
 
 func _update_elevator_networks() -> void:
-	var new_networks = _get_elevator_networks()
+	var new_networks: Array[Array] = _get_elevator_networks()
 
 	for platform: ElevatorPlatform in platform_container.get_children():
-		var freeable = true
-		for network in new_networks:
+		var freeable: bool = true
+		for network: Array in new_networks:
 			if platform._current_elevator in network:
 				freeable = false
 				platform.network = network
@@ -210,8 +228,8 @@ func _update_elevator_networks() -> void:
 		if freeable:
 			platform.queue_free()
 
-	for network in new_networks:
-		var already_have_platform = false
+	for network: Array in new_networks:
+		var already_have_platform: bool = false
 		for platform: ElevatorPlatform in platform_container.get_children():
 			if platform.network == network:
 				already_have_platform = true
@@ -219,7 +237,7 @@ func _update_elevator_networks() -> void:
 		var first_elevator: ElevatorShaft = network[0]
 
 		if not already_have_platform:
-			var new_platform = elevator_platform.instantiate()
+			var new_platform: Node3D = elevator_platform.instantiate()
 
 			platform_container.add_child(new_platform)
 			new_platform.global_position = first_elevator.room_node.global_position
@@ -237,12 +255,31 @@ func _update_elevator_networks() -> void:
 	_elevator_networks = new_networks
 
 
+func _clear_build_locations() -> void:
+	for location: Node3D in _build_locations:
+		if is_instance_valid(location):
+			location.queue_free()
+	_build_locations.clear()
+
+
+func _refresh_build_locations() -> void:
+	_clear_build_locations()
+	if _selected_build_room == NO_SELECTION:
+		return
+
+	for y in range(_matrix.size.y):
+		for z in range(_matrix.size.x):
+			if not _is_a_build_location(z, y, _selected_build_room):
+				continue
+			_place_build_location(y, z)
+
+
 func _get_elevator_networks() -> Array[Array]:
 	var networks: Array[Array] = []
-	var visited = []
+	var visited: Array = []
 
 	for x in range(_matrix.size.x):
-		var network = []
+		var network: Array = []
 
 		for y in range(_matrix.size.y):
 			var room = _matrix.get_room_at(x, y)
@@ -267,19 +304,25 @@ func _get_elevator_networks() -> Array[Array]:
 func _place_room(
 	y: int, z: int, room_type: GlobalRoomManager.RoomType, size: int = 1, room: AbstractRoom = null
 ) -> void:
-	var coordinate = Vector3i(0, _matrix.size.y - y - 1, -z)
+	var coordinate: Vector3 = Vector3(0, _matrix.size.y - y - 1, -z)
 	var palette_room_name: String = GlobalRoomManager.get_palette_room_name(room_type, size)
 
 	shelter_map.set_cell_item(coordinate, palette_room_name)
 
 	if room != null:
 		room.room_node = shelter_map._get_cell_node(coordinate)
+		_configure_work_spots(room)
 
 
 func _place_build_location(y: int, z: int, _size: int = 1) -> void:
-	# FIXME: Build location could not use SceneMap
-	# _place_room(y, z, GlobalRoomManager._meshes.BUILD_LOCATION.name)
-	pass
+	var location := GlobalRoomManager.get_build_location()
+	if location == null:
+		return
+	var coordinate: Vector3 = Vector3(0.1, _matrix.size.y - y - 1, -z)
+	var instance := shelter_map.add_temporary_node(location, coordinate)
+	if instance != null:
+		instance.set_meta("matrix_coords", Vector2i(z, y))
+		_build_locations.append(instance)
 
 
 func _remove_pointer() -> void:
@@ -298,7 +341,7 @@ func _remove_pointer() -> void:
 	pass
 
 
-func _place_pointer(y: int, z: int) -> void:
+func _place_pointer(_y: int, _z: int) -> void:
 	# FIXME: Pointers could not use SceneMap
 	# TODO: Rename Pointers
 	#var room: AbstractRoom = _matrix.get_room_at(z, y)
@@ -326,3 +369,94 @@ func _place_pointer(y: int, z: int) -> void:
 func _on_matrix_room_removed():
 	_update_rooms()
 	_update_elevator_networks()
+
+
+func _pick_dweller_hit(camera: Camera3D) -> Dictionary:
+	var exclude: Array = []
+	for _i in range(5):
+		var hit: Dictionary = camera.screen_point_to_ray(null, false, true, exclude)
+		if hit.is_empty():
+			return {}
+		var collider = hit.get("collider")
+		if collider == null:
+			return {}
+		if collider is AnimatableBody3D:
+			return hit
+		exclude.append(collider)
+	return {}
+
+
+func _configure_work_spots(room: AbstractRoom) -> void:
+	if room == null:
+		return
+	if !WORKSPOT_ROOM_TYPES.has(room.type):
+		return
+	var spots: Array = GlobalRoomManager.get_spots(room.type, room.size)
+	if spots.is_empty():
+		return
+	var parameters := WorkingPoolParameters.new()
+	parameters.append_positions(room.size, spots)
+	room.working_spots = WorkingPool.new(parameters)
+
+
+func _try_place_room(build_target: Dictionary) -> bool:
+	if build_target.is_empty():
+		return false
+
+	var target_coords: Vector2i = build_target.coords
+	if not _is_a_build_location(target_coords.x, target_coords.y, _selected_build_room):
+		return false
+
+	var room_script: GDScript = GlobalRoomManager.get_abstract_room(_selected_build_room)
+	if room_script == null:
+		return false
+
+	var new_room: AbstractRoom = room_script.new()
+	_matrix.add_room(new_room, [Vector2(target_coords.x, target_coords.y)])
+
+	_update_rooms()
+	_update_elevator_networks()
+
+	return true
+
+
+func _get_build_target_under_cursor(camera: Camera3D) -> Dictionary:
+	var viewport: Viewport = get_viewport()
+	if viewport == null:
+		return {}
+
+	var mouse_pos: Vector2 = viewport.get_mouse_position()
+	var origin: Vector3 = camera.project_ray_origin(mouse_pos)
+	var direction: Vector3 = camera.project_ray_normal(mouse_pos)
+	var ray_length: float = 1000.0
+
+	var query := PhysicsRayQueryParameters3D.create(origin, origin + direction * ray_length)
+	query.collide_with_areas = true
+	query.collide_with_bodies = false
+
+	var space_state: PhysicsDirectSpaceState3D = get_world_3d().direct_space_state
+	var result: Dictionary = space_state.intersect_ray(query)
+	if result.is_empty():
+		return {}
+
+	var collider: Object = result.get("collider")
+	if collider == null:
+		return {}
+
+	var coords: Vector2i
+
+	if collider is Area3D:
+		var parent_node: Node = (collider as Area3D).get_parent()
+		if parent_node != null and parent_node.has_meta("matrix_coords"):
+			coords = parent_node.get_meta("matrix_coords")
+		else:
+			return {}
+	else:
+		return {}
+
+	return {"coords": coords, "collider": collider}
+
+
+func _on_build_mode_disabled() -> void:
+	_selected_build_room = NO_SELECTION
+	_clear_build_locations()
