@@ -16,16 +16,17 @@ func _init(width: int, height: int) -> void:
 			matrix[y].append(null)
 
 
-func add_room(room: Room, positions: Array[Vector2]) -> void:
+func add_room(room, positions: Array[Vector2]) -> bool:
+	# Support both Room and RoomEntity types
 	room._matrix = self
 	for _pos in positions:
 		# Checking limits
 		if _pos.x < 0 or _pos.x >= size.x or _pos.y < 0 or _pos.y >= size.y:
-			return
+			return false
 
 		# Checking free space
 		if matrix[_pos.y][_pos.x] != null:
-			return
+			return false
 
 	for _pos in positions:
 		# Adding the room to the matrix at all room positions
@@ -37,7 +38,7 @@ func add_room(room: Room, positions: Array[Vector2]) -> void:
 		if (
 			left_neighbour != null
 			and left_neighbour.get_script() == room.get_script()
-			and left_neighbour.size < room.max_size
+			and left_neighbour.size < _get_room_max_size(room)
 		):
 			room = _merge_rooms(left_neighbour, room)
 
@@ -45,12 +46,14 @@ func add_room(room: Room, positions: Array[Vector2]) -> void:
 		if (
 			right_neighbour != null
 			and right_neighbour.get_script() == room.get_script()
-			and right_neighbour.size < room.max_size
+			and right_neighbour.size < _get_room_max_size(room)
 		):
 			room = _merge_rooms(right_neighbour, room)
+	
+	return true
 
 
-func remove_room(room: Room) -> void:
+func remove_room(room) -> void:
 	for _pos in room.positions:
 		# Delete room at all room positions on the matrix
 		matrix[_pos.y][_pos.x] = null
@@ -59,7 +62,7 @@ func remove_room(room: Room) -> void:
 	room_removed.emit()
 
 
-func _merge_rooms(base_room: Room, new_room: Room) -> Room:
+func _merge_rooms(base_room, new_room):
 	base_room.positions.append_array(new_room.positions)
 	Logger.info("Room(" + new_room.id + ") merged with Room(" + base_room.id + ")")
 	new_room.free()
@@ -68,6 +71,15 @@ func _merge_rooms(base_room: Room, new_room: Room) -> Room:
 		matrix[pos.y][pos.x] = base_room
 
 	return base_room
+
+
+## Get max size of a room (supports both Room and RoomEntity)
+func _get_room_max_size(room) -> int:
+	if room.has("max_size"):
+		return room.max_size
+	elif room.has("room_data") and room.room_data:
+		return room.room_data.max_size
+	return 3  # Default
 
 
 func _is_room_at(x: int, y: int) -> bool:
@@ -80,12 +92,12 @@ func _sort_postions(a: Vector2, b: Vector2) -> bool:
 	return false
 
 
-func get_room_at(x: int, y: int) -> Room:
+func get_room_at(x: int, y: int):
 	return matrix[y][x] if _is_room_at(x, y) else null
 
 
 func get_room_at_first_position(x: int, y: int):
-	var room: Room = get_room_at(x, y)
+	var room = get_room_at(x, y)
 	if room == null:
 		return
 
