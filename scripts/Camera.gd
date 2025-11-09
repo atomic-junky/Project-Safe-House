@@ -1,5 +1,4 @@
-extends Camera3D
-
+class_name ShelterCamera extends Camera3D
 
 const DEBUG_SPEED = 0.5
 const DRAG_SPEED = 0.0015
@@ -13,25 +12,40 @@ const MAX_HORIZONTAL_SCROLL: float = -34
 const MIN_VERTICAL_SCROLL: float = 50
 const MAX_VERTICAL_SCROLL: float = 0
 
+const _DEBUG_RAY_COLOR := Color.AQUAMARINE
+const _DEBUG_HIT_COLOR := Color.YELLOW_GREEN
+const _DEBUG_MISS_COLOR := Color.SALMON
+
 var _target_zoom: float = 0.01
 
 var _disabled: bool = false
 var _body_drag_mode: bool = false
+var _debug_raycast: bool = false
+var _debug_draw: Object = null
+var _warned_missing_debug_draw: bool = false
+
 
 func _init():
 	position.x = 3.6
 	position.z = -4.85
 	position.y = 46.5
 
+
 func _ready() -> void:
 	await get_tree().create_timer(0.2).timeout
-	
+
 	_target_zoom = 0.2
+
+	if Engine.has_singleton("DebugDraw3D"):
+		_debug_draw = Engine.get_singleton("DebugDraw3D")
+	else:
+		_debug_draw = null
+
 
 func _unhandled_input(event) -> void:
 	if _disabled or _body_drag_mode:
 		return
-	
+
 	var build_overlay = get_tree().current_scene.get_node_or_null("BuildOverlay")
 	# Zoom
 	if (not build_overlay or not build_overlay.visible) and event is InputEventMouseButton:
@@ -40,55 +54,102 @@ func _unhandled_input(event) -> void:
 				zoom_in()
 			if event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 				zoom_out()
-	
+
 	# Drag
 	if (not build_overlay or not build_overlay.visible) and event is InputEventMouseMotion:
 		if event.button_mask == MOUSE_BUTTON_LEFT:
 			position.z -= -event.relative.x * zoom() * 100 * DRAG_SPEED
 			position.y -= -event.relative.y * zoom() * 100 * DRAG_SPEED
 
+
 func zoom() -> float:
-	return round(position.x)/100
+	return round(position.x) / 100
+
 
 func zoom_in() -> void:
 	_target_zoom = max(_target_zoom - ZOOM_INCREMENT, MIN_ZOOM)
 	set_physics_process(true)
-	
+
+
 func zoom_out() -> void:
 	_target_zoom = min(_target_zoom + ZOOM_INCREMENT, MAX_ZOOM)
 	set_physics_process(true)
 
+
 func screen_point_to_ray(
-	to = null,
+	dist: float = 200,
 	collide_with_areas: bool = true,
 	collide_with_bodies: bool = true,
 	exclude: Array = [],
-	collision_mask: int = 0
-):
-	var space = get_world_3d().direct_space_state
-	var mouse_pos = get_viewport().get_mouse_position()
-	
-	var from = project_ray_origin(mouse_pos)
-	if to == null:
-		to = from + project_ray_normal(mouse_pos) * 100
-	
-	var ray_query = PhysicsRayQueryParameters3D.new()
-	ray_query.from = from
-	ray_query.to = to
+	collision_mask: int = 0,
+	debug_tag: String = ""
+) -> Dictionary:
+	var space: PhysicsDirectSpaceState3D = get_world_3d().direct_space_state
+	var mouse_pos: Vector2 = get_viewport().get_mouse_position()
+
+	var origin: Vector3 = project_ray_origin(mouse_pos)
+	if collision_mask == 0:
+		collision_mask = 0xFFFFFFFF
+
+	var ray_query: PhysicsRayQueryParameters3D = PhysicsRayQueryParameters3D.new()
+	ray_query.from = origin
+	ray_query.to = origin + project_ray_normal(mouse_pos) * dist
 	ray_query.collide_with_areas = collide_with_areas
 	ray_query.collide_with_bodies = collide_with_bodies
 	ray_query.exclude = exclude
 	ray_query.collision_mask = collision_mask
-	return space.intersect_ray(ray_query)
+	ray_query.hit_from_inside = true
+	ray_query.hit_back_faces = true
+
+	var result: Dictionary = space.intersect_ray(ray_query)
+
+	if _debug_raycast:
+		var tag: String = debug_tag if debug_tag != "" else "ray"
+		if _debug_draw != null:
+			_debug_draw.draw_line(ray_query.from, ray_query.to, _DEBUG_RAY_COLOR, 0.35, true)
+			if !result.is_empty() and result.has("position"):
+				_debug_draw.draw_sphere(result.position, 0.2, _DEBUG_HIT_COLOR, 0.35, true)
+			else:
+				_debug_draw.draw_sphere(ray_query.to, 0.2, _DEBUG_MISS_COLOR, 0.2, true)
+		elif !_warned_missing_debug_draw:
+			_warned_missing_debug_draw = true
+			FSLogger.warn("DebugDraw3D singleton missing; raycast visuals disabled")
+		if !result.is_empty() and result.has("collider"):
+			var collider: Variant = result.get("collider")
+			FSLogger.debug(
+				(
+					"%s hit %s at %s (mask=%s bodies=%s areas=%s)"
+					% [
+						tag,
+						str(collider),
+						str(result.position),
+						str(collision_mask),
+						str(collide_with_bodies),
+						str(collide_with_areas)
+					]
+				)
+			)
+		else:
+			FSLogger.debug(
+				(
+					"%s miss from %s to %s (mask=%s bodies=%s areas=%s)"
+					% [
+						tag,
+						str(ray_query.from),
+						str(ray_query.to),
+						str(collision_mask),
+						str(collide_with_bodies),
+						str(collide_with_areas)
+					]
+				)
+			)
+
+	return result
 
 
 func _physics_process(delta: float) -> void:
-	var zoom_value = lerp(
-		zoom(),
-		_target_zoom * 1,
-		ZOOM_RATE * delta
-	) * 100
-	
+	var zoom_value: float = lerp(zoom(), _target_zoom * 1, ZOOM_RATE * delta) * 100
+
 	# TODO: Limit the camera in y and z axis
 
 	position.x = zoom_value
@@ -107,17 +168,18 @@ func _physics_process(delta: float) -> void:
 	rotation_degrees.y = 90 + tilt_y * -1.5
 
 
-
 func get_mouse_position_on_plane():
 	var mouse_pos = get_viewport().get_mouse_position()
 	var ray_origin = project_ray_origin(mouse_pos)
 	var ray_dir = project_ray_normal(mouse_pos)
-	var plane = Plane( 1, 0, 0, 0 )
+	var plane = Plane(1, 0, 0, 0)
 	var pos_on_plane = plane.intersects_ray(ray_origin, ray_dir)
 	return pos_on_plane
 
+
 func disable() -> void:
 	_disabled = true
+
 
 func enable() -> void:
 	_disabled = false
@@ -125,3 +187,11 @@ func enable() -> void:
 
 func set_body_drag_mode(active: bool) -> void:
 	_body_drag_mode = active
+
+
+func set_debug_raycast(active: bool) -> void:
+	_debug_raycast = active
+
+
+func is_debug_raycast_enabled() -> bool:
+	return _debug_raycast

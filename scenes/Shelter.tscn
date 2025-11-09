@@ -48,6 +48,7 @@ script = ExtResource("4_u5mf0")
 transform = Transform3D(-1.18021e-08, 0, -0.27, 0, 0.27, 0, 0.27, 0, -1.18021e-08, -0.8, 47.095, -1)
 
 [node name="DragBody" type="Sprite3D" parent="."]
+unique_name_in_owner = true
 transform = Transform3D(-1.09278e-08, 0, 0.25, 0, 0.25, 0, -0.25, 0, -1.09278e-08, 0, 39.306, 19.264)
 visible = false
 cast_shadow = 0

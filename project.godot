@@ -24,6 +24,7 @@ GlobalRoomManager="*res://autoload/room_manager.gd"
 LoadManager="*res://autoload/load_manager.gd"
 Instructions="*res://autoload/instructions.gd"
 SignalBus="*res://autoload/signal_bus.gd"
+ECSManager="*res://scripts/managers/ECSManager.gd"
 
 [debug]
 

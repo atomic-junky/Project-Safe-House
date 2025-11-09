@@ -1,8 +1,6 @@
 class_name RoomEntity
 extends Node3D
 
-const Component := preload("res://scripts/components/Component.gd")
-
 var id: String = UUID.v4()
 var room_type_id: String = ""
 var max_size: int = 3
@@ -20,7 +18,6 @@ var _components: Array[Component] = []
 func _ready() -> void:
 	_register_child_components()
 	set_process(true)
-
 
 
 func _process(delta: float) -> void:
@@ -68,7 +65,6 @@ func _register_component(component: Component) -> void:
 	if _components.has(component):
 		return
 	_components.append(component)
-	component.entity = self
 	component.initialize()
 
 

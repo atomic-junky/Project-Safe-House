@@ -16,13 +16,18 @@ var _selected_build_room: GlobalRoomManager.RoomType = NO_SELECTION
 var _selected_dweller: Dweller = null
 var _elevator_networks: Array[Array] = []
 var _build_locations: Array[Node3D] = []
+var _raycast_debug_enabled: bool = false
 
 @onready var shelter_map: AutoSceneMap = $AutoSceneMap
 @onready var platform_container: Node = $PlatformContainer
-@onready var drag_body: Sprite3D = $DragBody
+@onready var drag_body: Sprite3D = %DragBody
 @onready var dweller_container: Node = $DwellerContainer
 
 @onready var elevator_platform: PackedScene = preload("res://prefabs/shelter/ElevatorPlatform.tscn")
+
+
+func get_matrix() -> Matrix:
+	return _matrix
 
 
 func _ready() -> void:
@@ -48,16 +53,27 @@ func _ready() -> void:
 	_update_rooms()
 	_update_elevator_networks()
 
+	var camera: ShelterCamera = $Camera
+	camera.set_debug_raycast(_raycast_debug_enabled)
+
 
 func _unhandled_input(event: InputEvent) -> void:
 	_remove_pointer()
 
-	var camera: Camera3D = $Camera
+	var camera: ShelterCamera = $Camera
+	if event is InputEventKey and event.is_pressed() and !event.is_echo():
+		if event.keycode == KEY_F7:
+			_raycast_debug_enabled = !_raycast_debug_enabled
+			camera.set_debug_raycast(_raycast_debug_enabled)
+			var state := "enabled" if _raycast_debug_enabled else "disabled"
+			FSLogger.info("Raycast debug %s" % state)
+
 	var ray_bodies: Dictionary = _pick_dweller_hit(camera)
-	var ray_areas: Dictionary = camera.screen_point_to_ray(null, true, false)
+	var ray_areas: Dictionary = camera.screen_point_to_ray(200, true, false, [], 0, "room-ray")
 	var pos_on_plane: Vector3 = camera.get_mouse_position_on_plane()
 	var map_cell_size: Vector3 = shelter_map.get_cell_size()
 	var build_target: Dictionary = {}
+	#print(ray_bodies)
 	if _selected_build_room != NO_SELECTION:
 		build_target = _get_build_target_under_cursor(camera)
 		var build_attempt = (
@@ -118,20 +134,38 @@ func _unhandled_input(event: InputEvent) -> void:
 	):
 		camera.set_body_drag_mode(true)
 		_selected_dweller = ray_bodies.collider.get_parent()
+		if _raycast_debug_enabled:
+			FSLogger.debug(
+				"Selected dweller %s via collider %s" % [
+					_selected_dweller.name if _selected_dweller != null else "<null>",
+					ray_bodies.collider.name
+			]
+			)
+		if _selected_dweller != null:
+			_selected_dweller.cancel_travel()
+		# Start drag in ECS Draggable component
+		if _selected_dweller != null and _selected_dweller.ecs_entity_id >= 0:
+			var draggable = ECSManager.get_component(_selected_dweller.ecs_entity_id, "Draggable")
+			if draggable != null:
+				draggable.is_being_dragged = true
+				draggable.drag_start_position = pos_on_plane
+				draggable.drag_current_position = pos_on_plane
+
 	elif event is InputEventMouseButton and !event.is_pressed():
 		if _selected_dweller:
-			var dweller_room: AbstractRoom = _selected_dweller.assigned_room
+			# End drag in ECS Draggable component
+			var draggable = ECSManager.get_component(_selected_dweller.ecs_entity_id, "Draggable")
+			if draggable != null:
+				draggable.is_being_dragged = false
+			
+			# Get target room
 			var target_room: AbstractRoom = _matrix.get_room_at(
 				roundi((pos_on_plane.z + 1) / map_cell_size.z) * -1,
 				_matrix.size.y - roundi(pos_on_plane.y / map_cell_size.y) - 1
 			)
 
-			if not (dweller_room != null and dweller_room == target_room) and target_room != null:
-				if (
-					not (target_room is ElevatorShaft or target_room is EmptyLocation)
-					and !target_room.is_full()
-				):
-					_selected_dweller.path_to_room(target_room)
+			# Process drag end - move dweller if valid target
+			_process_dweller_drop(_selected_dweller, target_room)
 
 		camera.set_body_drag_mode(false)
 		_selected_dweller = null
@@ -141,6 +175,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		drag_body.show()
 		drag_body.position.z = pos_on_plane.z
 		drag_body.position.y = pos_on_plane.y
+
+		# Update drag position in ECS Draggable component
+		var draggable = ECSManager.get_component(_selected_dweller.ecs_entity_id, "Draggable")
+		if draggable != null:
+			draggable.drag_current_position = pos_on_plane
 		return
 
 
@@ -366,24 +405,55 @@ func _place_pointer(_y: int, _z: int) -> void:
 	pass
 
 
-func _on_matrix_room_removed():
+func _on_matrix_room_removed() -> void:
 	_update_rooms()
 	_update_elevator_networks()
 
 
-func _pick_dweller_hit(camera: Camera3D) -> Dictionary:
+func _pick_dweller_hit(camera: ShelterCamera) -> Dictionary:
 	var exclude: Array = []
 	for _i in range(5):
-		var hit: Dictionary = camera.screen_point_to_ray(null, false, true, exclude)
+		var hit: Dictionary = camera.screen_point_to_ray(200, false, true, exclude, 0, "dweller-ray")
 		if hit.is_empty():
 			return {}
-		var collider = hit.get("collider")
+		var collider: Variant = hit.get("collider")
 		if collider == null:
 			return {}
 		if collider is AnimatableBody3D:
 			return hit
 		exclude.append(collider)
 	return {}
+
+
+func _process_dweller_drop(dweller: Dweller, target_room: AbstractRoom) -> void:
+	"""Handle dweller drop - assign to room and start travel."""
+	if dweller == null or target_room == null:
+		return
+
+	# Get current work assignment from ECS
+	var work_component = ECSManager.get_component(dweller.ecs_entity_id, "Work")
+	if work_component == null:
+		return
+	
+	var current_room: AbstractRoom = work_component.assigned_room
+
+	# Don't move if already in target room
+	if current_room != null and current_room == target_room:
+		return
+
+	# Validate target room
+	if target_room is ElevatorShaft or target_room is EmptyLocation:
+		return
+
+	if target_room.is_full():
+		return
+
+	# Assign to work (via Dweller public API which updates ECS)
+	dweller.assign_to_work(target_room)
+
+	# Request travel to room
+	dweller.travel_to_room(target_room)
+
 
 
 func _configure_work_spots(room: AbstractRoom) -> void:

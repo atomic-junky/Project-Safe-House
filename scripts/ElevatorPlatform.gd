@@ -63,7 +63,7 @@ func _can_go() -> bool:
 	# Check if all dwellers are in place
 	for spot in spots_pool.get_all_taken(1):
 		var dweller: Dweller = spot.dweller
-		if !dweller.machine.active_state is EIdlePlatformState:
+		if !dweller.is_idle():
 			return false
 
 	return true

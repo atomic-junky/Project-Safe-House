@@ -120,7 +120,7 @@ func _build_astar_path() -> AStar2D:
 	for y in range(size.y):
 		for x in range(size.x):
 			var room: Variant = get_room_at(x, y)
-			if room == null or room is EmptyLocation:
+			if room == null:
 				continue
 
 			var point_id: int = Matrix._vector_to_astar_id(Vector2i(x, y))

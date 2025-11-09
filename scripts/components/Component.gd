@@ -3,16 +3,10 @@ extends Node
 
 enum LifecycleState { NEW, INITIALIZED, CLEANED }
 
-var entity: Node:
-	get:
-		return _entity
-	set(value):
-		_entity = value
+@export var entity: ShelterEntity
 
 var lifecycle_state: LifecycleState = LifecycleState.NEW
 var auto_initialize: bool = true
-
-var _entity: Node = null
 
 
 func initialize() -> void:
